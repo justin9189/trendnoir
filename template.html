@@ -1,0 +1,1427 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>TrendNoir: Real trend, or illusion?</title>
+<meta name="description" content="A detective kit for NASA Earth data. Pull the record, remove the seasons, measure the change, test the evidence.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Special+Elite&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#dcdad2; --sheet:#ecebe4; --sheet-2:#e2e0d7; --ink:#1c1f22; --ink-soft:#4f565c; --rule:#b4b1a4;
+  --up:#a4540a; --down:#1c5a85; --stamp:#a3231c; --slat:rgba(20,22,24,.07); --glow:rgba(255,255,255,.55);
+  --header-bg:#dcdad2; --grain:.07; --shadow:rgba(30,30,24,.35);
+  --display:"Special Elite","Courier New",Courier,monospace;
+  --serif:"Source Serif 4",Georgia,"Times New Roman",serif;
+  box-sizing:border-box; padding-top:env(safe-area-inset-top,0px); padding-bottom:env(safe-area-inset-bottom,0px);
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#161c22; --sheet:#1f272e; --sheet-2:#252f37; --ink:#ebe6d9; --ink-soft:#9ba4aa; --rule:#36424c;
+    --up:#f0b345; --down:#62b4da; --stamp:#e04a3d; --slat:rgba(240,196,120,.075); --glow:rgba(240,196,120,.16);
+    --header-bg:#161c22; --grain:.09; --shadow:rgba(0,0,0,.6);
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#161c22; --sheet:#1f272e; --sheet-2:#252f37; --ink:#ebe6d9; --ink-soft:#9ba4aa; --rule:#36424c;
+  --up:#f0b345; --down:#62b4da; --stamp:#e04a3d; --slat:rgba(240,196,120,.075); --glow:rgba(240,196,120,.16);
+  --header-bg:#161c22; --grain:.09; --shadow:rgba(0,0,0,.6);
+}
+html{scroll-padding-top:calc(env(safe-area-inset-top,0px) + 4.2rem);scroll-behavior:smooth}
+*,*::before,*::after{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--serif);font-size:1.0625rem;line-height:1.62;-webkit-font-smoothing:antialiased;font-variant-numeric:tabular-nums}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:30;background:var(--header-bg)}
+body::after{content:"";position:fixed;inset:0;pointer-events:none;z-index:40;opacity:var(--grain);mix-blend-mode:overlay;
+  background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='180' height='180'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 .5  0 0 0 0 .5  0 0 0 0 .5  0 0 0 1.2 -.1'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>")}
+a{color:inherit}
+button{font:inherit;color:inherit;cursor:pointer}
+:focus-visible{outline:3px solid var(--up);outline-offset:3px}
+sup{font-size:.7em;line-height:0}
+.wrap{max-width:1120px;margin:0 auto;padding:0 clamp(1rem,4vw,2.2rem)}
+h1,h2,h3,h4{font-family:var(--display);font-weight:400;line-height:1.08;margin:0}
+p{margin:0 0 .9em;max-width:68ch}
+.muted{color:var(--ink-soft)}
+.small{font-size:.92rem}
+
+/* header */
+.bar{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:var(--header-bg);border-bottom:1px solid var(--rule)}
+.bar .wrap{display:flex;align-items:center;gap:1.4rem;min-height:3.4rem}
+.brand{font-family:var(--display);font-size:1.45rem;text-decoration:none;letter-spacing:.01em;margin-right:auto}
+.bar nav{display:flex;gap:1.3rem}
+.bar nav a{text-decoration:none;font-size:.98rem;padding:.3rem 0;border-bottom:2px solid transparent}
+.bar nav a:hover{border-bottom-color:var(--up)}
+.lamp{border:1px solid var(--rule);background:transparent;padding:.3rem .75rem;border-radius:2px;font-size:.9rem}
+.lamp:hover{border-color:var(--ink-soft)}
+@media (max-width:620px){.bar nav{display:none}}
+
+/* hero */
+.hero{position:relative;overflow:hidden;border-bottom:1px solid var(--rule)}
+.hero::before{content:"";position:absolute;inset:-10% -5%;pointer-events:none;
+  background:repeating-linear-gradient(166deg,transparent 0 46px,var(--slat) 46px 78px);
+  -webkit-mask-image:radial-gradient(ellipse 70% 90% at 82% 8%,#000 0%,transparent 72%);mask-image:radial-gradient(ellipse 70% 90% at 82% 8%,#000 0%,transparent 72%)}
+.hero::after{content:"";position:absolute;inset:0;pointer-events:none;background:radial-gradient(ellipse 50% 60% at 85% 0%,var(--glow),transparent 70%)}
+.hero .wrap{position:relative;z-index:1;display:grid;grid-template-columns:minmax(0,1.05fr) minmax(0,1fr);gap:clamp(1.5rem,4vw,3.5rem);align-items:center;padding-top:clamp(2.5rem,7vw,5.5rem);padding-bottom:clamp(2.5rem,7vw,5rem)}
+@media (max-width:900px){.hero .wrap{grid-template-columns:1fr}}
+.hero h1{font-size:clamp(2.9rem,8.2vw,5.6rem);line-height:.94;letter-spacing:-.01em;margin-bottom:1.3rem}
+.hero .lede{font-size:1.2rem;max-width:34ch;margin-bottom:1.6rem}
+.btn{display:inline-block;border:2px solid var(--ink);background:var(--ink);color:var(--bg);padding:.65rem 1.2rem;font-family:var(--display);font-size:1.05rem;text-decoration:none;border-radius:2px}
+.btn:hover{background:transparent;color:var(--ink)}
+.btn.ghost{background:transparent;color:var(--ink)}
+.btn.ghost:hover{background:var(--ink);color:var(--bg)}
+.btn[disabled]{opacity:.35;pointer-events:none}
+.btnrow{display:flex;gap:.8rem;flex-wrap:wrap}
+.exhibit{background:var(--sheet);border:1px solid var(--rule);padding:1.1rem 1.1rem 1rem;box-shadow:0 22px 40px -26px var(--shadow)}
+.exhibit h2{font-size:1.15rem;margin-bottom:.15rem}
+.exhibit .cap{font-size:.92rem;color:var(--ink-soft);margin-bottom:.4rem}
+.exhibit .read{min-height:4.6em;margin:.6rem 0 .7rem;font-size:1rem}
+.exhibit .read b{font-family:var(--display);font-weight:400;font-size:1.25em}
+
+/* sections */
+section{padding:clamp(2.6rem,6vw,4.4rem) 0;border-bottom:1px solid var(--rule)}
+section>.wrap>h2{font-size:clamp(1.9rem,4.6vw,2.9rem);margin-bottom:.7rem}
+.intro{max-width:62ch;font-size:1.1rem}
+
+/* tabs */
+.tabs{display:flex;gap:.35rem;flex-wrap:wrap;margin:1.4rem 0 0;border-bottom:2px solid var(--ink)}
+.tab{background:var(--sheet-2);border:1px solid var(--rule);border-bottom:none;padding:.55rem 1rem;font-family:var(--display);font-size:1rem;border-radius:3px 3px 0 0;position:relative;top:2px}
+.tab[aria-selected="true"]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.tab:hover:not([aria-selected="true"]){background:var(--sheet)}
+.casehead{padding:1.6rem 0 .4rem}
+.casehead h3{font-size:clamp(1.7rem,4vw,2.5rem);margin-bottom:.5rem}
+
+/* stepper */
+.stepper{list-style:none;margin:1.2rem 0 0;padding:0;display:grid;grid-template-columns:repeat(4,1fr);gap:.5rem}
+@media (max-width:700px){.stepper{grid-template-columns:repeat(2,1fr)}}
+.stepper button{width:100%;text-align:left;background:transparent;border:1px solid var(--rule);padding:.6rem .8rem;border-radius:2px;display:flex;gap:.6rem;align-items:baseline;line-height:1.2}
+.stepper .num{font-family:var(--display);font-size:1.5rem;line-height:1}
+.stepper button[aria-current="step"]{border-color:var(--ink);background:var(--sheet);box-shadow:inset 0 -3px 0 var(--up)}
+.stepper button.done .num{color:var(--up)}
+.stepnav{display:flex;gap:.7rem;margin:1rem 0 0;flex-wrap:wrap}
+
+/* sheets */
+.sheets{display:grid;gap:1.2rem;margin-top:1.3rem}
+.sheets.two{grid-template-columns:repeat(2,minmax(0,1fr))}
+@media (max-width:860px){.sheets.two{grid-template-columns:1fr}}
+.sheet{background:var(--sheet);border:1px solid var(--rule);padding:1.15rem 1.2rem 1.1rem;position:relative;box-shadow:0 22px 40px -28px var(--shadow)}
+.sheet h4{font-size:1.3rem;margin-bottom:.1rem}
+.sheet .where{font-size:.9rem;color:var(--ink-soft);margin-bottom:.7rem}
+.sheet .note{font-size:.98rem;margin:.6rem 0 0}
+.sheet .label{font-size:.88rem;color:var(--ink-soft);margin:.7rem 0 .1rem;font-style:italic}
+.bignum{font-family:var(--display);font-size:clamp(1.9rem,4.6vw,2.7rem);line-height:1.05;margin:.3rem 0 .15rem}
+.bignum.up{color:var(--up)} .bignum.down{color:var(--down)}
+.def{border-left:3px solid var(--rule);padding:.1rem 0 .1rem .8rem;margin:.3rem 0 .9rem;font-size:.98rem}
+.def b{font-weight:600}
+
+/* chart */
+.chart{width:100%;min-height:60px}
+.chart svg{display:block;max-width:100%;overflow:visible}
+.chart text{font-family:var(--serif);font-size:11.5px;fill:var(--ink-soft)}
+.chart .gl{stroke:var(--rule);stroke-width:1;opacity:.55}
+.chart .zero{stroke:var(--ink-soft);stroke-width:1;stroke-dasharray:3 4}
+.chart .ln{fill:none;stroke-linejoin:round;stroke-linecap:round}
+.chart .ln.raw{stroke:var(--ink-soft);stroke-width:1.25}
+.chart .ln.anom{stroke:var(--ink);stroke-width:1.35}
+.chart .ln.faint{stroke:var(--ink-soft);stroke-width:1;opacity:.4}
+.chart .ln.win{stroke:var(--ink);stroke-width:1.7}
+.chart .trend{fill:none;stroke-width:3.2;stroke-linecap:round}
+.chart .trend.up{stroke:var(--up)} .chart .trend.down{stroke:var(--down)}
+.chart .fan{opacity:.2} .chart .fan.up{fill:var(--up)} .chart .fan.down{fill:var(--down)}
+.chart .shade{fill:var(--ink);opacity:.08}
+.chart .draw{stroke-dasharray:1;stroke-dashoffset:1;animation:draw .9s .1s ease-out forwards}
+.chart.fade svg{animation:fadein .5s ease-out}
+@keyframes draw{to{stroke-dashoffset:0}}
+@keyframes fadein{from{opacity:0}to{opacity:1}}
+
+/* stamp: the one loud thing */
+.stampwrap{display:flex;align-items:center;gap:1rem;flex-wrap:wrap;margin:.2rem 0 .8rem;min-height:4.4rem}
+.stamp{display:inline-block;font-family:var(--display);font-size:clamp(1.5rem,3.6vw,2.2rem);line-height:1;text-transform:uppercase;letter-spacing:.07em;color:var(--stamp);border:4px double var(--stamp);padding:.45rem .8rem .35rem;transform:rotate(-5deg);filter:url(#rough);opacity:.94;white-space:nowrap}
+.stamp.cool{color:var(--ink-soft);border-color:var(--ink-soft);border-style:dashed;border-width:3px}
+.stamp.slam{animation:slam .55s cubic-bezier(.2,.9,.3,1) both}
+@keyframes slam{0%{transform:scale(2.4) rotate(-15deg);opacity:0}55%{transform:scale(.93) rotate(-5deg);opacity:1}100%{transform:scale(1) rotate(-5deg)}}
+.verdict-sentence{font-size:1.12rem;max-width:60ch}
+
+/* tables */
+.cmp{width:100%;border-collapse:collapse;font-size:.95rem;margin:.6rem 0 .3rem}
+.cmp th,.cmp td{text-align:left;padding:.4rem .5rem .4rem 0;border-bottom:1px solid var(--rule);vertical-align:top}
+.cmp th{font-weight:600}
+.cmp td.num{font-variant-numeric:tabular-nums}
+.badge{display:inline-block;padding:0 .45rem;border:1px solid currentColor;border-radius:2px;font-size:.85rem;line-height:1.5;white-space:nowrap}
+.badge.yes{color:var(--stamp)} .badge.no{color:var(--ink-soft)}
+.scroll{overflow-x:auto}
+
+/* trap */
+.sliders{display:grid;grid-template-columns:1fr 1fr;gap:1.2rem;margin:1.2rem 0 .4rem;max-width:640px}
+@media (max-width:560px){.sliders{grid-template-columns:1fr}}
+.sliders label{display:block;font-size:.95rem}
+.sliders output{font-family:var(--display);font-size:1.3rem;margin-left:.4rem}
+input[type=range]{width:100%;accent-color:var(--up);height:2rem}
+.trapgrid{display:grid;gap:1.2rem;margin-top:1rem}
+.trapblock{background:var(--sheet);border:1px solid var(--rule);padding:1.1rem 1.2rem;box-shadow:0 22px 40px -28px var(--shadow)}
+.trapblock h4{font-size:1.2rem;margin-bottom:.6rem}
+.trapcols{display:grid;grid-template-columns:minmax(0,420px) minmax(0,1fr);gap:1.2rem;align-items:start}
+@media (max-width:860px){.trapcols{grid-template-columns:1fr}}
+.heat svg{display:block;max-width:100%;cursor:crosshair}
+.heat text{font-family:var(--serif);font-size:11px;fill:var(--ink-soft)}
+.legend{display:flex;gap:1rem;flex-wrap:wrap;font-size:.86rem;color:var(--ink-soft);margin-top:.35rem;align-items:center}
+.sw{display:inline-block;width:.9rem;height:.9rem;vertical-align:-.12rem;margin-right:.3rem;border:1px solid var(--rule)}
+.readout{margin:.4rem 0 .2rem;font-size:1rem}
+.callout{border:2px solid var(--stamp);padding:.8rem 1rem;margin:1rem 0 0;background:var(--sheet-2);max-width:70ch}
+.callout b{font-family:var(--display);font-weight:400}
+
+/* detect */
+.detect{display:grid;gap:1.2rem;margin-top:1.2rem}
+.dbar{position:relative;height:1.1rem;background:var(--sheet-2);border:1px solid var(--rule);margin:.5rem 0 .3rem}
+.dbar i{position:absolute;left:0;top:0;bottom:0;background:var(--ink-soft);opacity:.55}
+.dbar u{position:absolute;top:-.35rem;bottom:-.35rem;width:3px;background:var(--up);text-decoration:none}
+.tag{display:inline-block;font-size:.88rem;border:1px dashed var(--ink-soft);padding:.1rem .5rem;color:var(--ink-soft);margin-top:.3rem}
+
+/* lineup */
+.lineup{margin-top:1.4rem;border-top:2px solid var(--ink)}
+.lrow{display:grid;grid-template-columns:minmax(140px,1.05fr) minmax(130px,.9fr) minmax(0,1.5fr) minmax(110px,.7fr) auto;gap:1rem;align-items:center;padding:.9rem 0;border-bottom:1px solid var(--rule)}
+@media (max-width:860px){.lrow{grid-template-columns:1fr 1fr;}.lrow .evc{grid-column:1/-1}}
+.lrow .nm{font-family:var(--display);font-size:1.25rem;line-height:1.1}
+.lrow .sub{font-size:.88rem;color:var(--ink-soft);margin-top:.2rem}
+.lrow .stamp{font-size:.95rem;border-width:3px;padding:.25rem .5rem .2rem;letter-spacing:.05em}
+.ev{position:relative;height:1.15rem;background:var(--sheet-2);border:1px solid var(--rule)}
+.ev i{position:absolute;left:0;top:0;bottom:0}
+.ev i.up{background:var(--up)} .ev i.down{background:var(--down)}
+.ev u{position:absolute;top:-.4rem;bottom:-.4rem;width:2px;background:var(--ink);text-decoration:none}
+.evnote{font-size:.85rem;color:var(--ink-soft);margin-top:.3rem}
+.halves{font-size:.95rem;line-height:1.35}
+.halves .ar{font-size:1.05rem}
+.halves .ar.up{color:var(--up)} .halves .ar.down{color:var(--down)}
+.halves .dis{display:block;font-size:.85rem;color:var(--stamp)}
+.halves .agr{display:block;font-size:.85rem;color:var(--ink-soft)}
+.fhead{display:flex;justify-content:flex-end;font-size:.88rem;color:var(--ink-soft);margin:.6rem 0 0}
+
+/* spot the real one */
+.subh{font-size:clamp(1.6rem,3.6vw,2.2rem);margin:3.2rem 0 .6rem}
+.chip{border:1px solid var(--rule);background:transparent;padding:.35rem .8rem;border-radius:2px;font-size:.95rem}
+.chip[aria-pressed="true"]{border-color:var(--ink);background:var(--sheet)}
+.spot{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:.7rem;margin-top:1rem;max-width:920px}
+.suspect{position:relative;display:block;width:100%;background:var(--sheet);border:1px solid var(--rule);padding:.5rem .55rem .4rem;text-align:left;border-radius:2px}
+.suspect:hover{border-color:var(--ink-soft)}
+.suspect[disabled]{cursor:default;opacity:1}
+.suspect .lt{font-family:var(--display);font-size:1.15rem;line-height:1}
+.suspect .cap2{font-size:.78rem;color:var(--ink-soft);min-height:2.5em;line-height:1.25;margin-top:.2rem}
+.suspect.real{border:2px solid var(--stamp)}
+.suspect.pick{outline:2px dashed var(--ink);outline-offset:3px}
+.suspect .stamp{position:absolute;right:.45rem;top:.4rem;font-size:.85rem;border-width:3px;padding:.15rem .4rem .1rem}
+.spotbar{display:flex;gap:.6rem;flex-wrap:wrap;margin-top:1rem}
+.spotmsg{margin-top:1rem;max-width:70ch}
+.spotmsg .callout{margin-top:0}
+@media (max-width:560px){.spot{gap:.4rem}.suspect{padding:.35rem}.suspect .cap2{font-size:.7rem}}
+.cal{margin-top:.2rem}
+.cal svg{display:block;max-width:100%}
+.cal text{font-family:var(--serif);font-size:11px;fill:var(--ink-soft)}
+.ops th{font-weight:400}
+.ops th b{font-weight:600}
+
+/* why + who */
+.facts{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:1.2rem;margin-top:1.4rem}
+@media (max-width:860px){.facts{grid-template-columns:1fr}}
+.fact .fig{font-family:var(--display);font-size:clamp(2.2rem,5vw,3.2rem);line-height:1;color:var(--stamp);margin:.2rem 0 .5rem}
+.fact p{font-size:1rem}
+.who{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:1.2rem;margin-top:1.6rem}
+@media (max-width:860px){.who{grid-template-columns:1fr}}
+.who h3{font-size:1.25rem;margin-bottom:.35rem}
+.who p{font-size:1rem;margin-bottom:.5rem}
+.hero .for{font-size:.98rem;color:var(--ink-soft);margin-top:1rem}
+
+/* claim check */
+.claimform{background:var(--sheet);border:1px solid var(--rule);padding:1.1rem 1.2rem;margin-top:1.2rem;box-shadow:0 22px 40px -28px var(--shadow)}
+.claimform label{display:inline-flex;flex-direction:column;font-size:.92rem;color:var(--ink-soft);gap:.2rem}
+.claimform select{font:inherit;font-size:1.05rem;color:var(--ink);background:var(--bg);border:1px solid var(--rule);padding:.45rem .55rem;border-radius:2px;max-width:100%}
+.claimline{display:flex;flex-wrap:wrap;gap:.8rem 1rem;align-items:flex-end}
+.claimline .rec{flex:1 1 300px} .claimline .rec select{width:100%}
+.claimform .btn{margin-top:1rem}
+.claimq{font-family:var(--display);font-size:clamp(1.3rem,3vw,1.75rem);line-height:1.25;margin:0 0 .6rem;max-width:40ch}
+.claimres{margin-top:1.4rem}
+.claimcols{display:grid;grid-template-columns:minmax(0,1.3fr) minmax(0,1fr);gap:1.2rem;margin:.6rem 0 .4rem}
+@media (max-width:860px){.claimcols{grid-template-columns:1fr}}
+.claimsteps{margin:.8rem 0 0;padding-left:1.3rem;max-width:72ch}
+.claimsteps li{margin-bottom:.6rem}
+.quote textarea{width:100%;min-height:6.5em;font:inherit;font-size:.98rem;color:var(--ink);background:var(--bg);border:1px solid var(--rule);padding:.6rem .7rem;border-radius:2px;resize:vertical}
+.quote{margin-top:1rem}
+.excl{display:flex;flex-wrap:wrap;gap:.5rem;margin-top:.5rem}
+.excl .chip{text-align:left}
+.claimres .stamp{white-space:normal;max-width:100%;text-align:center}
+.pred{margin:1.2rem 0 0;padding:.8rem 1rem;border:1px dashed var(--ink-soft);background:var(--sheet)}
+.pred .modechips{margin:.5rem 0 0}
+
+/* robustness */
+.robgrade{font-family:var(--display);font-size:clamp(1.5rem,3.4vw,2.1rem);line-height:1.1;margin:.2rem 0 .4rem}
+.robgrade.good{color:var(--stamp)} .robgrade.weak{color:var(--ink-soft)}
+.robline{font-size:1rem;margin:.3rem 0 .8rem;padding:.55rem .75rem;border-left:4px solid var(--stamp);background:var(--sheet-2)}
+.robline.weak{border-left-color:var(--ink-soft)}
+.spec svg{display:block;max-width:100%}
+.spec text{font-family:var(--serif);font-size:11px;fill:var(--ink-soft)}
+.cmpb{margin:1.3rem 0 0;max-width:none}
+.cmpb .big{font-family:var(--display);font-size:clamp(1.4rem,3vw,1.9rem);display:block;margin-bottom:.3rem}
+.replay{margin-top:.5rem;font-size:.95rem;padding:.4rem .8rem}
+.modechips{display:flex;gap:.5rem;margin-bottom:.8rem;flex-wrap:wrap}
+.droplab{display:block;font-size:.9rem;color:var(--ink-soft);margin-bottom:.2rem}
+.drop[hidden],.droplab[hidden]{display:none}
+
+/* bring your own evidence */
+.drop{display:block;border:2px dashed var(--ink-soft);background:var(--sheet);padding:1.6rem 1.2rem;text-align:center;cursor:pointer;border-radius:2px;margin-bottom:.8rem}
+.drop:hover,.drop.over{border-color:var(--up)}
+.drop input{position:absolute;width:1px;height:1px;opacity:0}
+.drop:focus-within{outline:3px solid var(--up);outline-offset:3px}
+.dropt{font-family:var(--display);font-size:1.15rem}
+.labcard{background:var(--sheet);border:1px solid var(--rule);padding:1rem 1.1rem;margin-top:1rem}
+.labcard label{display:block;font-size:.95rem;margin:.6rem 0 0}
+.labcard input[type=text],.labcard select{display:block;width:100%;margin-top:.2rem;padding:.45rem .55rem;font:inherit;font-size:1rem;color:var(--ink);background:var(--bg);border:1px solid var(--rule);border-radius:2px}
+.labcard .btn{margin-top:1rem}
+.err{border:2px solid var(--stamp);padding:.7rem .9rem;margin-top:1rem;background:var(--sheet-2)}
+.ok{border:1px solid var(--rule);padding:.7rem .9rem;margin-top:1rem;background:var(--sheet-2)}
+
+/* method */
+.cols{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:1.6rem 2.6rem}
+@media (max-width:860px){.cols{grid-template-columns:1fr}}
+.cols h3{font-size:1.3rem;margin-bottom:.4rem}
+.cols ol,.cols ul{margin:.2rem 0 1rem;padding-left:1.2rem;max-width:62ch}
+.cols li{margin-bottom:.45rem}
+footer{padding:2.4rem 0 3rem;font-size:.95rem;color:var(--ink-soft)}
+footer b{color:var(--ink);font-family:var(--display);font-weight:400;font-size:1.1rem}
+@media (prefers-reduced-motion: reduce){
+  html{scroll-behavior:auto}
+  .stamp.slam,.chart.fade svg{animation:none}
+  .chart .draw{animation:none;stroke-dashoffset:0}
+}
+</style>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+  <filter id="rough"><feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="2" seed="4" result="n"/><feDisplacementMap in="SourceGraphic" in2="n" scale="2.2"/></filter>
+</svg>
+
+<header class="bar">
+  <div class="wrap">
+    <a class="brand" href="#top">TrendNoir</a>
+    <nav aria-label="Sections"><a href="#claim">Check a claim</a><a href="#cases">Cases</a><a href="#evidence">Your data</a><a href="#lineup">The lineup</a><a href="#method">Method</a></nav>
+    <button class="lamp" id="lamp" type="button" aria-pressed="false">Switch the lamp</button>
+  </div>
+</header>
+
+<main id="top">
+<div class="hero">
+  <div class="wrap">
+    <div>
+      <h1>Real trend,<br>or illusion?</h1>
+      <p class="lede">Someone says the rain is drying up, a region is warming, or pollution is falling. TrendNoir checks the claim against decades of NASA measurements and tells you in one plain sentence whether it holds up, or only works for the years someone picked.</p>
+      <div class="btnrow"><a class="btn" href="#claim">Check a claim</a><a class="btn ghost" href="#cases">Open the case files</a></div>
+      <p class="for">Built for science journalists and fact-checkers, teachers, and students.</p>
+    </div>
+    <div class="exhibit">
+      <h2>Exhibit A: Alaska’s temperature</h2>
+      <p class="cap" id="heroCap"></p>
+      <div id="heroChart" class="chart" role="img"></div>
+      <p class="read" id="heroRead" aria-live="polite"></p>
+      <button class="btn" id="heroBtn" type="button">Remove the seasons</button>
+    </div>
+  </div>
+</div>
+
+<section id="why">
+  <div class="wrap">
+    <h2>Why a trend line isn’t enough</h2>
+    <p class="intro">Drawing a line through data is easy. Knowing whether to believe it is not. Three things we found in NASA’s own records, using the methods on this page:</p>
+    <div class="facts" id="facts"></div>
+    <div class="who">
+      <div><h3>Journalists and fact-checkers</h3><p>A claim says something has risen or fallen “since” some year. Check whether it survives other reasonable choices of years before repeating it.</p><a class="btn ghost" href="#claim">Check a claim</a></div>
+      <div><h3>Teachers</h3><p>Real NASA data for a lesson on seasons, noise and significance. Students predict first, then test. A 45-minute plan is included.</p><a class="btn ghost" href="#teach">See the lesson plan</a></div>
+      <div><h3>Students and citizen scientists</h3><p>Bring any variable from NASA Giovanni, for your own region, and get a verdict you can defend in a science fair or a report.</p><a class="btn ghost" href="#evidence">Bring your own data</a></div>
+    </div>
+  </div>
+</section>
+
+<section id="claim">
+  <div class="wrap">
+    <h2>Check a claim</h2>
+    <p class="intro">Choose a record, what the claim says, and the years it covers. TrendNoir tests the claim for those years, then asks the question that matters: were those years cherry-picked?</p>
+    <div class="claimform">
+      <div class="claimline">
+        <label class="rec">The record<select id="cRec"></select></label>
+        <label>Claim<select id="cDir"><option value="up">rose</option><option value="down">fell</option><option value="flat">did not change</option></select></label>
+        <label>from<select id="cA"></select></label>
+        <label>to<select id="cB"></select></label>
+      </div>
+      <button class="btn" id="cGo" type="button">Check this claim</button>
+    </div>
+    <p class="small muted" style="margin-top:1rem">Or try one of these claims:</p>
+    <div class="excl" id="cEx"></div>
+    <div id="cOut" aria-live="polite"></div>
+  </div>
+</section>
+
+<section id="cases">
+  <div class="wrap">
+    <h2>The case files</h2>
+    <p class="intro">Every case follows the same routine. Pull the record, remove the seasons, measure the change, test the evidence. Then try your best to break the result.</p>
+    <div class="tabs" id="tabs" role="tablist" aria-label="Case files"></div>
+    <div id="caseView"></div>
+
+    <div id="trap">
+      <h3 class="subh">Try to break it</h3>
+      <p class="intro">A trend can appear, vanish or flip depending on which years you pick. Drag the window, or click a square on the map. Each square is one possible choice of first and last year. Stronger color means a steeper slope; a dot means the change passes the careful test.</p>
+      <div class="sliders">
+        <label>First year <output id="outA"></output><input type="range" id="rngA" aria-label="First year of the window"></label>
+        <label>Last year <output id="outB"></output><input type="range" id="rngB" aria-label="Last year of the window"></label>
+      </div>
+      <div class="btnrow" style="margin-top:.6rem">
+        <button class="btn ghost" id="fooled" type="button">Show me how I get fooled</button>
+        <button class="btn ghost" id="fullrec" type="button">Reset to the full record</button>
+      </div>
+      <div id="fooledNote"></div>
+      <div class="trapgrid" id="trapGrid"></div>
+    </div>
+
+    <div id="robust">
+      <h3 class="subh">How hard is it to kill?</h3>
+      <p class="intro">One analysis can be lucky. So we run every reasonable one: each window of years that is at least ten years long and covers at least half the record, times four defensible methods. Each dot below is one analysis, sorted by the slope it found. A trend worth believing survives most of them and is reversed by none.</p>
+      <div class="trapgrid" id="robGrid"></div>
+    </div>
+
+    <div id="spotSec">
+      <h3 class="subh">Spot the real one</h3>
+      <p class="intro">Nine records. Eight are pure noise, built from this record’s own wobble and month-to-month memory, with the trend taken out. One is the real measurement. Pick the one you think is real. If you can’t tell it apart from noise, be wary of anyone who says they can.</p>
+      <div class="spotbar" id="spotSeries"></div>
+      <div class="spot" id="spot"></div>
+      <div class="spotbar"><button class="btn ghost" id="spotNew" type="button">Deal a new lineup</button></div>
+      <div class="spotmsg" id="spotMsg" aria-live="polite"></div>
+    </div>
+
+    <h3 class="subh">How long until it’s real?</h3>
+    <p class="intro">When the evidence falls short, the honest next question is how much more data would settle it.</p>
+    <div class="detect" id="detect"></div>
+  </div>
+</section>
+
+<section id="evidence">
+  <div class="wrap">
+    <h2>Bring your own evidence</h2>
+    <p class="intro">Any of the roughly two thousand variables in NASA’s Giovanni portal, over any region you draw, can go through the same routine. Compare two regions to see whether the same measurement moves the same way in both places. Your files are read and analyzed inside your browser and never leave it.</p>
+    <div class="cols">
+      <div>
+        <h3>Get a file from Giovanni</h3>
+        <ol>
+          <li>Open giovanni.gsfc.nasa.gov and sign in with a free NASA Earthdata account.</li>
+          <li>Set the plot type to Time Series, Area-Averaged.</li>
+          <li>Pick a variable (monthly ones are quickest), draw your region and choose at least ten full years.</li>
+          <li>Select Plot Data, then download the result as CSV. Daily data works too. If a long daily record times out, download it in parts and drop all the parts here together.</li>
+        </ol>
+      </div>
+      <div>
+        <div class="modechips" role="group" aria-label="Upload mode"><button class="chip" type="button" data-mode="one" aria-pressed="true">One region</button><button class="chip" type="button" data-mode="two" aria-pressed="false">Compare two regions</button></div>
+        <label class="drop" id="drop"><span class="droplab" id="dropLabA" hidden>Region A</span><input type="file" id="file" accept=".csv,text/csv" multiple><span class="dropt">Click here to choose Giovanni CSV files</span><br><span class="small muted">or drag them anywhere onto this page</span></label>
+        <label class="drop" id="dropB" hidden><span class="droplab">Region B: same variable, another place</span><input type="file" id="fileB" accept=".csv,text/csv" multiple><span class="dropt">Click here to choose the second region’s files</span></label>
+        <button class="btn ghost" id="sample" type="button">Use a sample file</button>
+        <p class="small muted" style="margin-top:.5rem" id="sampleNote">The sample is the raw Giovanni download behind Case 002. Its verdict should match the case file exactly.</p>
+        <div id="labForm"></div>
+        <div id="labMsg" aria-live="polite"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="lineup">
+  <div class="wrap">
+    <h2>The lineup: six suspects, one patch of Alaska</h2>
+    <p class="intro">Six measurements, all taken over the same stretch of interior Alaska from 1980 to 2025. Which ones have really changed? The bar shows how strongly the careful test rules out “nothing happened”: the longer the bar, the stronger the evidence, and a bar that stops short of the tick has not cleared the usual bar. The arrows show the direction in each half of the record. When they disagree, the change is not one steady trend.</p>
+    <div class="fhead">longer bar, stronger evidence. The black tick marks the usual 0.05 line.</div>
+    <div class="lineup" id="lineupRows"></div>
+  </div>
+</section>
+
+<section id="teach">
+  <div class="wrap">
+    <h2>For teachers: a 45-minute lesson</h2>
+    <p class="intro">For high school environmental science, statistics, or an introductory climate course. Students need no coding and no account; everything runs in the browser.</p>
+    <div class="cols">
+      <div>
+        <h3>Plan</h3>
+        <ol>
+          <li><b>Hook, 5 minutes.</b> Show Exhibit A at the top of the page. Ask whether Alaska is warming. Then press “Remove the seasons.”</li>
+          <li><b>Predict and test, 15 minutes.</b> In pairs, students open Case 001, make their call in step 1, and walk the four steps. Compare calls with the verdicts.</li>
+          <li><b>Spot the real one, 10 minutes.</b> Each pair plays two lineups and records how many fakes fooled the careless test.</li>
+          <li><b>Claim debate, 10 minutes.</b> Half the class picks years to support “Alaska stopped warming,” half to refute it, using Check a claim. Discuss what the robustness score says.</li>
+          <li><b>Exit ticket, 5 minutes.</b> In one sentence: why can the same record support opposite claims?</li>
+        </ol>
+      </div>
+      <div>
+        <h3>What students practice</h3>
+        <ul>
+          <li>Separating a slow trend from a repeating seasonal cycle.</li>
+          <li>Reading a p-value as “how often luck alone would do this,” and why neighboring months that resemble each other make careless p-values too small.</li>
+          <li>Telling the size of a change (a slope with a range) from the strength of the evidence.</li>
+          <li>Recognizing cherry-picked start and end years, and judging a claim across many reasonable analyses.</li>
+        </ul>
+        <h3>Questions to ask</h3>
+        <ul>
+          <li>Case 002: why does the raw record give p = 0.71 when the seasons-removed record gives a confirmed trend?</li>
+          <li>Case 001: what single process could push the same pollutant in opposite directions in two countries, and what evidence would test that idea?</li>
+          <li>The lineup: haze is confirmed by the main test but “falls over easily.” Which result should a news story report?</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="method">
+  <div class="wrap">
+    <h2>How the verdicts are reached</h2>
+    <div class="cols">
+      <div>
+        <h3>The routine</h3>
+        <ol>
+          <li>Average every measurement into monthly values. Months with fewer than ten valid satellite days would be dropped; none were.</li>
+          <li>Remove the seasons by subtracting each calendar month’s long-term average.</li>
+          <li>Measure the change with Sen’s slope: the median slope over every pair of months.</li>
+          <li>Test it with the Mann-Kendall test, which asks how often a later month beats an earlier one. With no trend that would be a coin flip.</li>
+          <li>Because neighboring months resemble each other, shrink the sample to an effective size using the lag-1 autocorrelation, then recompute the p-value and the range.</li>
+          <li>Get two second opinions. Hamed and Rao’s stricter correction (1998) uses every significant lag of memory, not just one. The seasonal Kendall test with Hirsch and Slack’s correction (1984) works on the raw record and compares each calendar month only with itself.</li>
+          <li>Find the turning point, if there is one: fit a line with a single bend at every possible month, keep the best, and estimate how sure we are of the bend with a block bootstrap that keeps the data’s memory.</li>
+          <li>Repeat the main test for every window of eight or more years to draw the map.</li>
+          <li>Score robustness with a multiverse analysis (Steegen and colleagues, 2016): every window of at least ten years and at least half the record, analyzed four defensible ways (the main test, Hamed and Rao, seasonal Kendall, and annual means). Because short windows lack the power to see small trends, we also report the result for windows long enough to catch a trend of that size.</li>
+          <li>Build the noise lineup: chop the record’s trend-free residuals into blocks long enough to keep their memory, shuffle the blocks, and deal eight fake records. This is the “lineup” method of visual inference from Buja and colleagues (2009).</li>
+        </ol>
+        <p class="small">The “careless” p-value on the map is an ordinary straight-line fit that ignores month-to-month memory. It is what many first attempts use, and it is shown here as the thing to distrust.</p>
+        <p class="small">“How long” uses the rule of thumb from Weatherhead and colleagues (1998): the years needed to catch a trend nine times out of ten depend on the noise, its memory and the size of the trend.</p>
+      </div>
+      <div>
+        <h3>What to keep in mind</h3>
+        <ul>
+          <li>Straight-line trends only, as the challenge asks. A curve, like China’s rise and fall, is described by splitting the record, not modeled.</li>
+          <li>The main memory correction uses only the first lag. The stricter Hamed and Rao version agrees with it on all nine records here.</li>
+          <li>Two popular shortcuts failed our checks, so we left them out. On land snow, trend-free pre-whitening and the uncorrected seasonal Kendall test gave p-values of 0.000004 and 0.00000001, against 0.26 from the careful test. Both treat strongly remembered noise as fresh evidence.</li>
+          <li>The month-by-month view runs twelve tests, so about one month could look significant by chance.</li>
+          <li>Hundreds of windows are tested on the map. Their p-values are not corrected for that, and a window chosen after looking is not a fair test. That is the point of the exercise.</li>
+          <li>MERRA-2 values are reanalysis: a model steered by observations, not direct measurements. Soil wetness and aerosols in particular depend on the model.</li>
+          <li>The OMI satellite’s coverage changed after 2007 because of a sensor problem known as the row anomaly. We did not adjust for it.</li>
+          <li>“No trend detected” means no trend larger than the stated size, not proof that nothing ever changes.</li>
+          <li>The case files are computed in Python before the page loads. Uploaded files and the noise lineup are analyzed in your browser with a JavaScript copy of the same methods, which we checked against Python on every raw Giovanni file used here. No AI model produces or alters any number.</li>
+        </ul>
+      </div>
+    </div>
+    <h3 style="font-size:1.4rem;margin:1rem 0 .6rem">Data used</h3>
+    <div class="scroll"><table class="cmp" id="dataTable"></table></div>
+  </div>
+</section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <p><b>TrendNoir</b> by team Signal Over Noise. Built for the 2026 NASA Space Apps Challenge, Seattle, in answer to “Be An Earth System Trend Detective!”</p>
+    <p>Data from NASA’s Giovanni portal at the GES DISC: OMI/Aura nitrogen dioxide and the MERRA-2 reanalysis from NASA’s Global Modeling and Assimilation Office. NASA does not endorse this project.</p>
+  </div>
+</footer>
+
+<script>
+(function(){
+'use strict';
+const D = __DATA__;
+const MINUS = '\u2212';
+const $ = (s,r)=> (r||document).querySelector(s);
+
+/* ---------- series text ---------- */
+const SM = {
+  no2_china:{label:'NO₂ over Eastern China',name:'Eastern China',measure:'Tropospheric NO₂ column',noun:'nitrogen dioxide pollution over Eastern China',
+    box:'112°E to 122°E, 30°N to 40°N',u:'×10¹⁵ molecules/cm²',up:'increased',down:'decreased',
+    def:'Nitrogen dioxide (NO₂) is a brownish gas released when fuel burns in vehicles, power plants and factories. The satellite measures how much of it sits in the column of air above the ground, so more NO₂ means more combustion pollution.',
+    source:'OMI instrument on NASA’s Aura satellite',kind:'Satellite observation',coll:'OMNO2d v4 (cloud-screened, 0.25°, daily, averaged to months)'},
+  no2_india:{label:'NO₂ over Northern India',name:'Northern India',measure:'Tropospheric NO₂ column',noun:'nitrogen dioxide pollution over Northern India',
+    box:'75°E to 88°E, 24°N to 31°N',u:'×10¹⁵ molecules/cm²',up:'increased',down:'decreased',
+    def:'The same gas, from the same satellite, over a different region. More NO₂ means more combustion pollution.',
+    source:'OMI instrument on NASA’s Aura satellite',kind:'Satellite observation',coll:'OMNO2d v4 (cloud-screened, 0.25°, daily, averaged to months)'},
+  t2m_alaska:{label:'Air temperature',name:'Interior Alaska',measure:'Air temperature at 2 meters',noun:'the air temperature in interior Alaska',
+    box:'156°W to 144°W, 62°N to 68°N',u:'°C',up:'warmed',down:'cooled',
+    def:'The air temperature about two meters above the ground, roughly what a weather-station thermometer reads. It comes from MERRA-2, NASA’s reanalysis: a weather model that is continually corrected with real observations.',
+    source:'MERRA-2, monthly',kind:'Reanalysis (model steered by observations)',coll:'M2TMNXSLV v5.12.4 (T2M)'},
+  precip_uscentral:{label:'Precipitation',name:'Central United States',measure:'Bias-corrected total precipitation',noun:'rainfall over the central United States',
+    box:'100°W to 90°W, 36°N to 44°N',u:'mm/day',up:'increased',down:'decreased',
+    def:'All the water that falls on the ground, with snow counted as its melted water, in millimeters per day. “Bias-corrected” means the model’s rainfall has been nudged toward gauge and satellite measurements.',
+    source:'MERRA-2, monthly',kind:'Reanalysis (model steered by observations)',coll:'M2TMNXFLX v5.12.4 (PRECTOTCORR)'},
+  precip_alaska:{label:'Precipitation',name:'Interior Alaska',measure:'Bias-corrected total precipitation',noun:'precipitation in interior Alaska',
+    box:'156°W to 144°W, 62°N to 68°N',u:'mm/day',up:'increased',down:'decreased',
+    def:'All the water that falls on the ground, with snow counted as its melted water, in millimeters per day.',
+    source:'MERRA-2, monthly',kind:'Reanalysis (model steered by observations)',coll:'M2TMNXFLX v5.12.4 (PRECTOTCORR)'},
+  snow_land_alaska:{label:'Land snow',name:'Interior Alaska',measure:'Total snow storage on land',noun:'snow on the ground in interior Alaska',
+    box:'156°W to 144°W, 62°N to 68°N',u:'kg/m²',up:'increased',down:'decreased',
+    def:'The weight of all the snow lying on the ground per square meter. Melted, 1 kg/m² equals 1 millimeter of water.',
+    source:'MERRA-2, monthly',kind:'Reanalysis (model steered by observations)',coll:'M2TMNXLND v5.12.4 (SNOMAS)'},
+  snow_glacier_alaska:{label:'Glacier snow',name:'Interior Alaska',measure:'Snow mass over glaciated surface',noun:'snow on glacier-covered ground in interior Alaska',
+    box:'156°W to 144°W, 62°N to 68°N',u:'kg/m²',up:'increased',down:'decreased',
+    def:'Snow weight on glacier-covered ground only. It is not the same thing as snow on ordinary land, and the two give different answers here.',
+    source:'MERRA-2, monthly',kind:'Reanalysis (model steered by observations)',coll:'M2TMNXGLC v5.12.4 (SNOMAS_GL)'},
+  soilwet_alaska:{label:'Soil wetness',name:'Interior Alaska',measure:'Root-zone soil wetness',noun:'the wetness of the soil in interior Alaska',
+    box:'156°W to 144°W, 62°N to 68°N',u:'on the 0 to 1 scale',up:'increased',down:'decreased',
+    def:'How full of water the soil is in the layer plant roots reach, from 0 (bone dry) to 1 (saturated). This is a model estimate, not a direct measurement.',
+    source:'MERRA-2, monthly',kind:'Reanalysis (model steered by observations)',coll:'M2TMNXLND v5.12.4 (GWETROOT)'},
+  aod_alaska:{label:'Haze (aerosols)',name:'Interior Alaska',measure:'Aerosol optical depth at 550 nm',noun:'the haze in the air over interior Alaska',
+    box:'156°W to 144°W, 62°N to 68°N',u:'AOD units',up:'increased',down:'decreased',
+    def:'How much haze (smoke, dust, particles) blocks sunlight. Roughly, 0.1 is clear sky and values above 0.4 are noticeably hazy. Smoke from wildfires is one common source of summer spikes.',
+    source:'MERRA-2, monthly',kind:'Reanalysis (model steered by observations)',coll:'M2TMNXAER v5.12.4 (TOTEXTTAU)'}
+};
+const CASES = [
+  {id:'c1',tab:'Case 001',title:'Two giants, opposite directions',series:['no2_china','no2_india'],
+   q:'The same satellite measures the same pollutant over Eastern China and Northern India. Both come from the same cause: burning fuel. Did the two move the same way between 2005 and 2025?'},
+  {id:'c2',tab:'Case 002',title:'The warming you can’t see',series:['t2m_alaska'],
+   q:'Air in interior Alaska swings by more than 30 °C every year. Is a slow warming hiding inside that swing, and can we prove it?'},
+  {id:'c3',tab:'Case 003',title:'The phantom trend',series:['precip_uscentral'],
+   q:'Rainfall over the central United States wobbles from year to year. Is it getting wetter or drier, or does it only look that way when you choose the right years?'}
+];
+const STEPS = ['Pull the record','Remove the seasons','Measure the change','Test the evidence'];
+const STAMP = {'CONFIRMED':{t:'Confirmed',cool:false},'UNSTEADY':{t:'Unsteady',cool:false},'WEAK':{t:'Weak evidence',cool:false},
+  'INCONCLUSIVE':{t:'Inconclusive',cool:true},'NO TREND DETECTED':{t:'No trend detected',cool:true}};
+const TIER = {'CONFIRMED':0,'UNSTEADY':1,'WEAK':2,'INCONCLUSIVE':3,'NO TREND DETECTED':4};
+
+/* ---------- prepare ---------- */
+const LOG05 = Math.log10(0.05);
+function median(a){const b=Float64Array.from(a).sort();const m=b.length>>1;return b.length%2?b[m]:(b[m-1]+b[m])/2;}
+function prepareSeries(k,meta){
+  const s=D[k]; Object.assign(s,meta||SM[k]);
+  s.cells=s.grid.map(r=>({a:r[0],b:r[1],sl:r[2],lc:r[3],ln:r[4]}));
+  s.cmap=new Map(s.cells.map(c=>[c.a*10000+c.b,c]));
+  const abs=s.cells.map(c=>Math.abs(c.sl)).sort((x,y)=>x-y);
+  s.smax=abs[Math.floor(abs.length*0.95)]||1;
+  s.des=s.stats.des; s.rawS=s.stats.raw;
+  s.years=s.y1-s.y0+1;
+}
+Object.keys(D).forEach(k=>prepareSeries(k));
+
+/* ---------- formatting ---------- */
+function nf(v,sig){sig=sig||2;if(v===0)return '0';const a=Math.abs(v);const d=Math.max(0,sig-1-Math.floor(Math.log10(a)));return a.toFixed(Math.min(d,6));}
+function sg(v,sig){return (v<0?MINUS:'+')+nf(v,sig);}
+function pv(lp){return Math.pow(10,lp);}
+function pEq(lp){return lp<=-15?'p &lt; 10<sup>'+MINUS+'15</sup>':'p = '+pHTML(lp);}
+function pHTML(lp){if(lp<=-15)return '10<sup>'+MINUS+'15</sup>';const p=pv(lp);if(p>=0.01)return p.toFixed(2);if(p>=0.001)return p.toFixed(3);
+  let e=Math.floor(lp),m=Math.pow(10,lp-e);m=Math.round(m);if(m===10){m=1;e+=1;}return m+'×10<sup>'+String(e).replace('-',MINUS)+'</sup>';}
+function luck(lp){const p=pv(lp);
+  if(p>=0.01)return 'about '+(p>=0.1?Math.round(p*100):(p*100).toFixed(1))+'% of the time';
+  if(p<1e-6)return 'less than 1 time in a million';
+  const n=Number((1/p).toPrecision(2));return 'about 1 time in '+n.toLocaleString('en-US');}
+function dirWord(s,v){return v>=0?s.up:s.down;}
+function delta(s,v){return sg(v)+' '+s.u+' per decade';}
+function pct(s,v){return s.pct?(sg(v/s.mean*100)+'% of the average'):'';}
+function range(s,lo,hi){return sg(lo)+' to '+sg(hi);}
+function rangeAnd(s,lo,hi){return sg(lo)+' and '+sg(hi);}
+function esc(t){return String(t).replace(/[&<>]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]));}
+
+/* ---------- charts ---------- */
+const RO = new ResizeObserver(es=>{es.forEach(e=>{const h=e.target;const w=Math.floor(e.contentRect.width);if(h._draw&&Math.abs((h._w||0)-w)>1)h._draw();});});
+function mount(host,fn){host._draw=fn;RO.observe(host);fn();}
+function niceTicks(min,max,count){const span=max-min;const s0=span/count;const mag=Math.pow(10,Math.floor(Math.log10(s0)));const er=s0/mag;
+  const step=(er>=7.5?10:er>=3.5?5:er>=1.5?2:1)*mag;const out=[];for(let v=Math.ceil(min/step)*step;v<=max+1e-9;v+=step)out.push(+v.toPrecision(12));return {ticks:out,step:step};}
+function tl(v,step){const d=Math.max(0,-Math.floor(Math.log10(step)+1e-9));return v.toFixed(d).replace('-',MINUS);}
+function drawChart(host){
+  const o=host._o;const W=Math.floor(host.clientWidth);if(!W)return;host._w=W;
+  const H=o.h||230,m=o.mini?{l:3,r:3,t:5,b:5}:{l:o.ml||48,r:12,t:20,b:26},pw=W-m.l-m.r,ph=H-m.t-m.b,n=o.n,xm=n-1;
+  let lo=Infinity,hi=-Infinity;
+  o.layers.forEach(L=>L.y.forEach(v=>{if(v<lo)lo=v;if(v>hi)hi=v;}));
+  (o.extra||[]).forEach(v=>{lo=Math.min(lo,v);hi=Math.max(hi,v);});
+  if(o.zero){lo=Math.min(lo,0);hi=Math.max(hi,0);}
+  if(o.ylim){lo=o.ylim[0];hi=o.ylim[1];}else{const pad=(hi-lo)*0.07||1;lo-=pad;hi+=pad;}
+  const X=i=>m.l+i/xm*pw,Y=v=>m.t+(1-(v-lo)/(hi-lo))*ph;
+  const nt=niceTicks(lo,hi,Math.max(3,Math.round(ph/46)));
+  let g='';
+  if(!o.mini){
+  nt.ticks.forEach(v=>{const y=Y(v).toFixed(1);g+=`<line class="gl" x1="${m.l}" x2="${W-m.r}" y1="${y}" y2="${y}"/><text x="${m.l-7}" y="${(+y+4).toFixed(1)}" text-anchor="end">${tl(v,nt.step)}</text>`;});
+  const yrs=n/12;const ys=[1,2,5,10,20].find(k=>yrs/k<=7)||20;
+  for(let y=o.y0;y<=o.y0+yrs;y+=ys){const i=(y-o.y0)*12;if(i>xm+0.5)break;g+=`<text x="${X(Math.min(i,xm)).toFixed(1)}" y="${H-7}" text-anchor="middle">${y}</text>`;}
+  if(o.zero)g+=`<line class="zero" x1="${m.l}" x2="${W-m.r}" y1="${Y(0).toFixed(1)}" y2="${Y(0).toFixed(1)}"/>`;
+  g+=`<text x="${m.l}" y="11" text-anchor="start">${esc(o.unit||'')}</text>`;
+  }else if(o.zero){g+=`<line class="zero" x1="${m.l}" x2="${W-m.r}" y1="${Y(0).toFixed(1)}" y2="${Y(0).toFixed(1)}"/>`;}
+  (o.shade||[]).forEach(s=>{g+=`<rect class="shade" x="${X(s.i0).toFixed(1)}" y="${m.t}" width="${(X(s.i1)-X(s.i0)).toFixed(1)}" height="${ph}"/>`;});
+  if(o.fan){const f=o.fan;g+=`<polygon class="fan ${f.cls}" points="${X(f.i0).toFixed(1)},${Y(f.a0).toFixed(1)} ${X(f.i1).toFixed(1)},${Y(f.a1).toFixed(1)} ${X(f.i1).toFixed(1)},${Y(f.b1).toFixed(1)} ${X(f.i0).toFixed(1)},${Y(f.b0).toFixed(1)}"/>`;}
+  o.layers.forEach(L=>{const x0=L.x0||0;let d='';for(let i=0;i<L.y.length;i++)d+=(i?'L':'M')+X(x0+i).toFixed(1)+' '+Y(L.y[i]).toFixed(1);g+=`<path class="ln ${L.cls}" d="${d}"/>`;});
+  (o.segs||[]).forEach(t=>{g+=`<path class="trend ${t.cls}${o.anim?' draw':''}" pathLength="1" d="M${X(t.i0).toFixed(1)} ${Y(t.v0).toFixed(1)}L${X(t.i1).toFixed(1)} ${Y(t.v1).toFixed(1)}"/>`;});
+  if(o.trend){const t=o.trend;g+=`<path class="trend ${t.cls}${o.anim?' draw':''}" pathLength="1" d="M${X(t.i0).toFixed(1)} ${Y(t.v0).toFixed(1)}L${X(t.i1).toFixed(1)} ${Y(t.v1).toFixed(1)}"/>`;}
+  host.innerHTML=`<svg width="${W}" height="${H}" viewBox="0 0 ${W} ${H}" role="img" aria-label="${esc(o.aria||'Time series chart')}">${g}</svg>`;
+}
+function chart(host,o){host._o=o;mount(host,()=>drawChart(host));}
+/* ---------- morphing chart: raw record, seasons removed, trend drawn ---------- */
+function morph(host,s,state0){host._mo=Object.assign({s:s,t:0,tr:0,fan:0},state0||{});host.classList.add('chart');mount(host,()=>drawMorph(host));}
+function morphDomains(s){if(s._md)return s._md;let a=Infinity,b=-Infinity;s.raw.forEach(v=>{if(v<a)a=v;if(v>b)b=v;});
+  const n=s.n,sm=s.des.slope_dec/120,v0=fitLine(s.anom,0,n-1,sm),piv=(n-1)/2,vm=v0+sm*piv,lo=s.des.lo_dec/120,hi=s.des.hi_dec/120;
+  const fan=[vm+lo*(0-piv),vm+lo*(n-1-piv),vm+hi*(0-piv),vm+hi*(n-1-piv)];let c=0,d=0;s.anom.concat(fan).forEach(v=>{if(v<c)c=v;if(v>d)d=v;});
+  const p1=(b-a)*.07,p2=(d-c)*.07;s._md={raw:[a-p1,b+p1],an:[c-p2,d+p2],v0:v0,sm:sm,piv:piv,vm:vm,lo:lo,hi:hi};return s._md;}
+function drawMorph(host){
+  const o=host._mo,s=o.s,W=Math.floor(host.clientWidth);if(!W)return;host._w=W;
+  const H=host.dataset.h?+host.dataset.h:240,m={l:48,r:12,t:20,b:26},pw=W-m.l-m.r,ph=H-m.t-m.b,n=s.n,xm=n-1,M=morphDomains(s),t=o.t;
+  const lo=M.raw[0]+(M.an[0]-M.raw[0])*t,hi=M.raw[1]+(M.an[1]-M.raw[1])*t,X=i=>m.l+i/xm*pw,Y=v=>m.t+(1-(v-lo)/(hi-lo))*ph,nt=niceTicks(lo,hi,Math.max(3,Math.round(ph/46)));
+  let g='';nt.ticks.forEach(v=>{const y=Y(v).toFixed(1);g+=`<line class="gl" x1="${m.l}" x2="${W-m.r}" y1="${y}" y2="${y}"/><text x="${m.l-7}" y="${(+y+4).toFixed(1)}" text-anchor="end">${tl(v,nt.step)}</text>`;});
+  const yrs=n/12,ys=[1,2,5,10,20].find(k=>yrs/k<=7)||20;for(let y=s.y0;y<=s.y0+yrs;y+=ys){const i=(y-s.y0)*12;if(i>xm+.5)break;g+=`<text x="${X(Math.min(i,xm)).toFixed(1)}" y="${H-7}" text-anchor="middle">${y}</text>`;}
+  if(t>0.02&&lo<0&&hi>0)g+=`<line class="zero" style="opacity:${t.toFixed(2)}" x1="${m.l}" x2="${W-m.r}" y1="${Y(0).toFixed(1)}" y2="${Y(0).toFixed(1)}"/>`;
+  g+=`<text x="${m.l}" y="11" text-anchor="start">${esc(t<0.5?s.u:s.u+' above or below normal')}</text>`;
+  const cls=s.des.slope_dec>=0?'up':'down';
+  if(o.fan>0.01){const P=i=>M.vm+M.lo*(i-M.piv),Q=i=>M.vm+M.hi*(i-M.piv);g+=`<polygon class="fan ${cls}" style="opacity:${(0.2*o.fan).toFixed(3)}" points="${X(0).toFixed(1)},${Y(P(0)).toFixed(1)} ${X(xm).toFixed(1)},${Y(P(xm)).toFixed(1)} ${X(xm).toFixed(1)},${Y(Q(xm)).toFixed(1)} ${X(0).toFixed(1)},${Y(Q(0)).toFixed(1)}"/>`;}
+  let d='';for(let i=0;i<n;i++)d+=(i?'L':'M')+X(i).toFixed(1)+' '+Y(s.anom[i]+(1-t)*s.clim[i%12]).toFixed(1);
+  g+=`<path class="ln ${t>0.5?'anom':'raw'}" d="${d}"/>`;
+  if(o.tr>0.01){const i1=xm*o.tr;g+=`<path class="trend ${cls}" d="M${X(0).toFixed(1)} ${Y(M.v0).toFixed(1)}L${X(i1).toFixed(1)} ${Y(M.v0+M.sm*i1).toFixed(1)}"/>`;}
+  host.innerHTML=`<svg width="${W}" height="${H}" viewBox="0 0 ${W} ${H}" role="img" aria-label="${esc(s.measure+' for '+s.name+(t>0.5?', seasons removed':', raw monthly record'))}">${g}</svg>`;
+}
+const REDUCE=window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+function animateMorph(host,target,dur,done){
+  if(!host||!host._mo)return;cancelAnimationFrame(host._raf);
+  if(REDUCE||!dur){Object.assign(host._mo,target);drawMorph(host);if(done)done();return;}
+  const st=Object.assign({},host._mo),t0=performance.now(),ease=x=>x<.5?4*x*x*x:1-Math.pow(-2*x+2,3)/2;
+  const step=now=>{const k=Math.min(1,(now-t0)/dur),e=ease(k);for(const key in target)host._mo[key]=st[key]+(target[key]-st[key])*e;drawMorph(host);
+    if(k<1)host._raf=requestAnimationFrame(step);else if(done)done();};host._raf=requestAnimationFrame(step);}
+function goMorph(host,target){
+  const cur=host&&host._mo;if(!cur)return;
+  if(target.tr>0&&cur.t<0.999)animateMorph(host,{t:1,tr:0,fan:0},1100,()=>animateMorph(host,{tr:1,fan:1},800));
+  else if(target.t<0.999&&cur.tr>0.001)animateMorph(host,{tr:0,fan:0},350,()=>animateMorph(host,target,1100));
+  else animateMorph(host,target,target.tr>0?800:1100);
+}
+const STEP_TARGET={1:{t:0,tr:0,fan:0},2:{t:1,tr:0,fan:0},3:{t:1,tr:1,fan:1},4:{t:1,tr:1,fan:1}};
+
+function fitLine(arr,i0,i1,slopeM){const r=[];for(let i=i0;i<=i1;i++)r.push(arr[i]-slopeM*(i-i0));return median(r);}
+function trendObj(s,i0,i1,slopeDec){const sm=slopeDec/120;const v0=fitLine(s.anom,i0,i1,sm);return {i0:i0,i1:i1,v0:v0,v1:v0+sm*(i1-i0),cls:slopeDec>=0?'up':'down'};}
+
+/* ---------- in-browser statistics (used only for the noise lineup) ---------- */
+function erfc(x){const z=Math.abs(x),t=1/(1+0.5*z);
+  const r=t*Math.exp(-z*z-1.26551223+t*(1.00002368+t*(0.37409196+t*(0.09678418+t*(-0.18628806+t*(0.27886807+t*(-1.13520398+t*(1.48851587+t*(-0.82215223+t*0.17087277)))))))));
+  return x>=0?r:2-r;}
+function p2(z){return erfc(Math.abs(z)/Math.SQRT2);}
+function corr1(a){const n=a.length;let mx=0,my=0;for(let i=0;i<n-1;i++){mx+=a[i];my+=a[i+1];}mx/=n-1;my/=n-1;
+  let sxy=0,sxx=0,syy=0;for(let i=0;i<n-1;i++){const dx=a[i]-mx,dy=a[i+1]-my;sxy+=dx*dy;sxx+=dx*dx;syy+=dy*dy;}return sxy/Math.sqrt(sxx*syy);}
+function qmedian(arr,len){
+  function sel(k){let lo=0,hi=len-1;for(;;){if(lo>=hi)return arr[lo];const pv0=arr[(lo+hi)>>1];let i=lo,j=hi;
+    while(i<=j){while(arr[i]<pv0)i++;while(arr[j]>pv0)j--;if(i<=j){const tt=arr[i];arr[i]=arr[j];arr[j]=tt;i++;j--;}}
+    if(k<=j)hi=j;else if(k>=i)lo=i;else return arr[k];}}
+  if(len%2)return sel((len-1)/2);const a=sel(len/2-1);let b=Infinity;for(let i=len/2;i<len;i++)if(arr[i]<b)b=arr[i];return (a+b)/2;}
+function tieTerm(y){const srt=Float64Array.from(y).sort();let tie=0;for(let i=0;i<srt.length;){let j=i;while(j<srt.length&&srt[j]===srt[i])j++;const c=j-i;if(c>1)tie+=c*(c-1)*(2*c+5);i=j;}return tie;}
+function mkCore(y,ci){
+  const n=y.length,N=n*(n-1)/2,sl=new Float64Array(N);let S=0,q=0;
+  for(let i=0;i<n-1;i++){const yi=y[i];for(let j=i+1;j<n;j++){const d=y[j]-yi;S+=d>0?1:d<0?-1:0;sl[q++]=d/(j-i);}}
+  const v=(n*(n-1)*(2*n+5)-tieTerm(y))/18;let slope;
+  if(ci){sl.sort();slope=N%2?sl[(N-1)/2]:(sl[N/2-1]+sl[N/2])/2;}else slope=qmedian(sl,N);
+  const res=new Float64Array(n);for(let i=0;i<n;i++)res[i]=y[i]-slope*i;const md=median(res);let ss=0,mu=0;
+  for(let i=0;i<n;i++){res[i]-=md;mu+=res[i];}mu/=n;for(let i=0;i<n;i++)ss+=(res[i]-mu)*(res[i]-mu);
+  const r1=Math.max(0,corr1(res)),neff=n*(1-r1)/(1+r1),vc=v*n/neff,z=S===0?0:(S-Math.sign(S))/Math.sqrt(vc);
+  const out={slope:slope,p:p2(z),r1:r1,n_eff:neff,resid_sd:Math.sqrt(ss/n),S:S,v:v};
+  if(ci){const C=1.96*Math.sqrt(vc);out.lo=sl[Math.max(Math.floor((N-C)/2),0)];out.hi=sl[Math.min(Math.ceil((N+C)/2),N-1)];}
+  return out;}
+function mkESS(y){return mkCore(y,false);}
+function olsP(y){const n=y.length;let mt=(n-1)/2,my=0;for(const v of y)my+=v;my/=n;let sxy=0,sxx=0;
+  for(let i=0;i<n;i++){sxy+=(i-mt)*(y[i]-my);sxx+=(i-mt)*(i-mt);}const b=sxy/sxx;let sse=0;for(let i=0;i<n;i++){const e=y[i]-my-b*(i-mt);sse+=e*e;}
+  const se=Math.sqrt(sse/(n-2)/sxx);return {slope:b,p:p2(b/se)};}
+function rng(seed){let a=seed>>>0;return ()=>{a=a+0x6D2B79F5|0;let t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296;};}
+function hashStr(s){let h=2166136261;for(const c of s){h^=c.charCodeAt(0);h=Math.imul(h,16777619);}return h>>>0;}
+function makeDecoys(s,seed,k){
+  const n=s.n,sm=s.des.slope_dec/120,v0=fitLine(s.anom,0,n-1,sm),res=s.anom.map((v,i)=>v-(v0+sm*i));
+  const phi=Math.max(0,s.des.r1),L=Math.min(60,Math.max(3,Math.round(2*(1+phi)/(1-phi))));
+  const R=rng(seed),out=[];
+  for(let d=0;d<k;d++){const y=new Array(n);let i=0;while(i<n){const st=Math.floor(R()*n);for(let j=0;j<L&&i<n;j++,i++)y[i]=res[(st+j)%n];}out.push(y);}
+  return {decoys:out,block:L};}
+
+/* ---------- state ---------- */
+const state={caseId:'c1',step:1,win:null,fooled:null,custom:null};
+function curCase(){return state.custom||CASES.find(c=>c.id===state.caseId);}
+function seriesOf(c){return c.series.map(k=>D[k]);}
+
+/* ---------- hero ---------- */
+const hero={mode:'raw'};
+function heroText(){
+  const s=D.t2m_alaska;
+  if(hero.mode==='raw'){$('#heroRead').innerHTML='Seasons swing the temperature by about <b>'+nf(s.stats.season_range,2)+' °C</b> every year. Any slow change hides behind that wave. The careful trend test on this line says '+pEq(s.rawS.lp)+': nothing to see.';$('#heroBtn').textContent='Remove the seasons';}
+  else{$('#heroRead').innerHTML='With the seasons gone, a steady climb appears: <b>'+delta(s,s.des.slope_dec)+'</b>, likely between '+rangeAnd(s,s.des.lo_dec,s.des.hi_dec)+'. The same test now says '+pEq(s.des.lp)+'.';$('#heroBtn').textContent='Put the seasons back';}
+}
+function drawHero(anim){
+  const s=D.t2m_alaska,host=$('#heroChart');host.dataset.h='250';
+  $('#heroCap').textContent=s.measure+', one average per month, '+s.y0+' to '+s.y1+'.';
+  if(!host._mo)morph(host,s);
+  if(anim)goMorph(host,hero.mode==='raw'?STEP_TARGET[1]:STEP_TARGET[3]);
+  heroText();
+}
+
+/* ---------- verdict text ---------- */
+function verdictText(s){
+  const d=s.des,v=s.stats.verdict,h=s.stats.half;
+  const base='Since '+s.y0+', '+s.noun+' has '+dirWord(s,d.slope_dec)+' by about '+nf(Math.abs(d.slope_dec))+' '+s.u+' per decade (likely between '+rangeAnd(s,d.lo_dec,d.hi_dec)+'). ';
+  const lk='If nothing were really changing, luck alone would produce a pattern this strong '+luck(d.lp)+'. ';
+  const halves='The first half of the record shows '+sg(h.first.slope_dec)+' per decade and the second half '+sg(h.second.slope_dec)+'. ';
+  if(v==='CONFIRMED')return base+lk+'Both halves of the record agree on the direction. <b>Verdict: a real trend.</b>';
+  if(v==='UNSTEADY')return base+lk+'But the trend is not steady. '+halves+(pv(d.lp)>=0.01?'The evidence is also thin. ':'')+'<b>Verdict: something changed, but not as one simple line.</b>';
+  if(v==='WEAK')return base+lk+'<b>Verdict: a hint of a trend, nothing more.</b>';
+  if(v==='INCONCLUSIVE')return 'The record leans '+(d.slope_dec>=0?'upward':'downward')+' ('+delta(s,d.slope_dec)+'), but the plausible range ('+range(s,d.lo_dec,d.hi_dec)+') includes zero. Luck alone would produce a pattern this strong '+luck(d.lp)+', which is not rare enough. <b>Verdict: can’t tell yet.</b>';
+  return 'The estimated change is essentially zero ('+delta(s,d.slope_dec)+', range '+range(s,d.lo_dec,d.hi_dec)+'). A record this long could catch any trend bigger than about '+nf(s.detect.min_detect_dec)+' '+s.u+' per decade, and none showed up. <b>Verdict: no trend detected.</b> That is not proof that nothing ever changes.';
+}
+
+/* ---------- step 4 extras ---------- */
+const MONF=['January','February','March','April','May','June','July','August','September','October','November','December'];
+function joinList(a){return a.length<2?a.join(''):a.slice(0,-1).join(', ')+' and '+a[a.length-1];}
+function extrasHTML(s){
+  const ex=s.extra,hg=ex.hinge;let h='';
+  if(s.stats.verdict==='UNSTEADY'){
+    if(hg.clear)h+=`<p class="label">Where does the line bend?</p><div class="chart" id="ch-${s.key}-h" role="img"></div><p class="note">The best single bend is around <b>${Math.floor(hg.year)}</b> (likely between ${Math.floor(hg.lo)} and ${Math.floor(hg.hi)}). Before it: ${delta(s,hg.before_dec)}. After it: ${delta(s,hg.after_dec)}.</p>`;
+    else h+=`<p class="note">Is there one clear turning point? No. The best bend could sit anywhere from ${Math.floor(hg.lo)} to ${Math.floor(hg.hi)}.</p>`;
+  }
+  const ops=[['Main test','Mann-Kendall, corrected for memory between neighboring months',s.des.lp],
+    ['Stricter memory check','Hamed and Rao’s correction, using every significant lag',ex.hr.lp],
+    ['Month by month','Seasonal Kendall on the raw record, each calendar month compared only with itself',ex.hs.lp]];
+  const ns=ops.filter(o=>pv(o[2])<0.05).length;
+  h+=`<p class="label">Second opinions</p><div class="scroll"><table class="cmp ops"><tbody>`+ops.map(o=>`<tr><th><b>${o[0]}</b><br><span class="muted small">${o[1]}</span></th><td class="num">${pEq(o[2])}<br>${pv(o[2])<0.05?'<span class="badge yes">significant</span>':'<span class="badge no">not significant</span>'}</td></tr>`).join('')+`</tbody></table></div>`;
+  let sum=ns===3?'All three tests agree: significant.':ns===0?'All three tests agree: not significant.':ns+' of 3 tests call it significant.';
+  const mainSig=pv(s.des.lp)<0.05,hsSig=pv(ex.hs.lp)<0.05;
+  if(!mainSig&&hsSig){const sgn=Math.sign(ex.hs.slope_dec);const list=ex.months.map((x,i)=>[x,i]).filter(z=>z[0][1]<LOG05&&Math.sign(z[0][0])===sgn).map(z=>MONF[z[1]]);
+    sum+=` The year as a whole shows no clear trend, but ${list.length?joinList(list):'some months'} show a steady ${sgn<0?'decline':'rise'} on their own. The change may be hiding in one part of the year.`;}
+  else if(mainSig&&!hsSig)sum+=' The month-by-month test is less sure, so the change is not equally clear in every season.';
+  h+=`<p class="note">${sum}</p><p class="label">When in the year?</p><div class="cal" id="cal-${s.key}" role="img" aria-label="Trend for each calendar month"></div>
+  <p class="note small muted">Each bar is the trend of one calendar month on its own, per decade. Solid bars pass the test; with twelve months tested, about one could pass by chance.</p>`;
+  return h;
+}
+function drawCal(host){
+  const s=host._s,W=Math.floor(host.clientWidth);if(!W)return;host._w=W;
+  const H=118,m={l:4,r:4,t:8,b:20},pw=W-m.l-m.r,ph=H-m.t-m.b,ms=s.extra.months,mx=Math.max.apply(null,ms.map(x=>Math.abs(x[0])))||1,bw=pw/12,y0=m.t+ph/2;
+  let g=`<line x1="${m.l}" x2="${W-m.r}" y1="${y0}" y2="${y0}" style="stroke:var(--ink-soft);stroke-dasharray:3 4"/>`;
+  ms.forEach((x,i)=>{const hh=Math.max(1,Math.abs(x[0])/mx*(ph/2)),up=x[0]>=0,sig=x[1]<LOG05,y=up?y0-hh:y0;
+    g+=`<rect x="${(m.l+i*bw+bw*.2).toFixed(1)}" y="${y.toFixed(1)}" width="${(bw*.6).toFixed(1)}" height="${hh.toFixed(1)}" style="fill:var(${up?'--up':'--down'});fill-opacity:${sig?1:.28}"><title>${MONF[i]}: ${sg(x[0])} ${s.u} per decade, p = ${pv(x[1]).toFixed(3)}</title></rect><text x="${(m.l+i*bw+bw/2).toFixed(1)}" y="${H-5}" text-anchor="middle">${MONF[i].slice(0,3)}</text>`;});
+  host.innerHTML=`<svg width="${W}" height="${H}" viewBox="0 0 ${W} ${H}">${g}</svg>`;
+}
+
+/* ---------- case view ---------- */
+function renderTabs(){
+  const t=$('#tabs');let h='';
+  CASES.forEach(c=>{h+=`<button class="tab" role="tab" data-case="${c.id}" aria-selected="${!state.custom&&state.caseId===c.id}">${c.tab}</button>`;});
+  if(state.custom)h+=`<button class="tab" role="tab" aria-selected="true">${esc(state.custom.tab||'Interrogation')}</button>`;
+  t.innerHTML=h;
+}
+function stepperHTML(){
+  let h=`<ol class="stepper" aria-label="Investigation steps">`;
+  STEPS.forEach((tx,i)=>{h+=`<li><button type="button" data-step="${i+1}" ${state.step===i+1?'aria-current="step"':''} class="${state.step>i+1?'done':''}"><span class="num">${i+1}</span><span>${tx}</span></button></li>`;});
+  h+=`</ol><div class="stepnav"><button class="btn ghost" id="prev" type="button" ${state.step===1?'disabled':''}>Back</button>
+  ${state.step<4?'<button class="btn" id="next" type="button">Next clue</button>':'<a class="btn" href="#trap">Try to break it</a>'}</div>`;return h;}
+function renderCase(){
+  const c=curCase(),ss=seriesOf(c);
+  let h=`<div class="casehead"><h3>${esc(c.title)}</h3><p class="intro">${esc(c.q)}</p></div><div id="stepperBox">${stepperHTML()}</div><div id="cmpBox"></div><div class="sheets ${ss.length>1?'two':''}" id="sheets">`;
+  ss.forEach(s=>{h+=`<article class="sheet">${sheetHead(s)}<div class="mchart" id="mc-${s.key}"></div><div id="st-${s.key}"></div></article>`;});
+  $('#caseView').innerHTML=h+'</div>';
+  ss.forEach(s=>morph($('#mc-'+s.key),s,STEP_TARGET[state.step]));
+  fillSteps();
+}
+function setStep(n){
+  state.step=n;$('#stepperBox').innerHTML=stepperHTML();
+  seriesOf(curCase()).forEach(s=>goMorph($('#mc-'+s.key),STEP_TARGET[n]));
+  fillSteps();
+}
+function sheetHead(s){return `<h4>${esc(s.name)}</h4><p class="where">${esc(s.measure)}, ${s.y0} to ${s.y1}. ${esc(s.box)}.</p>`;}
+function fillSteps(){
+  const c=curCase(),ss=seriesOf(c),step=state.step;
+  $('#cmpBox').innerHTML=step===1?predHTML(c,ss):step===4?predResult(c,ss)+compareHTML(ss):'';
+  ss.forEach(s=>{let h='';
+    if(step===1){h=`<div class="def" style="margin-top:.8rem"><b>What is it?</b> ${esc(s.def)}</div><p class="note">${s.n} months, one average per month. Source: ${esc(s.source)} (${esc(s.kind.toLowerCase())}).</p>`;}
+    else if(step===2){const tot=Math.abs(s.des.slope_dec)*s.years/10,ratio=s.stats.season_range/(tot||1e-9);
+      h=`<p class="note">Each calendar month’s normal value has been subtracted. What’s left is how unusual each month was.</p>`+(ratio>=2
+        ?`<p class="note">Here the seasons swing ${nf(s.stats.season_range)} ${esc(s.u)}. The whole change estimated over ${s.years} years is ${nf(tot)}. The seasons are ${ratio>100?'more than 100':'about '+nf(ratio,2)} times bigger, which is why the raw line can hide a trend.</p>`
+        :`<p class="note">Here the seasons swing only ${nf(s.stats.season_range)} ${esc(s.u)}, small next to the month-to-month noise. Removing them changes little. A detective checks before assuming.</p>`)
+        +`<button class="btn ghost replay" type="button" data-replay="${s.key}">Watch the seasons fall away again</button>`;}
+    else if(step===3){h=`<div class="bignum ${s.des.slope_dec>=0?'up':'down'}">${delta(s,s.des.slope_dec)}</div>
+      <p class="note">Likely between ${rangeAnd(s,s.des.lo_dec,s.des.hi_dec)} per decade${s.pct?' ('+pct(s,s.des.slope_dec)+')':''}. A typical month strays about ${nf(s.stats.resid_sd)} ${esc(s.u)} from the line.</p>
+      <p class="note muted small">The line is Sen’s slope: draw a line between every pair of months and take the middle slope. A few freak months can’t drag it around. The shaded fan is the range of slopes that fit the data well.</p>`;}
+    else{const st=STAMP[s.stats.verdict];
+      h=`<div class="stampwrap"><span class="stamp slam ${st.cool?'cool':''}">${st.t}</span></div>
+      <p class="verdict-sentence">${verdictText(s)}</p>${robLine(s)}
+      <div class="scroll"><table class="cmp"><thead><tr><th></th><th>Change per decade</th><th>Careful test</th><th>Careless test</th></tr></thead><tbody>
+      <tr><th>Seasons left in</th><td class="num">${sg(s.rawS.slope_dec)}<br><span class="muted small">${range(s,s.rawS.lo_dec,s.rawS.hi_dec)}</span></td><td class="num">${pEq(s.rawS.lp)}<br>${pv(s.rawS.lp)<0.05?'<span class="badge yes">significant</span>':'<span class="badge no">not significant</span>'}</td><td class="num">${pEq(s.rawS.lp_naive)}<br>${pv(s.rawS.lp_naive)<0.05?'<span class="badge yes">significant</span>':'<span class="badge no">not significant</span>'}</td></tr>
+      <tr><th>Seasons removed</th><td class="num">${sg(s.des.slope_dec)}<br><span class="muted small">${range(s,s.des.lo_dec,s.des.hi_dec)}</span></td><td class="num">${pEq(s.des.lp)}<br>${pv(s.des.lp)<0.05?'<span class="badge yes">significant</span>':'<span class="badge no">not significant</span>'}</td><td class="num">${pEq(s.des.lp_naive)}<br>${pv(s.des.lp_naive)<0.05?'<span class="badge yes">significant</span>':'<span class="badge no">not significant</span>'}</td></tr>
+      </tbody></table></div>
+      ${extrasHTML(s)}
+      <p class="note small muted">The p-value is how often luck alone would produce a pattern this strong. Below 0.05 is the usual bar for “significant.” The careless test treats every month as independent news. Neighboring months actually resemble each other (correlation ${s.des.r1.toFixed(2)}), so these ${s.n} months carry the weight of only about ${s.des.n_eff} independent ones. The careful test accounts for that.</p>`;}
+    $('#st-'+s.key).innerHTML=h;
+    if(step===4){const n=s.n,cal=$('#cal-'+s.key);if(cal){cal._s=s;mount(cal,()=>drawCal(cal));}
+      const hc=$('#ch-'+s.key+'-h');if(hc){const hg=s.extra.hinge;
+        chart(hc,{n:n,y0:s.y0,unit:s.u+' above or below normal',zero:true,h:190,anim:true,layers:[{y:s.anom,cls:'faint'}],
+          shade:[{i0:Math.max(0,(hg.lo-s.y0)*12),i1:Math.min(n-1,(hg.hi-s.y0)*12)}],
+          segs:[{i0:0,i1:hg.k,v0:hg.v0,v1:hg.vk,cls:hg.before_dec>=0?'up':'down'},{i0:hg.k,i1:n-1,v0:hg.vk,v1:hg.vn,cls:hg.after_dec>=0?'up':'down'}],
+          aria:'Two-segment line showing where the trend bends'});}}
+  });
+}
+
+/* ---------- trap detector ---------- */
+function winCell(s,a,b){return s.cmap.get(a*10000+b);}
+function badge(lp){return pv(lp)<0.05?'<span class="badge yes">looks significant</span>':'<span class="badge no">not significant</span>';}
+function setupSliders(){
+  const c=curCase(),s0=D[c.series[0]];
+  const A=$('#rngA'),B=$('#rngB');A.min=B.min=s0.y0;A.max=B.max=s0.y1;
+  state.win={a:s0.y0,b:s0.y1};state.fooled=null;$('#fooledNote').innerHTML='';
+}
+function syncSliders(){const w=state.win;$('#rngA').value=w.a;$('#rngB').value=w.b;$('#outA').textContent=w.a;$('#outB').textContent=w.b;}
+function setWin(a,b,keep){
+  const s0=D[curCase().series[0]];
+  a=Math.max(s0.y0,Math.min(a,s0.y1-7));b=Math.min(s0.y1,Math.max(b,a+7));
+  state.win={a:a,b:b};if(!keep)state.fooled=null;syncSliders();renderTrapDyn();
+}
+function renderTrapBlocks(){
+  const c=curCase(),ss=seriesOf(c);let h='';
+  ss.forEach(s=>{h+=`<div class="trapblock"><h4>${esc(s.name)}</h4><div class="trapcols">
+    <div><div class="heat" id="hm-${s.key}"></div><div class="legend"><span><span class="sw" style="background:var(--up)"></span>rising</span><span><span class="sw" style="background:var(--down)"></span>falling</span><span>● passes the careful test</span></div></div>
+    <div><div class="chart" id="wc-${s.key}" role="img"></div><div id="ro-${s.key}"></div></div></div></div>`;});
+  $('#trapGrid').innerHTML=h;setupSliders();
+  ss.forEach(s=>{const hm=$('#hm-'+s.key);hm._s=s;hm.onclick=e=>{const r=e.target.closest&&e.target.closest('rect[data-a]');if(r)setWin(+r.dataset.a,+r.dataset.b);};mount(hm,()=>drawHeat(hm));});
+  syncSliders();renderTrapDyn();
+}
+function drawHeat(host){
+  const s=host._s,w=state.win;const W=Math.min(Math.floor(host.clientWidth),440);if(!W)return;host._w=Math.floor(host.clientWidth);
+  const ml=38,mr=6,mt=6,mb=34,ny=s.years,cw=(W-ml-mr)/ny,H=mt+mb+cw*ny;let g='';
+  s.cells.forEach(c=>{const x=ml+(c.a-s.y0)*cw,y=mt+(s.y1-c.b)*cw,k=Math.min(1,Math.abs(c.sl)/s.smax);
+    g+=`<rect data-a="${c.a}" data-b="${c.b}" x="${x.toFixed(2)}" y="${y.toFixed(2)}" width="${(cw+.4).toFixed(2)}" height="${(cw+.4).toFixed(2)}" style="fill:var(${c.sl>=0?'--up':'--down'});fill-opacity:${(0.1+0.9*k).toFixed(2)}"><title>${c.a} to ${c.b}: ${sg(c.sl)} ${s.u} per decade. Careful p ${pv(c.lc)<0.001?'below 0.001':'= '+pv(c.lc).toFixed(3)}</title></rect>`;
+    if(c.lc<LOG05)g+=`<circle cx="${(x+cw/2).toFixed(2)}" cy="${(y+cw/2).toFixed(2)}" r="${Math.min(cw*.2,3.2).toFixed(2)}" style="fill:var(--ink)" pointer-events="none"/>`;});
+  const step=ny>25?10:5;
+  for(let yr=s.y0;yr<=s.y1;yr+=step){const cx=ml+(yr-s.y0+.5)*cw,cy=mt+(s.y1-yr+.5)*cw;
+    g+=`<text x="${cx.toFixed(1)}" y="${mt+cw*ny+13}" text-anchor="middle">${yr}</text><text x="${ml-5}" y="${(cy+4).toFixed(1)}" text-anchor="end">${yr}</text>`;}
+  g+=`<text x="${ml+cw*ny/2}" y="${H-3}" text-anchor="middle">first year of window</text>`;
+  g+=`<text transform="translate(9 ${mt+cw*ny/2}) rotate(-90)" text-anchor="middle">last year</text>`;
+  const sx=ml+(w.a-s.y0)*cw,sy=mt+(s.y1-w.b)*cw;
+  g+=`<rect x="${sx.toFixed(2)}" y="${sy.toFixed(2)}" width="${cw.toFixed(2)}" height="${cw.toFixed(2)}" fill="none" style="stroke:var(--ink);stroke-width:2"/>`;
+  g+=`<line x1="${ml}" x2="${sx.toFixed(2)}" y1="${(sy+cw/2).toFixed(2)}" y2="${(sy+cw/2).toFixed(2)}" style="stroke:var(--ink);stroke-width:1;stroke-dasharray:2 3"/><line x1="${(sx+cw/2).toFixed(2)}" x2="${(sx+cw/2).toFixed(2)}" y1="${(sy+cw).toFixed(2)}" y2="${mt+cw*ny}" style="stroke:var(--ink);stroke-width:1;stroke-dasharray:2 3"/>`;
+  host.innerHTML=`<svg width="${W}" height="${H.toFixed(0)}" viewBox="0 0 ${W} ${H.toFixed(0)}" role="img" aria-label="Map of the trend for every possible window of years">${g}</svg>`;
+}
+function renderTrapDyn(){
+  const c=curCase(),ss=seriesOf(c),w=state.win;
+  ss.forEach(s=>{
+    const hm=$('#hm-'+s.key);if(hm)drawHeat(hm);
+    const cell=winCell(s,w.a,w.b);if(!cell)return;
+    const i0=(w.a-s.y0)*12,i1=(w.b-s.y0+1)*12-1,t=trendObj(s,i0,i1,cell.sl);
+    chart($('#wc-'+s.key),{n:s.n,y0:s.y0,unit:s.u+' above or below normal',zero:true,h:210,
+      layers:[{y:s.anom,cls:'faint'},{y:s.anom.slice(i0,i1+1),x0:i0,cls:'win'}],shade:[{i0:i0,i1:i1}],trend:t,
+      aria:'Trend inside the chosen window of years'});
+    const long=s.cells.filter(x=>x.b-x.a+1>=10),nn=long.filter(x=>x.ln<LOG05).length/long.length,cc=long.filter(x=>x.lc<LOG05).length/long.length;
+    const said=pv(cell.lc)<0.05?('Stop here and a detective would call it <b>'+(cell.sl>=0?'rising':'falling')+'</b>.'):'Stop here and a detective would say <b>there’s nothing to see</b>.';
+    $('#ro-'+s.key).innerHTML=`<p class="readout"><b>${w.a} to ${w.b}:</b> ${delta(s,cell.sl)}.<br>Careless test ${pEq(cell.ln)} ${badge(cell.ln)}<br>Careful test ${pEq(cell.lc)} ${badge(cell.lc)}</p>
+    <p class="small muted">${said} Across all ${long.length} windows of 10 or more years, ${Math.round(nn*100)}% pass the careless test and ${Math.round(cc*100)}% pass the careful one.</p>`;
+  });
+  renderFooledNote();
+}
+function pickFooled(s){
+  const full=s.des,fullSig=pv(full.lp)<0.05,fs=Math.sign(full.slope_dec),C=s.cells.filter(x=>x.b-x.a+1>=8);
+  let cand,kind;
+  if(!fullSig){cand=C.filter(x=>x.lc<LOG05);kind='falseCareful';cand.sort((x,y)=>x.lc-y.lc);
+    if(!cand.length){cand=C.filter(x=>x.ln<LOG05);kind='falseNaive';cand.sort((x,y)=>x.ln-y.ln);}}
+  else{cand=C.filter(x=>x.lc<LOG05&&Math.sign(x.sl)!==fs);kind='reversal';cand.sort((x,y)=>x.lc-y.lc);
+    if(!cand.length){cand=C.filter(x=>x.lc>=LOG05);kind='vanish';cand.sort((x,y)=>(y.b-y.a)-(x.b-x.a)||y.lc-x.lc);}}
+  return cand.length?{cell:cand[0],kind:kind,s:s}:null;
+}
+function doFooled(){
+  const ss=seriesOf(curCase());let pick=null;
+  for(const s of ss){const p=pickFooled(s);if(p&&(!pick||(p.kind==='reversal'&&pick.kind!=='reversal')))pick=p;}
+  if(!pick)return;
+  state.fooled=pick;setWin(pick.cell.a,pick.cell.b,true);
+  document.getElementById('trap').scrollIntoView({behavior:'smooth',block:'start'});
+}
+function renderFooledNote(){
+  const f=state.fooled,box=$('#fooledNote');if(!f){box.innerHTML='';return;}
+  const s=f.s,c=f.cell,full=s.des;let m;
+  if(f.kind==='reversal')m=`In ${c.a} to ${c.b}, ${s.noun} ${dirWord(s,c.sl)} (${delta(s,c.sl)}), the opposite of the full record, and it still passes the careful test (${pEq(c.lc)}).`;
+  else if(f.kind==='vanish')m=`The full record shows a clear trend, yet in ${c.a} to ${c.b} it is not significant (careful ${pEq(c.lc)}). Pick that window and the change seems to vanish.`;
+  else if(f.kind==='falseCareful')m=`The full record shows no trend, yet ${c.a} to ${c.b} shows ${delta(s,c.sl)} and passes even the careful test (${pEq(c.lc)}). A false alarm.`;
+  else m=`The full record shows no trend, yet ${c.a} to ${c.b} shows ${delta(s,c.sl)}, and the careless test calls it significant (${pEq(c.ln)}). The careful test is not fooled (${pEq(c.lc)}).`;
+  box.innerHTML=`<div class="callout"><b>Here is the trick.</b> ${m} Choose your years after looking at the data and you can “prove” almost anything. A fair test fixes the window first.</div>`;
+}
+
+/* ---------- spot the real one ---------- */
+const spot={key:null,seed:0,recs:[],pos:0,picked:null,info:null};
+const LET='ABCDEFGHI';
+function dealSpot(key,seed){
+  const s=D[key];spot.key=key;spot.seed=seed;spot.picked=null;
+  const md=makeDecoys(s,seed,8);const R=rng(seed^0x9e3779b9);spot.pos=Math.floor(R()*9);
+  const recs=md.decoys.slice();recs.splice(spot.pos,0,s.anom);spot.recs=recs;spot.block=md.block;spot.info=null;
+  renderSpot();
+}
+function renderSpot(){
+  const c=curCase(),ss=seriesOf(c),s=D[spot.key];
+  $('#spotSeries').innerHTML=ss.length>1?ss.map(x=>`<button class="chip" type="button" data-spot="${x.key}" aria-pressed="${x.key===spot.key}">${esc(x.name)}</button>`).join(''):'';
+  let lo=Infinity,hi=-Infinity;spot.recs.forEach(r=>r.forEach(v=>{if(v<lo)lo=v;if(v>hi)hi=v;}));const pad=(hi-lo)*.04;
+  const done=spot.picked!==null;let h='';
+  spot.recs.forEach((r,i)=>{
+    const real=i===spot.pos;let cap='';
+    if(done){const inf=spot.info[i];cap=`careless p ${inf.pn<0.001?'&lt; 0.001':'= '+inf.pn.toFixed(3)}<br>careful p ${inf.pc<0.001?'&lt; 0.001':'= '+inf.pc.toFixed(3)}`;}
+    h+=`<button class="suspect${done&&real?' real':''}${done&&spot.picked===i?' pick':''}" type="button" data-pick="${i}" ${done?'disabled':''} aria-label="Suspect ${LET[i]}"><span class="lt">${LET[i]}</span>${done&&real?'<span class="stamp slam">Real</span>':''}<div class="chart" id="sp-${i}"></div><div class="cap2">${cap}</div></button>`;});
+  $('#spot').innerHTML=h;
+  spot.recs.forEach((r,i)=>{const o={n:s.n,y0:s.y0,mini:true,zero:true,ylim:[lo-pad,hi+pad],h:84,layers:[{y:r,cls:'anom'}],aria:'Suspect '+LET[i]};
+    if(done){const inf=spot.info[i];const t0=fitLine(r,0,s.n-1,inf.slope);o.trend={i0:0,i1:s.n-1,v0:t0,v1:t0+inf.slope*(s.n-1),cls:inf.slope>=0?'up':'down'};}
+    chart($('#sp-'+i),o);});
+  renderSpotMsg();
+}
+function pickSpot(i){
+  const s=D[spot.key];
+  spot.info=spot.recs.map((r,j)=>{if(j===spot.pos)return {slope:s.des.slope_dec/120,pc:pv(s.des.lp),pn:pv(s.des.lp_naive)};
+    const m=mkESS(r),o=olsP(r);return {slope:m.slope,pc:m.p,pn:o.p};});
+  spot.picked=i;renderSpot();
+}
+function renderSpotMsg(){
+  const box=$('#spotMsg');if(spot.picked===null){box.innerHTML='';return;}
+  const s=D[spot.key],ok=spot.picked===spot.pos,sigReal=pv(s.des.lp)<0.05,L=LET[spot.pos];
+  const fakes=spot.info.filter((x,j)=>j!==spot.pos),fn=fakes.filter(x=>x.pn<0.05).length,fc=fakes.filter(x=>x.pc<0.05).length;
+  let m;
+  if(ok&&sigReal)m='<b>You found it.</b> A real trend stands out even against noise with the same wobble and memory.';
+  else if(ok)m='<b>You picked it, but probably by luck.</b> The careful test can’t separate this record from noise either, which matches the verdict.';
+  else if(sigReal)m=`<b>Not this one. The real record was ${L}.</b> The test can see a trend your eye missed (careful ${pEq(s.des.lp)}). Trust the test over a glance.`;
+  else m=`<b>The real record was ${L}.</b> It looks just like the noise, which matches the verdict: nothing here you could tell apart from chance.`;
+  box.innerHTML=`<div class="callout">${m}<br>Among the eight fakes, which contain no trend at all, the careless test calls ${fn} “significant.” The careful test calls ${fc}.</div>`;
+}
+
+/* ---------- bring your own evidence: parsing ---------- */
+const SAMPLE_CSV=__SAMPLE__;
+function parseGiovanni(text,name){
+  const lines=text.replace(/\r/g,'').split('\n');const meta={file:name};let start=-1;
+  for(let i=0;i<lines.length;i++){const L=lines[i];
+    if(/^\s*time\s*,/i.test(L)){start=i;meta.col=(L.split(',')[1]||'').trim();break;}
+    const m=L.match(/^([^,]+?):\s*,\s*(.*)$/);if(m){const key=m[1].trim(),val=m[2].replace(/^"|"$/g,'').trim();
+      if(/^Title/i.test(key))meta.title=val;else if(/^User Bounding Box/i.test(key))meta.bbox=val;
+      else if(/^Fill Value/i.test(key))meta.fill=parseFloat(val);else if(/^URL/i.test(key)){const d=val.match(/[?&#]data=([^&]+)/);if(d)meta.dataset=decodeURIComponent(d[1]);}}}
+  if(start<0)throw new Error(name+': no “time” column found. In Giovanni, choose Time Series, Area-Averaged and download the result as CSV.');
+  const rows=[];
+  for(let i=start+1;i<lines.length;i++){const L=lines[i].trim();if(!L)continue;const c=L.split(',');
+    const m=c[0].trim().match(/^(\d{4})-(\d{2})(?:-(\d{2}))?/);if(!m)continue;let v=parseFloat(c[1]);
+    if(!isFinite(v)||Math.abs(v)>=1e29||(meta.fill!==undefined&&isFinite(meta.fill)&&v===meta.fill))v=NaN;
+    rows.push({y:+m[1],m:+m[2],d:m[3]?+m[3]:1,v:v,key:c[0].trim()});}
+  if(rows.length<24)throw new Error(name+': fewer than 24 data rows. Choose a longer date range.');
+  return {meta:meta,rows:rows};
+}
+function cleanTitle(t){if(!t)return 'Uploaded variable';t=t.replace(/^Time Series, Area-Averaged of\s*/i,'');
+  const cut=t.search(/\s(monthly|daily|hourly|3-hourly)\b|\s\(|\s\[/i);return (cut>0?t.slice(0,cut):t).trim();}
+function fmtBox(b){if(!b)return 'region not stated';const v=b.split(',').map(Number);if(v.length!==4||v.some(isNaN))return b;
+  const lon=x=>Math.abs(x)+'°'+(x<0?'W':'E'),lat=x=>Math.abs(x)+'°'+(x<0?'S':'N');return lon(v[0])+' to '+lon(v[2])+', '+lat(v[1])+' to '+lat(v[3]);}
+function mergeParsed(list){
+  const map=new Map();list.forEach(p=>p.rows.forEach(r=>{if(!map.has(r.key)||isNaN(map.get(r.key).v))map.set(r.key,r);}));
+  const rows=[...map.values()].sort((a,b)=>(a.y-b.y)||(a.m-b.m)||(a.d-b.d));
+  const metas=list.map(p=>p.meta),titles=new Set(metas.map(m=>m.title)),boxes=new Set(metas.map(m=>m.bbox));
+  if(titles.size>1||boxes.size>1)throw new Error('These files are not parts of the same record: their variable or region differs. Upload one record at a time.');
+  return {meta:metas[0],rows:rows,files:list.length};
+}
+function toMonthly(rec,bounds){
+  const g=new Map();rec.rows.forEach(r=>{const k=r.y*12+(r.m-1);if(!g.has(k))g.set(k,{s:0,c:0,all:0});const e=g.get(k);e.all++;if(!isNaN(r.v)){e.s+=r.v;e.c++;}});
+  let maxAll=0;g.forEach(e=>{if(e.all>maxAll)maxAll=e.all;});
+  const daily=maxAll>=20,need=daily?10:Math.max(1,Math.ceil(maxAll/3));
+  const keys=[...g.keys()].filter(k=>g.get(k).c>=need).sort((a,b)=>a-b);if(!keys.length)throw new Error('No month has enough valid values.');
+  let y0=Math.floor(keys[0]/12);if(keys[0]%12!==0)y0++;let y1=Math.floor(keys[keys.length-1]/12);if(keys[keys.length-1]%12!==11)y1--;
+  if(bounds){y0=Math.max(y0,bounds[0]);y1=Math.min(y1,bounds[1]);}
+  if(y1-y0+1<10)throw new Error('After trimming to whole calendar years, only '+Math.max(0,y1-y0+1)+' years remain. TrendNoir needs at least ten.');
+  const vals=[];let miss=0;for(let k=y0*12;k<(y1+1)*12;k++){const e=g.get(k);if(e&&e.c>=need)vals.push(e.s/e.c);else{vals.push(NaN);miss++;}}
+  if(miss>vals.length*0.1)throw new Error(miss+' of '+vals.length+' months are missing or too sparse. TrendNoir accepts up to 10%.');
+  return {vals:vals,y0:y0,y1:y1,missing:miss,daily:daily,maxAll:maxAll};
+}
+
+/* ---------- bring your own evidence: analysis (mirrors preprocess.py) ---------- */
+function ranks(a){const idx=a.map((v,i)=>i).sort((x,y)=>a[x]-a[y]);const r=new Array(a.length);
+  for(let i=0;i<idx.length;){let j=i;while(j+1<idx.length&&a[idx[j+1]]===a[idx[i]])j++;const av=(i+j)/2+1;for(let k=i;k<=j;k++)r[idx[k]]=av;i=j+1;}return r;}
+function mkPlain(y){const n=y.length;let S=0;const sl=[];for(let i=0;i<n-1;i++)for(let j=i+1;j<n;j++){const d=y[j]-y[i];S+=d>0?1:d<0?-1:0;sl.push(d/(j-i));}
+  const v=(n*(n-1)*(2*n+5)-tieTerm(y))/18,z=S===0?0:(S-Math.sign(S))/Math.sqrt(v);return {p:p2(z),slope:median(sl)};}
+function hamedRao(y){const n=y.length;let S=0;const sl=new Float64Array(n*(n-1)/2);let q=0;
+  for(let i=0;i<n-1;i++)for(let j=i+1;j<n;j++){const d=y[j]-y[i];S+=d>0?1:d<0?-1:0;sl[q++]=d/(j-i);}
+  const b=qmedian(sl,q),v=(n*(n-1)*(2*n+5)-tieTerm(y))/18;
+  const r=ranks(y.map((x,i)=>x-b*i));let mu=0;r.forEach(x=>mu+=x);mu/=n;const rc=r.map(x=>x-mu);let den=0;rc.forEach(x=>den+=x*x);
+  const lim=1.96/Math.sqrt(n);let s=0;for(let k=1;k<n-2;k++){let num=0;for(let i=0;i+k<n;i++)num+=rc[i]*rc[i+k];const rho=num/den;if(Math.abs(rho)>lim)s+=(n-k)*(n-k-1)*(n-k-2)*rho;}
+  const ratio=Math.max(1,1+2*s/(n*(n-1)*(n-2))),z=S===0?0:(S-Math.sign(S))/Math.sqrt(v*ratio);return {p:p2(z),ratio:ratio};}
+function hirschSlack(raw){const n=raw.length/12,Y=[];for(let i=0;i<n;i++)Y.push(raw.slice(i*12,i*12+12));
+  const col=g=>Y.map(r=>r[g]);let S=0;const K=[...Array(12)].map(()=>new Array(12).fill(0)),sl=[];
+  for(let i=0;i<n-1;i++)for(let j=i+1;j<n;j++){const sg=new Array(12);for(let g=0;g<12;g++){const d=Y[j][g]-Y[i][g];sg[g]=d>0?1:d<0?-1:0;S+=sg[g];sl.push(d/(j-i));}
+    for(let g=0;g<12;g++)for(let h=0;h<12;h++)K[g][h]+=sg[g]*sg[h];}
+  const R=[...Array(12)].map((_,g)=>ranks(col(g)));let V=0;
+  for(let g=0;g<12;g++)for(let h=0;h<12;h++){let c;if(g===h)c=(n*(n-1)*(2*n+5)-tieTerm(col(g)))/18;else{let rr=0;for(let i=0;i<n;i++)rr+=R[g][i]*R[h][i];c=(K[g][h]+4*rr-n*(n+1)*(n+1))/3;}V+=c;}
+  const z=S===0?0:(S-Math.sign(S))/Math.sqrt(V);return {p:p2(z),slope_yr:median(sl)};}
+function inv3(M){const[a,b,c]=M[0],[d,e,f]=M[1],[g,h,i]=M[2];const A=e*i-f*h,B=-(d*i-f*g),C=d*h-e*g,det=a*A+b*B+c*C;
+  return [[A/det,-(b*i-c*h)/det,(b*f-c*e)/det],[B/det,(a*i-c*g)/det,-(a*f-c*d)/det],[C/det,-(a*h-b*g)/det,(a*e-b*d)/det]];}
+function pctl(sorted,p){const pos=p/100*(sorted.length-1),lo=Math.floor(pos),hi=Math.ceil(pos);return sorted[lo]+(sorted[hi]-sorted[lo])*(pos-lo);}
+function hingeFit(y,y0,B,seed){
+  const n=y.length,ks=[];for(let k=36;k<n-36;k++)ks.push(k);let st=0,stt=0;for(let i=0;i<n;i++){st+=i;stt+=i*i;}
+  const inv=ks.map(k=>{let sh=0,sth=0,shh=0;for(let i=k+1;i<n;i++){const h=i-k;sh+=h;sth+=i*h;shh+=h*h;}return inv3([[n,st,sh],[st,stt,sth],[sh,sth,shh]]);});
+  const A=new Float64Array(n+1),Bs=new Float64Array(n+1);
+  function best(yy){let sy=0,sty=0,syy=0;for(let i=0;i<n;i++){sy+=yy[i];sty+=i*yy[i];syy+=yy[i]*yy[i];}
+    A[n]=0;Bs[n]=0;for(let i=n-1;i>=0;i--){A[i]=A[i+1]+i*yy[i];Bs[i]=Bs[i+1]+yy[i];}
+    let bi=0,bs=Infinity,bb=null;for(let x=0;x<ks.length;x++){const k=ks[x],hy=A[k+1]-k*Bs[k+1],M=inv[x];
+      const b0=M[0][0]*sy+M[0][1]*sty+M[0][2]*hy,b1=M[1][0]*sy+M[1][1]*sty+M[1][2]*hy,b2=M[2][0]*sy+M[2][1]*sty+M[2][2]*hy,sse=syy-(b0*sy+b1*sty+b2*hy);
+      if(sse<bs){bs=sse;bi=x;bb=[b0,b1,b2];}}return {x:bi,b:bb};}
+  const f=best(y),k=ks[f.x],fit=y.map((_,i)=>f.b[0]+f.b[1]*i+f.b[2]*Math.max(0,i-k)),res=y.map((v,i)=>v-fit[i]);
+  const r1=Math.max(0,corr1(res)),L=Math.min(60,Math.max(3,Math.round(2*(1+r1)/(1-r1)))),R=rng(seed),kb=[],yy=new Float64Array(n);
+  for(let b=0;b<B;b++){let i=0;while(i<n){const s0=Math.floor(R()*n);for(let j=0;j<L&&i<n;j++,i++)yy[i]=fit[i]+res[(s0+j)%n];}kb.push(ks[best(yy).x]);}
+  kb.sort((a,b)=>a-b);const yrs=n/12,year=y0+k/12,lo=y0+pctl(kb,2.5)/12,hi=y0+pctl(kb,97.5)/12;
+  return {year:year,lo:lo,hi:hi,before_dec:f.b[1]*120,after_dec:(f.b[1]+f.b[2])*120,k:k,clear:(hi-lo)<=0.4*yrs,v0:fit[0],vk:fit[k],vn:fit[n-1]};}
+const lp10=p=>Math.log10(Math.max(p,1e-300));
+function tick(){return new Promise(r=>setTimeout(r,0));}
+async function analyzeMonthly(mo,conv,progress){
+  let vals=mo.vals.map(v=>conv==='k2c'?v-273.15:conv==='s2d'?v*86400:conv==='e15'?v/1e15:v);
+  const n=vals.length,y0=mo.y0,y1=mo.y1,yrs=n/12;
+  const clim=[];for(let g=0;g<12;g++){let s=0,c=0;for(let i=g;i<n;i+=12)if(!isNaN(vals[i])){s+=vals[i];c++;}clim.push(s/c);}
+  let anom=vals.map((v,i)=>v-clim[i%12]);
+  if(mo.missing){for(let i=0;i<n;i++)if(isNaN(anom[i])){let a=i-1;while(a>=0&&isNaN(anom[a]))a--;let b=i+1;while(b<n&&isNaN(anom[b]))b++;
+      const va=a>=0?anom[a]:anom[b],vb=b<n?anom[b]:anom[a];anom[i]=(a>=0&&b<n)?va+(vb-va)*(i-a)/(b-a):(a>=0?va:vb);}
+    vals=anom.map((v,i)=>v+clim[i%12]);}
+  const climMean=clim.reduce((x,y)=>x+y,0)/12;
+  // recompute anomalies exactly as pandas would (climatology from the filled record)
+  const clim2=[];for(let g=0;g<12;g++){let s=0,c=0;for(let i=g;i<n;i+=12){s+=vals[i];c++;}clim2.push(s/c);}anom=vals.map((v,i)=>v-clim2[i%12]);
+  progress('Running the main tests');await tick();
+  const mean=vals.reduce((x,y)=>x+y,0)/n,rawM=mkCore(vals,true),des=mkCore(anom,true),rawN=olsP(vals).p,desN=olsP(anom).p;
+  const half=n>>1,h1=mkCore(anom.slice(0,half),false),h2=mkCore(anom.slice(half),false);
+  const sd=des.resid_sd,sl=des.slope*120,lo=des.lo*120,hi=des.hi*120,ciEx=lo>0||hi<0,cons=Math.sign(h1.slope)===Math.sign(h2.slope);
+  const phi=des.r1,infl=Math.sqrt((1+phi)/(1-phi)),om=Math.abs(des.slope)*12,nstar=om>0?Math.pow((3.3*sd/om)*infl,2/3):null,mind=3.3*sd*infl/Math.pow(yrs,1.5);
+  let verdict;if(des.p<0.05){verdict=!cons?'UNSTEADY':(des.p<0.01&&ciEx)?'CONFIRMED':'WEAK';}else verdict=Math.abs(sl)<0.15*mind*10?'NO TREND DETECTED':'INCONCLUSIVE';
+  progress('Getting second opinions');await tick();
+  const hr=hamedRao(anom),hs=hirschSlack(vals),months=[];for(let g=0;g<12;g++){const col=[];for(let i=g;i<n;i+=12)col.push(vals[i]);const r=mkPlain(col);months.push([r.slope*10,lp10(r.p)]);}
+  progress('Looking for a turning point');await tick();
+  const hg=hingeFit(anom,y0,200,1);
+  const grid=[];let done=0;const total=((y1-y0+1-7)*(y1-y0+2-7))/2;
+  for(let a=y0;a<=y1;a++){for(let b=a+7;b<=y1;b++){const seg=anom.slice((a-y0)*12,(b-y0+1)*12),r=mkCore(seg,false);grid.push([a,b,r.slope*120,lp10(r.p),lp10(olsP(seg).p)]);done++;}
+    progress('Testing every window of years: '+done+' of '+total);await tick();}
+  const minlen=Math.max(10,Math.ceil((y1-y0+1)/2)),gm=new Map(grid.map(g=>[g[0]*10000+g[1],g])),ann=[];
+  for(let i=0;i<n/12;i++){let s0=0;for(let j=0;j<12;j++)s0+=vals[i*12+j];ann.push(s0/12);}
+  const rob={minlen:minlen,a:[],b:[],m:[[],[],[],[]]};let rdone=0;const rtot=((y1-y0+1-minlen+1)*(y1-y0+1-minlen+2))/2;
+  for(let a=y0;a<=y1;a++){for(let b=a+minlen-1;b<=y1;b++){const i0=(a-y0)*12,i1=(b-y0+1)*12,g=gm.get(a*10000+b);rob.a.push(a);rob.b.push(b);
+      rob.m[0].push([g[2],g[3]]);rob.m[1].push([g[2],lp10(hamedRao(anom.slice(i0,i1)).p)]);
+      const hh=hirschSlack(vals.slice(i0,i1));rob.m[2].push([hh.slope_yr*10,lp10(hh.p)]);
+      const am=mkCore(ann.slice(a-y0,b-y0+1),false);rob.m[3].push([am.slope*10,lp10(am.p)]);rdone++;}
+    if(rdone)progress('Scoring robustness: '+rdone+' of '+rtot+' windows');await tick();}
+  return {rob:rob,y0:y0,y1:y1,n:n,mean:mean,raw:vals,anom:anom,clim:clim2,pct:vals.every(v=>v>0)&&conv!=='k2c',
+    stats:{raw:{slope_dec:rawM.slope*120,lo_dec:rawM.lo*120,hi_dec:rawM.hi*120,lp:lp10(rawM.p),lp_naive:lp10(rawN),r1:rawM.r1,n_eff:Math.round(rawM.n_eff)},
+      des:{slope_dec:sl,lo_dec:lo,hi_dec:hi,lp:lp10(des.p),lp_naive:lp10(desN),r1:des.r1,n_eff:Math.round(des.n_eff)},
+      resid_sd:sd,season_range:Math.max.apply(null,clim2)-Math.min.apply(null,clim2),
+      half:{first:{slope_dec:h1.slope*120,lp:lp10(h1.p)},second:{slope_dec:h2.slope*120,lp:lp10(h2.p)}},
+      verdict:verdict,consistent:cons,ci_excludes_zero:ciEx,std_dec:sl/sd,std_lo:lo/sd,std_hi:hi/sd},
+    detect:{record_years:yrs,nstar:(nstar===null||nstar>300)?null:nstar,min_detect_dec:mind*10,noise_sd:sd,r1:phi},
+    extra:{hr:{lp:lp10(hr.p),ratio:hr.ratio},hs:{lp:lp10(hs.p),slope_dec:hs.slope_yr*10},months:months,hinge:hg},grid:grid};
+}
+
+/* ---------- bring your own evidence: interface ---------- */
+const SAMPLE2=__SAMPLE2__;
+const lab={mode:'one',recA:null,recB:null,placeA:null,placeB:null,count:0};
+function labMsg(html,cls){$('#labMsg').innerHTML=html?`<div class="${cls||'ok'}">${html}</div>`:'';}
+function guessConv(rec){const t=((rec.meta.title||'')+' '+(rec.meta.dataset||'')).toLowerCase();const vs=rec.rows.filter(r=>!isNaN(r.v)).map(r=>r.v);
+  const med=vs.length?median(vs):0;if(/no2|nitrogen/.test(t)&&Math.abs(med)>1e13)return 'e15';if(/precip|rainf|prectot|snowf/.test(t)&&med<0.01)return 's2d';if(/temperature|t2m|tlml|\bts\b/.test(t)&&med>150&&med<350)return 'k2c';return 'none';}
+const UNIT_GUESS={k2c:'°C',s2d:'mm/day',e15:'×10¹⁵ molecules/cm²',none:''};
+function setLabMode(m){lab.mode=m;document.querySelectorAll('[data-mode]').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.mode===m)));
+  $('#dropB').hidden=m!=='two';$('#dropLabA').hidden=m!=='two';
+  $('#sampleNote').textContent=m==='two'?'The sample is the six raw Giovanni files behind Case 001: daily satellite NO₂ over Eastern China and Northern India, downloaded in parts.':'The sample is the raw Giovanni download behind Case 002. Its verdict should match the case file exactly.';
+  renderLabForm();}
+function recSummary(rec,label){const m=rec.meta,first=rec.rows[0].key.slice(0,10),last=rec.rows[rec.rows.length-1].key.slice(0,10);
+  return `<p>${label?'<span class="muted small">'+label+'</span><br>':''}<b>${esc(cleanTitle(m.title))}</b><br>${rec.rows.length} values from ${first} to ${last}${rec.files>1?', merged from '+rec.files+' files':''}. ${esc(fmtBox(m.bbox))}.${m.dataset?'<br><span class="muted small">'+esc(m.dataset)+'</span>':''}</p>`;}
+function convSelect(){return `<label>Convert values<select id="labConv"><option value="none">Keep as they are</option><option value="k2c">Kelvin to °C (subtract 273.15)</option><option value="s2d">kg m⁻² s⁻¹ to mm/day (multiply by 86,400)</option><option value="e15">Divide by 10¹⁵ (for NO₂ columns in molecules/cm²)</option></select></label>`;}
+function renderLabForm(){
+  const A=lab.recA,B=lab.recB,box=$('#labForm');
+  if(lab.mode==='one'){if(!A){box.innerHTML='';return;}const conv=guessConv(A);
+    box.innerHTML=`<div class="labcard">${recSummary(A)}<label>Place name<input type="text" id="labPlace" value="${esc(lab.placeA||(A.meta.bbox?fmtBox(A.meta.bbox):'the selected region'))}"></label>
+      <label>Units shown on charts (Giovanni files don’t include them)<input type="text" id="labUnits" value="${UNIT_GUESS[conv]}" placeholder="for example kg/m² or °C"></label>${convSelect()}
+      <button class="btn" id="labGo" type="button">Analyze this record</button></div>`;$('#labConv').value=conv;return;}
+  if(!A&&!B){box.innerHTML='';return;}
+  let h='<div class="labcard">'+(A?recSummary(A,'Region A'):'<p class="muted">Region A: waiting for a file.</p>')+(B?recSummary(B,'Region B'):'<p class="muted">Region B: waiting for a file of the same variable over another place.</p>');
+  if(A&&B){const conv=guessConv(A),same=cleanTitle(A.meta.title)===cleanTitle(B.meta.title);
+    if(!same)h+=`<p class="err" style="margin-top:.4rem">These look like different variables. A comparison only makes sense for the same measurement in two places.</p>`;
+    h+=`<label>Name for region A<input type="text" id="labPlace" value="${esc(lab.placeA||(A.meta.bbox?fmtBox(A.meta.bbox):'Region A'))}"></label>
+      <label>Name for region B<input type="text" id="labPlaceB" value="${esc(lab.placeB||(B.meta.bbox?fmtBox(B.meta.bbox):'Region B'))}"></label>
+      <label>Units shown on charts<input type="text" id="labUnits" value="${UNIT_GUESS[conv]}" placeholder="for example kg/m² or °C"></label>${convSelect()}
+      <button class="btn" id="labGo" type="button">Compare the two regions</button>`;h+='</div>';box.innerHTML=h;$('#labConv').value=conv;return;}
+  box.innerHTML=h+'</div>';
+}
+function loadTexts(list,slot,place){
+  slot=slot||'A';
+  try{const rec=mergeParsed(list.map(x=>parseGiovanni(x.text,x.name)));toMonthly(rec);lab['rec'+slot]=rec;lab['place'+slot]=place||null;labMsg('');renderLabForm();}
+  catch(e){labMsg(esc(e.message),'err');}
+}
+function registerUser(res,rec,mo,place,units,title){
+  lab.count++;const key='user_'+lab.count;D[key]=Object.assign(res,{key:key,units:units,decimals:3});
+  prepareSeries(key,{label:title,name:place,measure:title,noun:title.charAt(0).toLowerCase()+title.slice(1)+' over '+place,box:rec.meta.bbox?fmtBox(rec.meta.bbox):place,u:units,up:'increased',down:'decreased',
+    def:'Uploaded from NASA Giovanni'+(rec.meta.dataset?' (dataset '+rec.meta.dataset+')':'')+'. '+(mo.daily?'Daily values were averaged into months; months with fewer than ten valid days would be dropped. ':'')+(mo.missing?mo.missing+' missing months were filled by straight-line interpolation of their neighbors. ':''),
+    source:'your Giovanni download',kind:'Uploaded data',coll:rec.meta.dataset||'uploaded file'});
+  return key;
+}
+async function runLab(){
+  const btn=$('#labGo');if(!btn)return;btn.disabled=true;const t0=performance.now();
+  try{const conv=$('#labConv').value,units=$('#labUnits').value.trim()||'units',A=lab.recA,title=cleanTitle(A.meta.title);
+    if(lab.mode==='one'){
+      const mo=toMonthly(A),place=$('#labPlace').value.trim()||'the selected region';
+      const res=await analyzeMonthly(mo,conv,msg=>labMsg(esc(msg)+'…'));const key=registerUser(res,A,mo,place,units,title);
+      state.custom={id:key,tab:'Your evidence',title:'Your evidence: '+title,series:[key],q:title+' over '+place+', '+mo.y0+' to '+mo.y1+', from the file you uploaded. Does the evidence hold?'};
+    }else{
+      const B=lab.recB,pa=$('#labPlace').value.trim()||'Region A',pb=$('#labPlaceB').value.trim()||'Region B';
+      const a0=toMonthly(A),b0=toMonthly(B),Y0=Math.max(a0.y0,b0.y0),Y1=Math.min(a0.y1,b0.y1);
+      if(Y1-Y0+1<10)throw new Error('The two records share only '+Math.max(0,Y1-Y0+1)+' full calendar years. TrendNoir needs at least ten in common.');
+      const moA=toMonthly(A,[Y0,Y1]),moB=toMonthly(B,[Y0,Y1]);
+      const rA=await analyzeMonthly(moA,conv,msg=>labMsg(esc(pa)+': '+esc(msg)+'…'));const kA=registerUser(rA,A,moA,pa,units,title);
+      const rB=await analyzeMonthly(moB,conv,msg=>labMsg(esc(pb)+': '+esc(msg)+'…'));const kB=registerUser(rB,B,moB,pb,units,title);
+      state.custom={id:kA+kB,tab:'Your evidence',title:'Your evidence: '+title+' in two places',series:[kA,kB],q:'The same measurement over '+pa+' and '+pb+', '+Y0+' to '+Y1+'. Do the two places move the same way?'};
+    }
+    state.step=1;showCase();fillClaimRecords();
+    labMsg('Done in '+((performance.now()-t0)/1000).toFixed(1)+' seconds. Your case file is open in the case files above. <a href="#cases">Go to it</a>.');
+    document.getElementById('cases').scrollIntoView({behavior:'smooth'});
+  }catch(e){labMsg(esc(e.message),'err');}
+  btn.disabled=false;
+}
+function readFiles(files,slot){const arr=[...files];if(!arr.length)return;
+  if(!slot)slot=(lab.mode==='two'&&lab.recA)?'B':'A';
+  Promise.all(arr.map(f=>f.text().then(text=>({name:f.name,text:text})))).then(l=>loadTexts(l,slot)).catch(e=>labMsg(esc(String(e)),'err'));}
+
+/* ---------- robustness (multiverse) ---------- */
+const METHODS=['Main test','Hamed and Rao','Seasonal Kendall','Annual means'];
+function robSummary(s){
+  if(s._rob)return s._rob;const r=s.rob;if(!r)return null;const sign=s.des.slope_dec>=0?1:-1,mainSig=pv(s.des.lp)<0.05,ns=s.detect.nstar;
+  const rows=[];for(let mi=0;mi<4;mi++)r.m[mi].forEach((x,i)=>{const out=x[1]<LOG05?(((x[0]>=0)===(sign>0))?1:-1):0;rows.push({mi:mi,a:r.a[i],b:r.b[i],sl:x[0],lp:x[1],len:r.b[i]-r.a[i]+1,out:out});});
+  const N=rows.length,sup=rows.filter(x=>x.out===1).length,con=rows.filter(x=>x.out===-1).length,S=sup/N,C=con/N;
+  const need=ns?Math.ceil(ns):null,le=need?rows.filter(x=>x.len>=need):[],LE=le.length?le.filter(x=>x.out===1).length/le.length:null;
+  let grade,good;
+  if(mainSig){if(C>=0.1){grade='Contested';good=false;}else if(S>=0.8){grade='Very hard to kill';good=true;}else if(LE!==null&&LE>=0.8){grade='Hard to kill';good=true;}else if(S>=0.4){grade='Fragile';good=false;}else{grade='Falls over easily';good=false;}}
+  else{if(S+C<=0.1){grade='Nothing there, from every angle';good=true;}else{grade='Depends on how you look';good=false;}}
+  s._rob={rows:rows,N:N,S:S,C:C,need:need,le:le.length,LE:LE,grade:grade,good:good,mainSig:mainSig,minlen:r.minlen,windows:r.a.length};return s._rob;
+}
+const P100=x=>Math.round(x*100)+'%';
+function robText(s,R){
+  if(R.mainSig){let t=`Holds in ${P100(R.S)} of ${R.N.toLocaleString('en-US')} reasonable analyses and is reversed in ${P100(R.C)}.`;
+    if(R.le)t+=` Counting only windows long enough to catch a trend this size (${R.need} years or more), it holds in ${P100(R.LE)} of ${R.le.toLocaleString('en-US')}.`;
+    else if(R.need)t+=` Catching a trend this size reliably would take about ${R.need} years of data, more than any window here, so most analyses are underpowered.`;
+    return t;}
+  const claim=R.S+R.C;let t=`${P100(1-claim)} of ${R.N.toLocaleString('en-US')} reasonable analyses find no trend.`;
+  if(claim>0)t+=` ${P100(claim)} claim one${R.S&&R.C?` (${P100(R.S)} ${s.des.slope_dec>=0?'upward':'downward'}, ${P100(R.C)} the other way)`:''}, so the answer depends on how you look.`;
+  return t;
+}
+function renderRob(){
+  const ss=seriesOf(curCase());let h='';
+  ss.forEach(s=>{const R=robSummary(s);if(!R)return;
+    h+=`<div class="trapblock"><h4>${esc(s.name)}</h4><div class="robgrade ${R.good?'good':'weak'}">${R.grade}</div><p>${robText(s,R)}</p>
+    <div class="spec" id="spec-${s.key}" role="img" aria-label="Every reasonable analysis sorted by the slope it found"></div>
+    <div class="legend"><span><span class="sw" style="background:var(${s.des.slope_dec>=0?'--up':'--down'})"></span>significant, same direction</span><span><span class="sw" style="background:var(${s.des.slope_dec>=0?'--down':'--up'})"></span>significant, opposite</span><span><span class="sw" style="background:var(--ink-soft);opacity:.4"></span>can’t tell</span></div>
+    <p class="small muted" style="margin-top:.4rem">${R.windows} windows of ${R.minlen} years or more, each analyzed ${METHODS.length} ways. The rows underneath show which method produced each dot.</p></div>`;});
+  $('#robGrid').innerHTML=h;
+  ss.forEach(s=>{const host=$('#spec-'+s.key);if(host){host._s=s;mount(host,()=>drawSpec(host));}});
+}
+function drawSpec(host){
+  const s=host._s,R=robSummary(s),W=Math.floor(host.clientWidth);if(!W)return;host._w=W;
+  const rows=R.rows.slice().sort((x,y)=>x.sl-y.sl),N=rows.length,ml=Math.min(110,Math.max(78,W*.16)),mr=8,top=14,ph=150,rowH=13,H=top+ph+14+rowH*4+6,pw=W-ml-mr;
+  let lo=Math.min(0,rows[0].sl),hi=Math.max(0,rows[N-1].sl);const pad=(hi-lo)*.08||1;lo-=pad;hi+=pad;
+  const X=i=>ml+(i+.5)/N*pw,Y=v=>top+(1-(v-lo)/(hi-lo))*ph,nt=niceTicks(lo,hi,4);
+  const up=s.des.slope_dec>=0,cs=o=>o===0?'var(--ink-soft)':((o===1)===up?'var(--up)':'var(--down)');
+  let g='';nt.ticks.forEach(v=>{g+=`<line x1="${ml}" x2="${W-mr}" y1="${Y(v).toFixed(1)}" y2="${Y(v).toFixed(1)}" style="stroke:var(--rule);opacity:.5"/><text x="${ml-6}" y="${(Y(v)+4).toFixed(1)}" text-anchor="end">${tl(v,nt.step)}</text>`;});
+  g+=`<line x1="${ml}" x2="${W-mr}" y1="${Y(0).toFixed(1)}" y2="${Y(0).toFixed(1)}" style="stroke:var(--ink-soft);stroke-dasharray:3 4"/>`;
+  g+=`<text x="${ml}" y="${top-3}" text-anchor="start">${esc(s.u)} per decade</text>`;
+  const r=Math.max(1.2,Math.min(2.6,pw/N*1.4));
+  rows.forEach((x,i)=>{g+=`<circle cx="${X(i).toFixed(1)}" cy="${Y(x.sl).toFixed(1)}" r="${r.toFixed(1)}" style="fill:${cs(x.out)};opacity:${x.out===0?.35:.95}"/>`;});
+  const by=top+ph+14;METHODS.forEach((m,mi)=>{const y=by+mi*rowH;g+=`<text x="${ml-6}" y="${y+9}" text-anchor="end">${m}</text>`;});
+  rows.forEach((x,i)=>{const y=by+x.mi*rowH;g+=`<rect x="${(X(i)-Math.max(.5,pw/N/2)).toFixed(1)}" y="${y+1}" width="${Math.max(1,pw/N).toFixed(2)}" height="${rowH-3}" style="fill:${cs(x.out)};opacity:${x.out===0?.3:.9}"/>`;});
+  host.innerHTML=`<svg width="${W}" height="${H}" viewBox="0 0 ${W} ${H}">${g}</svg>`;
+}
+function robLine(s){const R=robSummary(s);if(!R)return '';return `<p class="robline ${R.good?'':'weak'}"><b>${R.grade}.</b> ${robText(s,R)} <a href="#robust">See every analysis</a>.</p>`;}
+
+/* ---------- why it matters: facts from the data ---------- */
+function renderFacts(){
+  const soil=D.soilwet_alaska,t2=D.t2m_alaska,pr=D.precip_uscentral,c=winCell(pr,2007,2014);
+  $('#facts').innerHTML=`
+  <div class="sheet fact"><h3>Noise that looks like a trend</h3><div class="fig">${P100(soil.fp.careless)}</div>
+    <p>of ${soil.fp.n} pure-noise versions of Alaska’s soil wetness record pass a careless trend test. The careful test, which knows that neighboring months resemble each other, passes ${P100(soil.fp.careful)}.</p></div>
+  <div class="sheet fact"><h3>A trend hidden by the seasons</h3><div class="fig">p = ${pHTML(t2.rawS.lp)}</div>
+    <p>is what Alaska’s raw temperature record gives: no sign of change. Remove the seasons and the same test finds ${delta(t2,t2.des.slope_dec)}, ${pEq(t2.des.lp)}.</p></div>
+  <div class="sheet fact"><h3>A decline made of chosen years</h3><div class="fig">2007–2014</div>
+    <p>is the window where central US rainfall “fell” by ${nf(Math.abs(c.sl))} mm/day per decade with ${pEq(c.lc)}. Across all 46 years, ${P100(1-robSummary(pr).S-robSummary(pr).C)} of 1,200 reasonable analyses find no trend at all.</p></div>`;
+}
+
+/* ---------- check a claim ---------- */
+const EXAMPLES=[
+  {txt:'“Rainfall in the central US fell from 2007 to 2014.”',k:'precip_uscentral',d:'down',a:2007,b:2014},
+  {txt:'“Pollution over Eastern China rose from 2005 to 2012.”',k:'no2_china',d:'up',a:2005,b:2012},
+  {txt:'“Alaska stopped warming after 2000.”',k:'t2m_alaska',d:'flat',a:2000,b:2025},
+  {txt:'“Interior Alaska has warmed since 1980.”',k:'t2m_alaska',d:'up',a:1980,b:2025}];
+const CLAIM_ORDER=['t2m_alaska','precip_uscentral','no2_china','no2_india','precip_alaska','snow_land_alaska','snow_glacier_alaska','soilwet_alaska','aod_alaska'];
+function claimRecords(){return CLAIM_ORDER.concat(Object.keys(D).filter(k=>k.indexOf('user_')===0));}
+function fillClaimRecords(keep){
+  const sel=$('#cRec'),cur=keep||sel.value||'t2m_alaska';
+  sel.innerHTML=claimRecords().map(k=>{const s=D[k];return `<option value="${k}">${esc(s.measure)}, ${esc(s.name)}${k.indexOf('user_')===0?' (your upload)':''}</option>`;}).join('');
+  sel.value=D[cur]?cur:'t2m_alaska';fillClaimYears();
+}
+function fillClaimYears(a,b){
+  const s=D[$('#cRec').value],A=$('#cA'),B=$('#cB');let o='';for(let y=s.y0;y<=s.y1;y++)o+=`<option value="${y}">${y}</option>`;
+  A.innerHTML=o;B.innerHTML=o;A.value=a||s.y0;B.value=b||s.y1;
+}
+function sameLen(s,len){return s.cells.filter(c=>c.b-c.a+1===len);}
+function claimStrip(host){
+  const o=host._c,s=o.s,W=Math.floor(host.clientWidth);if(!W)return;host._w=W;
+  const cells=sameLen(s,o.len),H=96,ml=10,mr=10,top=26,pw=W-ml-mr;let lo=0,hi=0;cells.forEach(c=>{lo=Math.min(lo,c.sl);hi=Math.max(hi,c.sl);});
+  const pad=(hi-lo)*.08||1;lo-=pad;hi+=pad;const X=v=>ml+(v-lo)/(hi-lo)*pw;
+  let g=`<text x="${ml}" y="12">Every ${o.len}-year window in the record, by its slope (${esc(s.u)} per decade)</text>`;
+  g+=`<line x1="${X(0).toFixed(1)}" x2="${X(0).toFixed(1)}" y1="${top-4}" y2="${H-20}" style="stroke:var(--ink-soft);stroke-dasharray:3 4"/><text x="${X(0).toFixed(1)}" y="${H-6}" text-anchor="middle">0</text>`;
+  cells.forEach((c,i)=>{const me=c.a===o.a&&c.b===o.b,y=top+16+((i*37)%5-2)*5;
+    g+=`<circle cx="${X(c.sl).toFixed(1)}" cy="${me?top+16:y}" r="${me?7:3.4}" style="fill:${me?'var(--stamp)':'var(--ink-soft)'};opacity:${me?1:.55}"/>`;});
+  const me=cells.find(c=>c.a===o.a&&c.b===o.b);if(me)g+=`<text x="${X(me.sl).toFixed(1)}" y="${H-6}" text-anchor="middle" style="fill:var(--stamp)">the claim’s years</text>`;
+  host.innerHTML=`<svg width="${W}" height="${H}" viewBox="0 0 ${W} ${H}">${g}</svg>`;
+}
+function evaluateClaim(s,dir,a,b){
+  const c=winCell(s,a,b),len=b-a+1,R=robSummary(s),p=pv(c.lc),sig=p<0.05,up=c.sl>=0;
+  const want=dir==='up'?1:dir==='down'?-1:0;
+  let inWin;if(want)inWin=sig?((up?1:-1)===want?'supports':'contradicts'):'unshown';else inWin=sig?'contradicts':'consistent';
+  const same=sameLen(s,len);let extreme=null;
+  if(want&&same.length>=5)extreme=same.filter(x=>want>0?x.sl>=c.sl:x.sl<=c.sl).length/same.length;
+  // share of reasonable analyses backing the claim
+  const rows=R.rows;let back;if(want)back=rows.filter(x=>x.lp<LOG05&&((x.sl>=0?1:-1)===want)).length/rows.length;else back=rows.filter(x=>x.lp>=LOG05).length/rows.length;
+  let backLong=null;const need=R.need;
+  if(need){const le=rows.filter(x=>x.len>=need);if(le.length){backLong=want?le.filter(x=>x.lp<LOG05&&((x.sl>=0?1:-1)===want)).length/le.length:le.filter(x=>x.lp>=LOG05).length/le.length;}}
+  const phi=s.detect.r1,infl=Math.sqrt((1+phi)/(1-phi)),minDet=3.3*s.detect.noise_sd*infl/Math.pow(len,1.5)*10;
+  let verdict,cool=false;
+  if(inWin==='contradicts'){verdict='Contradicted';}
+  else if(want&&inWin==='unshown'){verdict='Not supported';cool=true;}
+  else if(want){verdict=(back>=0.5||(backLong!==null&&backLong>=0.8))?'Holds up':'True for those years only';}
+  else{const longTrend=R.mainSig&&backLong!==null&&backLong<=0.2;verdict=back>=0.9?'Holds up':longTrend?'Misleading':'Unproven';cool=verdict==='Unproven';}
+  return {c:c,len:len,R:R,p:p,sig:sig,inWin:inWin,extreme:extreme,back:back,backLong:backLong,need:need,minDet:minDet,verdict:verdict,cool:cool,want:want};
+}
+const PAST={up:'rose',down:'fell',flat:'did not change'};
+function claimSentence(s,dir,a,b){const n=s.noun;return '“'+n.charAt(0).toUpperCase()+n.slice(1)+' '+PAST[dir]+' from '+a+' to '+b+'.”';}
+function runClaim(ex){
+  const k=$('#cRec').value,s=D[k],dir=$('#cDir').value;let a=+$('#cA').value,b=+$('#cB').value;
+  if(b<a){const x=a;a=b;b=x;}
+  if(b-a+1<8){$('#cOut').innerHTML='<div class="err">Pick at least eight years. Shorter windows are too noisy to test.</div>';return;}
+  const E=evaluateClaim(s,dir,a,b),q=ex?ex.txt:claimSentence(s,dir,a,b),dw=E.want>0?'rise':'decline';
+  const s1=E.want?
+    (E.inWin==='supports'?`For ${a} to ${b}, the careful test finds ${delta(s,E.c.sl)} (${pEq(E.c.lc)}). For those years, the claim checks out.`
+    :E.inWin==='contradicts'?`For ${a} to ${b}, the careful test finds the opposite: ${delta(s,E.c.sl)} (${pEq(E.c.lc)}).`
+    :`For ${a} to ${b}, the record shows ${delta(s,E.c.sl)}, but the careful test can’t tell it from noise (${pEq(E.c.lc)}). The claim isn’t backed even for the years it chose.`)
+    :(E.inWin==='contradicts'?`For ${a} to ${b}, the careful test finds a real change: ${delta(s,E.c.sl)} (${pEq(E.c.lc)}).`
+    :`For ${a} to ${b}, the careful test finds no significant change (${delta(s,E.c.sl)}, ${pEq(E.c.lc)}). But a ${E.len}-year window can only reliably catch changes larger than about ${nf(E.minDet)} ${s.u} per decade, so “no change” has not been shown, only “not detected.”`);
+  const s2=E.want&&E.extreme!==null?`Among all ${sameLen(s,E.len).length} windows of ${E.len} years in this record, ${E.extreme<=0.1?'only ':''}${P100(E.extreme)} show a ${dw} at least this steep.${E.extreme<=0.1?' Those years sit at the extreme: a classic sign of cherry-picking.':''}`
+    :E.want?`This window is too long to compare with others of the same length.`:`Choosing a window where nothing is detected is easy when the window is short or noisy. The real test is the next one.`;
+  const s3=E.want?`Across ${E.R.N.toLocaleString('en-US')} reasonable analyses of the full ${s.y0}–${s.y1} record, ${P100(E.back)} support a ${dw}.`+(E.backLong!==null?` In windows long enough to catch a change of this record’s size (${E.need} years or more), ${P100(E.backLong)} do.`:'')
+    :`Across ${E.R.N.toLocaleString('en-US')} reasonable analyses of the full ${s.y0}–${s.y1} record, ${P100(E.back)} find no trend.`+(E.backLong!==null?` In windows long enough to catch a change of this record’s size (${E.need} years or more), ${P100(1-E.backLong)} find one.`:'');
+  const tail={'Holds up':'The claim holds up beyond the years it picked.','True for those years only':'True for the years chosen, but the longer record does not back it. Repeating it as a trend would mislead.',
+    'Not supported':'The evidence does not back the claim.','Contradicted':'The evidence points the other way.','Misleading':'Nothing was detected in the chosen years, but the longer record shows a real trend. Saying it “stopped” would mislead.','Unproven':'No change was detected, but the record cannot rule one out.'}[E.verdict];
+  const quote=`TrendNoir check: ${q} Verdict: ${E.verdict.toLowerCase()}. ${tail} Data: ${s.coll} via NASA Giovanni (${s.measure}, ${s.name}).`;
+  $('#cOut').innerHTML=`<article class="sheet claimres"><p class="claimq">${esc(q)}</p><div class="stampwrap"><span class="stamp slam ${E.cool?'cool':''}">${E.verdict}</span></div>
+    <p class="verdict-sentence">${tail}</p>
+    <div class="claimcols"><div class="chart" id="cChart" role="img"></div><div class="spec" id="cStrip" role="img" aria-label="Slopes of every window of the same length"></div></div>
+    <ol class="claimsteps"><li><b>For the claimed years.</b> ${s1}</li><li><b>Were the years cherry-picked?</b> ${s2}</li><li><b>Across every reasonable analysis.</b> ${s3}</li></ol>
+    <div class="quote"><label class="small muted" for="cQuote">A summary you can quote</label><textarea id="cQuote" readonly>${esc(quote)}</textarea><button class="btn ghost" id="cCopy" type="button">Copy the summary</button></div></article>`;
+  const i0=(a-s.y0)*12,i1=(b-s.y0+1)*12-1,tr=trendObj(s,i0,i1,E.c.sl);
+  chart($('#cChart'),{n:s.n,y0:s.y0,unit:s.u+' above or below normal',zero:true,h:210,layers:[{y:s.anom,cls:'faint'},{y:s.anom.slice(i0,i1+1),x0:i0,cls:'win'}],shade:[{i0:i0,i1:i1}],trend:tr,anim:true,aria:'The record with the claimed years highlighted'});
+  const st=$('#cStrip');if(E.want&&sameLen(s,E.len).length>=5){st._c={s:s,len:E.len,a:a,b:b};mount(st,()=>claimStrip(st));}else st.innerHTML='';
+  document.getElementById('cOut').scrollIntoView({behavior:'smooth',block:'start'});
+}
+function copyQuote(){const ta=$('#cQuote');if(!ta)return;ta.select();
+  const done=()=>{$('#cCopy').textContent='Copied';setTimeout(()=>{const b=$('#cCopy');if(b)b.textContent='Copy the summary';},1600);};
+  if(navigator.clipboard&&navigator.clipboard.writeText)navigator.clipboard.writeText(ta.value).then(done,()=>{try{document.execCommand('copy');done();}catch(e){}});
+  else{try{document.execCommand('copy');done();}catch(e){}}}
+function setupClaim(){
+  fillClaimRecords('t2m_alaska');
+  $('#cEx').innerHTML=EXAMPLES.map((e,i)=>`<button class="chip" type="button" data-ex="${i}">${esc(e.txt)}</button>`).join('');
+}
+
+/* ---------- classroom: predict first ---------- */
+state.pred={};
+function truthOf(s){return ['CONFIRMED','UNSTEADY','WEAK'].indexOf(s.stats.verdict)>=0?(s.des.slope_dec>=0?'up':'down'):'flat';}
+function pairTruth(ss){const A=ss[0],B=ss[1],sa=pv(A.des.lp)<0.05,sb=pv(B.des.lp)<0.05,ua=A.des.slope_dec>=0,ub=B.des.slope_dec>=0;
+  return sa&&sb?(ua===ub?'same':'opposite'):(sa||sb)?'one':'neither';}
+const PRED_LABEL={up:'rising',down:'falling',flat:'not really changing',same:'the same way',opposite:'opposite ways',one:'only one changes',neither:'neither changes'};
+function predHTML(c,ss){
+  const cur=state.pred[c.id],opts=ss.length>1?['same','opposite','one','neither']:['up','down','flat'];
+  const q=ss.length>1?'Before the evidence: will the two places move the same way?':'Before the evidence: is this record rising, falling, or not really changing?';
+  return `<div class="pred"><b>Your call first.</b> ${q}<div class="modechips">`+opts.map(o=>`<button class="chip" type="button" data-pred="${o}" aria-pressed="${cur===o}">${PRED_LABEL[o]}</button>`).join('')+`</div></div>`;
+}
+function predResult(c,ss){
+  const cur=state.pred[c.id];if(!cur)return '';const truth=ss.length>1?pairTruth(ss):truthOf(ss[0]);
+  const said=ss.length>1?PRED_LABEL[truth]:(truth==='flat'?'no trend the evidence can confirm':PRED_LABEL[truth]);
+  return `<div class="pred">${cur===truth?`<b>You called it.</b> Your call was “${PRED_LABEL[cur]},” and the evidence agrees.`:`<b>Your call was “${PRED_LABEL[cur]}.”</b> The evidence says ${said}. Worth asking what your eye picked up on.`}</div>`;
+}
+
+/* ---------- comparing two places ---------- */
+function compareHTML(ss){
+  if(ss.length!==2)return '';const A=ss[0],B=ss[1],sa=pv(A.des.lp)<0.05,sb=pv(B.des.lp)<0.05,ua=A.des.slope_dec>=0,ub=B.des.slope_dec>=0;
+  const d=(s)=>`${esc(s.name)} ${dirWord(s,s.des.slope_dec)} (${delta(s,s.des.slope_dec)})`;let head,body;
+  if(sa&&sb&&ua!==ub){head='Opposite directions';body=`${d(A)}, while ${d(B)}. Both pass the careful test. Same measurement, opposite trends. Whether one process drives both is the next question, and answering it takes evidence beyond these records.`;}
+  else if(sa&&sb){head='Same direction';body=`${d(A)} and ${d(B)}. Both pass the careful test.`;}
+  else if(sa||sb){const X=sa?A:B,Y=sa?B:A;head='Only one place changed';body=`${d(X)}. ${esc(Y.name)} shows no trend that passes the careful test.`;}
+  else{head='Neither place shows a clear trend';body='Neither record passes the careful test.';}
+  return `<div class="callout cmpb"><span class="big">${head}</span>${body}</div>`;
+}
+
+/* ---------- how long ---------- */
+function renderDetect(){
+  const ss=seriesOf(curCase());let h='';
+  ss.forEach(s=>{
+    const d=s.detect,rec=d.record_years,ns=d.nstar,mx=Math.max(rec,ns||rec)*1.12;
+    let msg;
+    if(ns===null)msg=`At the estimated rate it would take centuries to be sure. In practice that means there is no detectable trend.`;
+    else{msg=`To catch a trend of this size reliably (nine times out of ten), you would want about <b>${nf(ns,2)} years</b> of data. This record has ${nf(rec,2)}. `;
+      if(rec>=ns)msg+='That is enough.';
+      else if(pv(s.des.lp)<0.05)msg+='The trend crossed the line anyway, so treat its exact size with caution.';
+      else msg+=`If the trend is real and stays the same, that is about ${Math.max(1,Math.round(ns-rec))} more years.`;}
+    h+=`<div class="sheet"><h4>${esc(s.name)}</h4><p class="where">${esc(s.measure)}</p><p>${msg}</p>
+    <div class="dbar" role="img" aria-label="Record length compared with years needed"><i style="width:${(rec/mx*100).toFixed(1)}%"></i>${ns?`<u style="left:${(ns/mx*100).toFixed(1)}%"></u>`:''}</div>
+    <p class="small muted">Gray: years of data in hand.${ns?' Orange tick: years needed.':''} A record this long can reliably catch a change of about ${nf(d.min_detect_dec)} ${esc(s.u)} per decade or more.</p>
+    <span class="tag">Rough estimate. Assumes the trend stays constant and the noise behaves as it did before.</span></div>`;
+  });
+  $('#detect').innerHTML=h;
+}
+
+/* ---------- lineup ---------- */
+function renderLineup(){
+  const keys=['t2m_alaska','soilwet_alaska','aod_alaska','snow_glacier_alaska','precip_alaska','snow_land_alaska'];
+  const arr=keys.map(k=>D[k]).sort((a,b)=>TIER[a.stats.verdict]-TIER[b.stats.verdict]||a.des.lp-b.des.lp);
+  const CAP=8;let h='';
+  const ar=v=>`<span class="ar ${v>=0?'up':'down'}" aria-label="${v>=0?'rising':'falling'}">${v>=0?'▲':'▼'}</span>`;
+  arr.forEach(s=>{
+    const st=STAMP[s.stats.verdict],ev=Math.min(CAP,-s.des.lp),cls=s.des.slope_dec>=0?'up':'down',h1=s.stats.half.first.slope_dec,h2=s.stats.half.second.slope_dec,agree=(h1>=0)===(h2>=0);
+    h+=`<div class="lrow"><div><div class="nm">${esc(s.label)}</div><div class="sub">${esc(s.measure)}</div></div>
+    <div><span class="stamp ${st.cool?'cool':''}">${st.t}</span><div class="sub">${sg(s.des.slope_dec)} ${esc(s.u)} per decade</div></div>
+    <div class="evc"><div class="ev" role="img" aria-label="Evidence strength"><i class="${cls}" style="width:${(ev/CAP*100).toFixed(1)}%"></i><u style="left:${(Math.log10(20)/CAP*100).toFixed(1)}%"></u></div>
+      <div class="evnote">careful ${pEq(s.des.lp)}. ${robSummary(s).grade}.</div></div>
+    <div class="halves">first half ${ar(h1)}<br>second half ${ar(h2)}<span class="${agree?'agr':'dis'}">${agree?'directions agree':'directions disagree'}</span></div>
+    <div><button class="btn ghost" type="button" data-interrogate="${s.key}">Interrogate</button></div></div>`;
+  });
+  $('#lineupRows').innerHTML=h;
+}
+function renderDataTable(){
+  const keys=Object.keys(D);let h='<thead><tr><th>Measurement</th><th>Region</th><th>Dataset</th><th>Kind</th><th>Period</th></tr></thead><tbody>';
+  keys.forEach(k=>{const s=D[k];h+=`<tr><td>${esc(s.measure)}</td><td>${esc(s.name)}<br><span class="muted small">${esc(s.box)}</span></td><td>${esc(s.coll)}</td><td>${esc(s.kind)}</td><td>${s.y0} to ${s.y1}</td></tr>`;});
+  $('#dataTable').innerHTML=h+'</tbody>';
+}
+
+/* ---------- wiring ---------- */
+function showCase(){renderTabs();renderCase();renderTrapBlocks();renderRob();renderDetect();const k=curCase().series[0];dealSpot(k,hashStr(k));}
+document.addEventListener('click',e=>{
+  const rp=e.target.closest&&e.target.closest('[data-replay]');
+  if(rp){const h=$('#mc-'+rp.dataset.replay);if(h){animateMorph(h,{t:0,tr:0,fan:0},0);setTimeout(()=>animateMorph(h,{t:1},1400),250);}return;}
+  const ex=e.target.closest&&e.target.closest('[data-ex]');
+  if(ex){const E=EXAMPLES[+ex.dataset.ex];fillClaimRecords(E.k);$('#cDir').value=E.d;fillClaimYears(E.a,E.b);runClaim(E);return;}
+  if(e.target.id==='cGo'){runClaim();return;}
+  if(e.target.id==='cCopy'){copyQuote();return;}
+  const pr=e.target.closest&&e.target.closest('[data-pred]');
+  if(pr){state.pred[curCase().id]=pr.dataset.pred;fillSteps();return;}
+  const mo=e.target.closest&&e.target.closest('[data-mode]');
+  if(mo){setLabMode(mo.dataset.mode);return;}
+  const sp=e.target.closest&&e.target.closest('[data-pick],[data-spot]');
+  if(sp){if(sp.dataset.spot)dealSpot(sp.dataset.spot,hashStr(sp.dataset.spot));else if(spot.picked===null)pickSpot(+sp.dataset.pick);return;}
+  const t=e.target.closest&&e.target.closest('[data-case],[data-step],[data-interrogate],#next,#prev');
+  if(!t)return;
+  if(t.dataset.case){state.custom=null;state.caseId=t.dataset.case;state.step=1;showCase();}
+  else if(t.dataset.step){setStep(+t.dataset.step);}
+  else if(t.dataset.interrogate){const s=D[t.dataset.interrogate];
+    state.custom={id:'q',title:'Interrogation: '+s.label.toLowerCase(),series:[s.key],q:'One suspect, four steps. '+s.measure+' over '+s.name+', '+s.y0+' to '+s.y1+'. Does the evidence hold?'};
+    state.step=1;showCase();document.getElementById('cases').scrollIntoView({behavior:'smooth'});}
+  else if(t.id==='next'){setStep(Math.min(4,state.step+1));}
+  else if(t.id==='prev'){setStep(Math.max(1,state.step-1));}
+});
+$('#rngA').addEventListener('input',e=>setWin(+e.target.value,state.win.b));
+$('#rngB').addEventListener('input',e=>setWin(state.win.a,+e.target.value));
+$('#fooled').addEventListener('click',doFooled);
+$('#file').addEventListener('change',e=>readFiles(e.target.files,'A'));
+$('#fileB').addEventListener('change',e=>readFiles(e.target.files,'B'));
+const dropEl=$('#drop');['dragenter','dragover'].forEach(ev=>dropEl.addEventListener(ev,e=>{e.preventDefault();dropEl.classList.add('over');}));
+['dragleave','drop'].forEach(ev=>dropEl.addEventListener(ev,e=>{e.preventDefault();dropEl.classList.remove('over');}));
+dropEl.addEventListener('drop',e=>{e.stopPropagation();readFiles(e.dataTransfer.files,'A');});
+const dropB=$('#dropB');['dragenter','dragover'].forEach(ev=>dropB.addEventListener(ev,e=>{e.preventDefault();dropB.classList.add('over');}));
+['dragleave','drop'].forEach(ev=>dropB.addEventListener(ev,e=>{e.preventDefault();dropB.classList.remove('over');}));
+dropB.addEventListener('drop',e=>{e.stopPropagation();readFiles(e.dataTransfer.files,'B');});
+const hasFiles=e=>e.dataTransfer&&[...(e.dataTransfer.types||[])].includes('Files');
+window.addEventListener('dragover',e=>{if(hasFiles(e)){e.preventDefault();e.dataTransfer.dropEffect='copy';dropEl.classList.add('over');}});
+window.addEventListener('drop',e=>{if(!hasFiles(e))return;e.preventDefault();dropEl.classList.remove('over');readFiles(e.dataTransfer.files);document.getElementById('evidence').scrollIntoView({behavior:'smooth'});});
+$('#sample').addEventListener('click',()=>{if(lab.mode==='two'){loadTexts(SAMPLE2.A,'A','Eastern China');loadTexts(SAMPLE2.B,'B','Northern India');}else loadTexts([{name:'A3_merra2_t2m_alaska.csv',text:SAMPLE_CSV}],'A','Interior Alaska');});
+document.addEventListener('click',e=>{if(e.target&&e.target.id==='labGo')runLab();});
+$('#spotNew').addEventListener('click',()=>dealSpot(spot.key,(spot.seed*1103515245+12345)>>>0));
+window.__TN={D:D,mkESS:mkESS,olsP:olsP,makeDecoys:makeDecoys,parseGiovanni:parseGiovanni,mergeParsed:mergeParsed,toMonthly:toMonthly,analyzeMonthly:analyzeMonthly};
+$('#fullrec').addEventListener('click',()=>{const s0=D[curCase().series[0]];setWin(s0.y0,s0.y1);});
+$('#cRec').addEventListener('change',()=>fillClaimYears());
+$('#heroBtn').addEventListener('click',()=>{hero.mode=hero.mode==='raw'?'anom':'raw';drawHero(true);});
+$('#lamp').addEventListener('click',()=>{const root=document.documentElement;
+  const dark=getComputedStyle(root).getPropertyValue('--bg').trim()==='#161c22';
+  root.setAttribute('data-theme',dark?'light':'dark');$('#lamp').setAttribute('aria-pressed',String(!dark));});
+
+drawHero(false);renderFacts();setupClaim();renderLineup();renderDataTable();showCase();
+})();
+</script>
+</body>
+</html>

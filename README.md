@@ -4,7 +4,8 @@
 **Event:** 2026 NASA Space Apps Challenge, Seattle
 **Challenge:** Be An Earth System Trend Detective! (Advanced)
 
-TrendNoir is a detective kit for NASA Earth data. Pick a variable and a place, and it walks the record
+TrendNoir is a detective kit for NASA Earth data, built for science journalists and fact-checkers,
+teachers, and students. Pick a variable and a place, and it walks the record
 through four steps (pull the record, remove the seasons, measure the change, test the evidence), then
 gives a plain-language verdict: a real trend, an unsteady one, not enough evidence yet, or no trend.
 It then tries to break its own verdict, so users learn how a trend line can fool them.
@@ -14,6 +15,15 @@ or visit the GitHub Pages site for this repository.
 
 ## What it does
 
+- **Check a claim.** Pick a record, a direction (rose, fell, did not change) and the years a claim
+  covers. TrendNoir tests those years, checks whether they are extreme among all windows of the same
+  length (cherry-picking), and asks how many reasonable analyses of the full record back the claim.
+  It returns a verdict (holds up, true for those years only, not supported, contradicted, misleading,
+  unproven) and a summary that can be quoted.
+- **Why it matters.** Three findings computed from the data on page load, for example that a careless
+  test calls 64% of trend-free versions of Alaska's soil-wetness record significant.
+- **Classroom mode.** Students make a call before the evidence and compare it with the verdict; a
+  45-minute lesson plan is on the page.
 - **Case files.** Three worked cases built from NASA data: opposite NO₂ trends over Eastern China and
   Northern India (OMI on Aura), a warming in interior Alaska that is invisible until the seasons are
   removed (MERRA-2), and a "phantom" rainfall trend over the central United States (MERRA-2).
@@ -73,7 +83,8 @@ The page loads fonts from Google Fonts and needs no other network access.
    circular block bootstrap of residuals.
 8. Robustness: every window of at least max(10 years, half the record) analyzed four ways; reported
    overall and for windows long enough to detect a trend of that size.
-9. Noise lineup: decoys from a circular block bootstrap of the trend-free residuals.
+9. Noise lineup: decoys from a circular block bootstrap of the trend-free residuals. The same recipe,
+   with 400 decoys per record, measures each test's false-positive rate (shown in "Why it matters").
 10. Detection time: rule of thumb of Weatherhead et al. (1998).
 
 Two common shortcuts, trend-free pre-whitening and the seasonal Kendall test without the
