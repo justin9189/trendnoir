@@ -24,6 +24,9 @@ or visit the GitHub Pages site for this repository.
   test calls 64% of trend-free versions of Alaska's soil-wetness record significant.
 - **Classroom mode.** Students make a call before the evidence and compare it with the verdict; a
   45-minute lesson plan is on the page.
+- **Learn.** Four live explainers: a slider shows seasons hiding a trend, a draggable point shows why
+  Sen's slope resists outliers, a vote tally shows what Mann-Kendall counts, and a simulation of 200
+  trend-free records shows how memory fools a careless test. Plus a one-sentence glossary.
 - **Case files.** Three worked cases built from NASA data: opposite NO₂ trends over Eastern China and
   Northern India (OMI on Aura), a warming in interior Alaska that is invisible until the seasons are
   removed (MERRA-2), and a "phantom" rainfall trend over the central United States (MERRA-2).
