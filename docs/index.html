@@ -12,7 +12,7 @@
 :root{
   --bg:#cfc9bb; --sheet:#ecebe4; --sheet-2:#e2e0d7; --ink:#1c1f22; --ink-soft:#4f565c; --rule:#b4b1a4;
   --up:#a4540a; --down:#1c5a85; --stamp:#a3231c; --slat:rgba(20,22,24,.07); --glow:rgba(255,255,255,.55);
-  --header-bg:#cfc9bb; --grain:.07; --shadow:rgba(30,30,24,.35); --ocean:#c3cdd0; --land:#8f8b7d;
+  --header-bg:#cfc9bb; --grain:.07; --shadow:rgba(30,30,24,.35); --ocean:#c3cdd0; --land:#8f8b7d; --brass:#9c7a36; --atm:rgba(70,110,130,.28);
   --display:"Special Elite","Courier New",Courier,monospace;
   --serif:"Source Serif 4",Georgia,"Times New Roman",serif;
   box-sizing:border-box; padding-top:env(safe-area-inset-top,0px); padding-bottom:env(safe-area-inset-bottom,0px);
@@ -21,13 +21,13 @@
   :root:not([data-theme="light"]){
     --bg:#161c22; --sheet:#1f272e; --sheet-2:#252f37; --ink:#ebe6d9; --ink-soft:#9ba4aa; --rule:#36424c;
     --up:#f0b345; --down:#62b4da; --stamp:#e04a3d; --slat:rgba(240,196,120,.075); --glow:rgba(240,196,120,.16);
-    --header-bg:#161c22; --grain:.09; --shadow:rgba(0,0,0,.6); --ocean:#14222d; --land:#5b6670;
+    --header-bg:#161c22; --grain:.09; --shadow:rgba(0,0,0,.6); --ocean:#14222d; --land:#5b6670; --brass:#b8924a; --atm:rgba(240,196,120,.30);
   }
 }
 :root[data-theme="dark"]{
   --bg:#161c22; --sheet:#1f272e; --sheet-2:#252f37; --ink:#ebe6d9; --ink-soft:#9ba4aa; --rule:#36424c;
   --up:#f0b345; --down:#62b4da; --stamp:#e04a3d; --slat:rgba(240,196,120,.075); --glow:rgba(240,196,120,.16);
-  --header-bg:#161c22; --grain:.09; --shadow:rgba(0,0,0,.6); --ocean:#14222d; --land:#5b6670;
+  --header-bg:#161c22; --grain:.09; --shadow:rgba(0,0,0,.6); --ocean:#14222d; --land:#5b6670; --brass:#b8924a; --atm:rgba(240,196,120,.30);
 }
 html{scroll-padding-top:calc(env(safe-area-inset-top,0px) + 4.2rem);scroll-behavior:smooth}
 *,*::before,*::after{box-sizing:border-box}
@@ -277,6 +277,18 @@ input[type=range]{width:100%;accent-color:var(--up);height:2rem}
 .tour .btn{padding:.35rem .8rem;font-size:.95rem}
 .sharebtn{margin-left:.5rem}
 
+/* sentence builder */
+.sentence{font-family:var(--display);font-size:clamp(1.15rem,2.6vw,1.6rem);line-height:1.6;display:flex;flex-wrap:wrap;gap:.3rem .55rem;align-items:baseline}
+.sentence select{font:inherit;color:var(--ink);background:transparent;border:none;border-bottom:2px solid var(--up);border-radius:0;padding:0 1.3rem 0 .15rem;cursor:pointer;-webkit-appearance:none;appearance:none;max-width:100%;
+  background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='10' height='6'><path d='M0 0 L5 6 L10 0' fill='%239a4f07'/></svg>");background-repeat:no-repeat;background-position:right .2rem center}
+.sentence select:hover{background-color:var(--sheet-2)}
+.sentence select.miss{border-bottom-color:var(--stamp);color:var(--stamp)}
+.shint{font-size:.95rem;margin:.6rem 0 .2rem;color:var(--ink-soft)}
+.shint b{color:var(--ink)}
+.invsum{font-family:var(--display);font-size:1.05rem;padding:.6rem .9rem;margin:0 0 1.2rem;border-left:4px solid var(--up);background:var(--sheet-2);--sheet-2:#e4dcc7;--ink:#25221c;--up:#9a4f07;color:var(--ink)}
+.invsum i{font-style:normal;color:#8a3a2a}
+.gsteps>li.done::before{content:"✓";background:var(--up);color:var(--bg)}
+
 /* motion */
 @keyframes viewIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
 .view.enter,.panel.enter{animation:viewIn .34s cubic-bezier(.2,.8,.2,1)}
@@ -302,9 +314,19 @@ body.tt-on #tt,body.tt-on #ttl,body.tt-on #ttd{opacity:1}
 .globe svg:active{cursor:grabbing}
 .globe.draw svg{cursor:crosshair}
 .g-sphere{fill:var(--ocean)}
+.g-ring{fill:none;stroke:var(--brass);stroke-width:5}
+.g-ring2{fill:none;stroke:var(--brass);stroke-width:1;opacity:.7}
+.g-tick{stroke:var(--brass);stroke-width:1.2}
+.g-floor{fill:#000;opacity:.4}
+.g-mark{fill:var(--ink);stroke:var(--ocean);stroke-width:1.5;pointer-events:none}
+.g-pulse{fill:none;stroke-width:2;transform-box:fill-box;transform-origin:center;animation:gpulse 2.2s ease-out infinite;pointer-events:none}
+.g-pulse.up{stroke:var(--up)} .g-pulse.down{stroke:var(--down)} .g-pulse.flat{stroke:var(--ink-soft)}
+@keyframes gpulse{0%{transform:scale(.6);opacity:.9}100%{transform:scale(2.6);opacity:0}}
+.g-case:hover{fill-opacity:.65;stroke-width:2.6}
+@media (prefers-reduced-motion: reduce){.g-pulse{animation:none;opacity:.6}}
 .g-halo{fill:none;stroke:var(--rule);stroke-width:1}
 .g-grat{fill:none;stroke:var(--ink-soft);stroke-width:.5;opacity:.25}
-.g-land{fill:var(--land);stroke:none}
+.g-land{fill:var(--land);stroke:rgba(0,0,0,.18);stroke-width:.4}
 .g-bord{fill:none;stroke:var(--ocean);stroke-width:.7;opacity:.85}
 .g-case{stroke-width:1.6;fill-opacity:.38;cursor:pointer}
 .g-case.up{fill:var(--up);stroke:var(--up)} .g-case.down{fill:var(--down);stroke:var(--down)} .g-case.flat{fill:var(--ink-soft);stroke:var(--ink-soft)}
@@ -322,7 +344,7 @@ body.tt-on #tt,body.tt-on #ttl,body.tt-on #ttd{opacity:1}
 .gsteps h3{font-size:1.25rem;margin-bottom:.35rem}
 .bbox{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:.5rem;margin-top:.7rem}
 .bbox label{display:flex;flex-direction:column;font-size:.85rem;color:var(--ink-soft);gap:.2rem}
-.bbox input,.claimline select{font:inherit;font-size:1rem;color:var(--ink);background:var(--bg);border:1px solid var(--rule);padding:.4rem .5rem;border-radius:2px;width:100%;min-width:0}
+.bbox input,.claimline select,.gsteps select,.gsteps .claimrow input{font:inherit;font-size:1rem;color:var(--ink);background:var(--bg);border:1px solid var(--rule);padding:.4rem .5rem;border-radius:2px;width:100%;min-width:0}
 .glinks{display:flex;flex-wrap:wrap;gap:.5rem}
 .gsteps .claimline .rec{flex-basis:100%}
 .gsel{margin-top:.8rem;padding:.7rem .85rem;background:var(--sheet);border:1px solid var(--rule)}
@@ -355,7 +377,8 @@ body.tt-on #tt,body.tt-on #ttl,body.tt-on #ttd{opacity:1}
 .gloss dd{margin:.15rem 0 0;font-size:.98rem;color:var(--ink-soft)}
 
 /* app shell */
-.view[hidden],.panel[hidden]{display:none}
+.view[hidden],.panel[hidden],.subtabs[hidden]{display:none}
+main{overflow-x:clip}
 section.tight{padding:clamp(1.6rem,4vw,2.8rem) 0;border-bottom:none}
 section.tight>.wrap>h2{font-size:clamp(1.8rem,4.2vw,2.6rem);margin-bottom:.4rem}
 .lead1{font-size:1.08rem;color:var(--ink-soft);max-width:62ch;margin:.1rem 0 1rem}
@@ -481,7 +504,7 @@ footer b{color:var(--ink);font-family:var(--display);font-weight:400;font-size:1
   <div class="wrap">
     <a class="brand" href="#home">TrendNoir</a>
     <button class="lamp" id="lamp" type="button" aria-pressed="false">Lights</button>
-    <nav aria-label="Pages"><a href="#explore">Investigate</a><a href="#cases">Case files</a><a href="#claim">Check a claim</a><a href="#learn">Learn</a><a href="#lineup">Lineup</a><a href="#about">About</a></nav>
+    <nav aria-label="Pages"><a href="#explore">Investigate</a><a href="#cases">Case files</a><a href="#claim">Check a claim</a><a href="#learn">Learn</a><a href="#about">About</a></nav>
   </div>
 </header>
 
@@ -522,25 +545,22 @@ footer b{color:var(--ink);font-family:var(--display);font-weight:400;font-size:1
 <div class="view" id="v-claim" hidden>
   <section class="tight"><div class="wrap">
     <h2>Check a claim</h2>
-    <p class="lead1">A real trend, or cherry-picked years? Type the claim the way you heard it.</p>
+    <p class="lead1">Heard that something is rising or falling? Set up the claim as a sentence. TrendNoir tests the years it names, then every other reasonable choice of years.</p>
     <div class="claimtype">
-      <label for="cText">The claim</label>
-      <div class="claimrow"><input id="cText" type="text" autocomplete="off" placeholder="e.g. Rainfall in Seattle has dropped since 2010"><button class="btn" id="cParse" type="button">Check it</button></div>
+      <div class="sentence" id="sBuild">
+        <select id="sMeas" aria-label="What changed"></select><span>in</span><select id="sPlace" aria-label="Where"></select><select id="sDir" aria-label="Which way"><option value="up">rose</option><option value="down">fell</option><option value="flat">did not change</option></select><span>from</span><select id="sA" aria-label="First year"></select><span>to</span><select id="sB" aria-label="Last year"></select>
+      </div>
+      <p class="shint" id="sHint"></p>
+      <div class="btnrow"><button class="btn" id="sGo" type="button">Check it</button></div>
+      <details class="more" style="margin-top:1rem"><summary>Or paste a claim you read</summary>
+        <div class="claimrow" style="margin-top:.5rem"><input id="cText" type="text" autocomplete="off" placeholder="e.g. Rainfall in Seattle has dropped since 2010"><button class="btn ghost" id="cParse" type="button">Read it</button></div>
+        <p class="small muted" style="margin-top:.4rem">TrendNoir reads it with simple rules and fills in the sentence above. Anything it can’t read is marked in red for you to pick.</p>
+      </details>
       <div id="cRead" aria-live="polite"></div>
     </div>
-    <div class="excl" id="cEx" style="margin-top:.8rem"></div>
-    <details class="more" style="margin-top:1.2rem"><summary>Or set the claim up by hand</summary>
-    <div class="claimform">
-      <div class="claimline">
-        <label class="rec">The record<select id="cRec"></select></label>
-        <label>Claim<select id="cDir"><option value="up">rose</option><option value="down">fell</option><option value="flat">did not change</option></select></label>
-        <label>from<select id="cA"></select></label>
-        <label>to<select id="cB"></select></label>
-      </div>
-      <button class="btn" id="cGo" type="button">Check this claim</button>
-    </div>
-    
-    </details>
+    <p class="small muted" style="margin:1.1rem 0 .3rem">Or try one of these:</p>
+    <div class="excl" id="cEx"></div>
+    <div hidden><select id="cRec"></select><select id="cDir"><option value="up">rose</option><option value="down">fell</option><option value="flat">did not change</option></select><select id="cA"></select><select id="cB"></select><button id="cGo" type="button"></button></div>
     <div id="cOut" aria-live="polite"></div>
   </div></section>
 </div>
@@ -670,47 +690,43 @@ footer b{color:var(--ink);font-family:var(--display);font-weight:400;font-size:1
         <div class="legend" style="margin-top:.6rem"><span><span class="sw" style="background:var(--up)"></span>rising</span><span><span class="sw" style="background:var(--down)"></span>falling</span><span><span class="sw" style="background:var(--ink-soft)"></span>no clear trend</span><span><span class="sw" style="background:var(--stamp)"></span>your region</span></div>
         <p class="small muted" id="gHint" style="margin-top:.3rem">Drag to spin. Scroll or use + and − to zoom.</p>
       </div>
+      <div>
+      <div class="invsum" id="invSum"></div>
       <ol class="gsteps">
-        <li><h3>What do you want to investigate?</h3>
+        <li id="st1"><h3>What do you want to investigate?</h3>
           <p class="small muted">What kind of place?</p><div class="excl" id="fPlace"></div>
           <p class="small muted" style="margin-top:.6rem">What interests you?</p><div class="excl" id="fInt"></div>
-          <div id="fSug"></div></li>
-        <li><h3>Pick a region</h3>
-          <p class="small muted">Draw on the globe, click a colored box, or start from a place.</p>
-          <div class="excl" id="gPresets"></div>
-          <div class="bbox"><label>West<input type="number" id="bW" step="0.5" min="-180" max="180"></label><label>South<input type="number" id="bS" step="0.5" min="-90" max="90"></label><label>East<input type="number" id="bE" step="0.5" min="-180" max="180"></label><label>North<input type="number" id="bN" step="0.5" min="-90" max="90"></label></div>
-          <div id="gSel"></div></li>
-        <li><h3>Pick a measurement and years</h3>
-          <div class="claimline"><label class="rec">Measurement<select id="gVar"></select></label><label>from<select id="gA"></select></label><label>to<select id="gB"></select></label></div>
+          <div id="fSug"></div>
+          <label class="rec" style="display:block;margin-top:.9rem;font-size:.92rem;color:var(--ink-soft)">Or choose a measurement directly<select id="gVar" style="margin-top:.25rem"></select></label>
           <p class="small" id="gDef" style="margin-top:.5rem"></p>
           <div id="gOtherBox" hidden style="margin-top:.7rem">
             <div class="claimrow"><input id="gKw" type="text" autocomplete="off" placeholder="Search word, Giovanni variable ID, or a pasted Giovanni link"></div>
             <div class="excl" id="gKwChips" style="margin-top:.5rem"></div>
-            <p class="small muted" style="margin-top:.4rem">Giovanni opens with your region and years set and this word in its search box. Pick a <b>monthly</b> variable from its list for the quickest download.</p>
+            <p class="small muted" style="margin-top:.4rem">Giovanni opens with your region and years set and this word in its search box. Pick a <b>monthly</b> variable for the quickest download.</p>
           </div></li>
-        <li><h3>Get the data from NASA</h3>
-          <div id="gLinks"></div>
-          <p class="small muted" style="margin-top:.5rem">Giovanni opens with your region, measurement and years filled in. Sign in with a free Earthdata account, press <b>Plot Data</b>, then download the CSV.</p></li>
-        <li><h3>Drop the file here</h3>
+        <li id="st2"><h3>Where?</h3>
+          <p class="small muted">Search for a place, click a colored box on the globe, or press <b>Draw a region</b> under the globe.</p>
+          <div class="claimrow"><input id="gPlaceQ" type="text" list="placeList" autocomplete="off" placeholder="Seattle, the Amazon, Delhi, Greenland…"><button class="btn ghost" id="gPlaceGo" type="button">Go</button></div>
+          <datalist id="placeList"></datalist>
+          <div id="gSel"></div>
+          <details class="more"><summary>Exact coordinates</summary>
+            <div class="bbox"><label>West<input type="number" id="bW" step="0.5" min="-180" max="180"></label><label>South<input type="number" id="bS" step="0.5" min="-90" max="90"></label><label>East<input type="number" id="bE" step="0.5" min="-180" max="180"></label><label>North<input type="number" id="bN" step="0.5" min="-90" max="90"></label></div></details></li>
+        <li id="st3"><h3>Get the data from NASA</h3>
+          <div class="claimline"><label>from<select id="gA"></select></label><label>to<select id="gB"></select></label></div>
+          <div id="gLinks" style="margin-top:.7rem"></div>
+          <p class="small muted" style="margin-top:.5rem">Giovanni opens with everything filled in. Sign in with a free Earthdata account, press <b>Plot Data</b>, then download the CSV.</p></li>
+        <li id="st4"><h3>Drop the file here</h3>
           <div class="modechips" role="group" aria-label="Upload mode"><button class="chip" type="button" data-mode="one" aria-pressed="true">One region</button><button class="chip" type="button" data-mode="two" aria-pressed="false">Compare two regions</button></div>
         <label class="drop" id="drop"><span class="droplab" id="dropLabA" hidden>Region A</span><input type="file" id="file" accept=".csv,text/csv" multiple><span class="dropt">Click here to choose Giovanni CSV files</span><br><span class="small muted">or drag them anywhere onto this page</span></label>
         <label class="drop" id="dropB" hidden><span class="droplab">Region B: same variable, another place</span><input type="file" id="fileB" accept=".csv,text/csv" multiple><span class="dropt">Click here to choose the second region’s files</span></label>
-        <button class="btn ghost" id="sample" type="button">Use a sample file</button>
-        <p class="small muted" style="margin-top:.5rem" id="sampleNote">The sample is the raw Giovanni download behind Case 002. Its verdict should match the case file exactly.</p>
+        <button class="linkbtn" id="sample" type="button">No file yet? Use a sample</button>
+        <p class="small muted" style="margin-top:.3rem" id="sampleNote">The sample is the raw Giovanni download behind Case 002. Its verdict should match the case file exactly.</p>
         
         <div id="labForm"></div>
         <div id="labMsg" aria-live="polite"></div></li>
       </ol>
+      </div>
     </div>
-  </div></section>
-</div>
-
-<div class="view" id="v-lineup" hidden>
-  <section class="tight"><div class="wrap">
-    <h2>The lineup</h2>
-    <p class="lead1">Six measurements over the same patch of interior Alaska, 1980 to 2025. Which ones really changed?</p>
-    <div class="fhead">Bar: strength of evidence. Tick: the usual 0.05 line. Arrows: direction in each half of the record.</div>
-    <div class="lineup" id="lineupRows"></div>
   </div></section>
 </div>
 
@@ -719,7 +735,7 @@ footer b{color:var(--ink);font-family:var(--display);font-weight:400;font-size:1
   <h2>How TrendNoir answers the challenge</h2>
   <div class="scroll"><table class="cmp">
     <thead><tr><th>The challenge asks</th><th>Where TrendNoir does it</th></tr></thead><tbody>
-    <tr><td>Identify variables of interest</td><td>Investigate, step 1: two questions (kind of place, interest) suggest variables from MODIS, OMI, AIRS, GPM, MERRA-2 and GLDAS, each with a plain definition. Any other Giovanni variable can be searched. The Lineup ranks six variables over one region by strength of evidence.</td></tr>
+    <tr><td>Identify variables of interest</td><td>Investigate, step 1: two questions (kind of place, interest) suggest variables from MODIS, OMI, AIRS, GPM, MERRA-2 and GLDAS, each with a plain definition. Any other Giovanni variable can be searched. Case 004 ranks six variables over one region by strength of evidence.</td></tr>
     <tr><td>Acquire the data for a region</td><td>Draw a region on the globe or pick a place; TrendNoir builds the Giovanni request with region, variable and years filled in, then reads the downloaded CSV in the browser.</td></tr>
     <tr><td>Generate and visualize a time series</td><td>Every case and upload: the monthly record, the seasons removed in an animated step, the trend line with its range, and maps of every window of years.</td></tr>
     <tr><td>Rate of change and significance (t-test, Mann-Kendall, confidence intervals)</td><td>Sen’s slope per decade with a 95% range; Mann-Kendall corrected for autocorrelation; a plain t-test shown for comparison; Hamed-Rao and seasonal Kendall as second opinions; robustness across every reasonable analysis.</td></tr>
@@ -833,7 +849,9 @@ const CASES = [
   {id:'c2',tab:'Case 002',title:'The warming you can’t see',series:['t2m_alaska'],
    q:'Air in interior Alaska swings by more than 30 °C every year. Is a slow warming hiding inside that swing, and can we prove it?'},
   {id:'c3',tab:'Case 003',title:'The phantom trend',series:['precip_uscentral'],
-   q:'Rainfall over the central United States wobbles from year to year. Is it getting wetter or drier, or does it only look that way when you choose the right years?'}
+   q:'Rainfall over the central United States wobbles from year to year. Is it getting wetter or drier, or does it only look that way when you choose the right years?'},
+  {id:'c4',tab:'Case 004',title:'One place, six suspects',lineup:true,series:['t2m_alaska','soilwet_alaska','aod_alaska','snow_glacier_alaska','precip_alaska','snow_land_alaska'],
+   q:'Six measurements over the same patch of interior Alaska, 1980 to 2025. Which ones really changed? They are ranked by strength of evidence, and any one can be interrogated in four steps.'}
 ];
 const STEPS = ['Pull the record','Remove the seasons','Measure the change','Test the evidence'];
 const STAMP = {'CONFIRMED':{t:'Confirmed',cool:false},'UNSTEADY':{t:'Unsteady',cool:false},'WEAK':{t:'Weak evidence',cool:false},
@@ -1077,6 +1095,10 @@ function stepperHTML(){
 function renderCase(){
   const c=curCase(),ss=seriesOf(c);
   const fileNo=c.tab&&/^Case \d+/.test(c.tab)?'TN-'+c.tab.slice(5):'TN-'+String(lab.count).padStart(3,'0')+'U';
+  const stEl=document.querySelector('.subtabs');if(stEl)stEl.hidden=!!c.lineup;
+  if(c.lineup){$('#caseHead').innerHTML=`<div class="filelabel"><span><i>File no.</i>${esc(fileNo)}</span><span><i>Subject</i>Six measurements</span><span><i>Period</i>1980–2025</span><span><i>Status</i>Ranked by evidence</span></div>
+      <div class="casehead"><h3>${esc(c.title)}</h3><p class="lead1" style="margin-bottom:0">${esc(c.q)}</p></div>`;
+    $('#caseView').innerHTML=`<div class="fhead">Bar: strength of evidence. Tick: the usual 0.05 line. Arrows: direction in each half of the record.</div><div class="lineup" id="lineupRows">${lineupHTML()}</div>`;setSub('inv');return;}
   $('#caseHead').innerHTML=`<div class="filelabel"><span><i>File no.</i>${esc(fileNo)}</span><span><i>Subject</i>${esc(ss[0].measure)}</span><span><i>Period</i>${ss[0].y0}–${ss[0].y1}</span><span><i>Status</i><span id="fileStatus"></span>${CAN_SHARE&&!state.custom?'<button class="linkbtn sharebtn" type="button" data-share-case="1">copy link</button>':''}</span></div>
     <div class="casehead"><h3>${esc(c.title)}</h3><p class="lead1" style="margin-bottom:0">${esc(c.q)}</p></div>`;
   let h=`<div id="stepperBox">${stepperHTML()}</div><div id="cmpBox"></div><div class="sheets ${ss.length>1?'two':''}" id="sheets">`;
@@ -1086,9 +1108,9 @@ function renderCase(){
   state._pw=(state.step-1)/3*100;const bar=document.querySelector('.stepbar i');if(bar)bar.style.width=state._pw+'%';
   fillSteps();fileStatus();
 }
-function fileStatus(){const el=$('#fileStatus');if(!el)return;const ss=seriesOf(curCase());el.textContent=state.step<4?'Under investigation':ss.map(s=>STAMP[s.stats.verdict].t).join(' / ');}
+function fileStatus(){const el=$('#fileStatus');if(!el||curCase().lineup)return;const ss=seriesOf(curCase());el.textContent=state.step<4?'Under investigation':ss.map(s=>STAMP[s.stats.verdict].t).join(' / ');}
 function setStep(n){
-  state.step=n;$('#stepperBox').innerHTML=stepperHTML();const bar=document.querySelector('.stepbar i');if(bar){void bar.offsetWidth;bar.style.width=((n-1)/3*100)+'%';}state._pw=(n-1)/3*100;
+  if(curCase().lineup)return;state.step=n;$('#stepperBox').innerHTML=stepperHTML();const bar=document.querySelector('.stepbar i');if(bar){void bar.offsetWidth;bar.style.width=((n-1)/3*100)+'%';}state._pw=(n-1)/3*100;
   seriesOf(curCase()).forEach(s=>goMorph($('#mc-'+s.key),STEP_TARGET[n]));
   fillSteps();fileStatus();
 }
@@ -1424,6 +1446,7 @@ function loadTexts(list,slot,place){
 }
 function registerUser(res,rec,mo,place,units,title){
   lab.count++;const key='user_'+lab.count;D[key]=Object.assign(res,{key:key,units:units,decimals:3});
+  INV.file=true;if(typeof invSummary==='function')invSummary();
   if(rec.meta.bbox){const bb=rec.meta.bbox.split(',').map(Number);if(bb.length===4&&!bb.some(isNaN)){G.user.push({b:bb,key:key});if(G.ready)renderGlobe();}}
   prepareSeries(key,{label:title,name:place,measure:title,noun:title.charAt(0).toLowerCase()+title.slice(1)+' over '+place,box:rec.meta.bbox?fmtBox(rec.meta.bbox):place,u:units,up:'increased',down:'decreased',
     def:'Uploaded from NASA Giovanni'+(rec.meta.dataset?' (dataset '+rec.meta.dataset+')':'')+'. '+(mo.daily?'Daily values were averaged into months; months with fewer than ten valid days would be dropped. ':'')+(mo.missing?mo.missing+' missing months were filled by straight-line interpolation of their neighbors. ':''),
@@ -1440,7 +1463,7 @@ async function runLab(){
       if(state.pendingClaim){const pc=state.pendingClaim,s=D[key];state.pendingClaim=null;$('#gPending').innerHTML='';
         const want=G.box?G.box.join(','):null,got=(A.meta.bbox||'').replace(/\s/g,'');
         $('#cRead').innerHTML=(want&&got&&want!==got)?`<p class="err" style="margin-top:.6rem">Heads up: the uploaded file covers ${esc(fmtBox(got))}, not the region set for this claim (${esc(fmtBox(want))}). The verdict below is for the file you uploaded.</p>`:'';
-        state.step=1;showCase();fillClaimRecords(key);$('#cDir').value=pc.dir;let a=Math.max(s.y0,pc.a||s.y0),b=Math.min(s.y1,pc.b||s.y1);if(b-a+1<8)a=Math.max(s.y0,b-7);fillClaimYears(a,b);
+        state.step=1;showCase();fillClaimRecords(key);fillBuilder({m:$('#sMeas').value,p:'u:'+key,a:pc.a,b:pc.b});$('#sDir').value=pc.dir;$('#cDir').value=pc.dir;let a=Math.max(s.y0,pc.a||s.y0),b=Math.min(s.y1,pc.b||s.y1);if(b-a+1<8)a=Math.max(s.y0,b-7);fillClaimYears(a,b);
         labMsg('Done. Your claim is checked on the claim page. <a href="#claim">See the verdict</a>.');btn.disabled=false;go('claim');setTimeout(()=>runClaim({txt:pc.txt}),80);return;}
     }else{
       const B=lab.recB,pa=$('#labPlace').value.trim()||'Region A',pb=$('#labPlaceB').value.trim()||'Region B';
@@ -1451,7 +1474,7 @@ async function runLab(){
       const rB=await analyzeMonthly(moB,conv,msg=>labMsg(esc(pb)+': '+esc(msg)+'…','busy'));const kB=registerUser(rB,B,moB,pb,units,title);
       state.custom={id:kA+kB,tab:'Your evidence',title:'Your evidence: '+title+' in two places',series:[kA,kB],q:'The same measurement over '+pa+' and '+pb+', '+Y0+' to '+Y1+'. Do the two places move the same way?'};
     }
-    state.step=1;showCase();fillClaimRecords();
+    state.step=1;showCase();fillClaimRecords();fillBuilder();
     labMsg('Done in '+((performance.now()-t0)/1000).toFixed(1)+' seconds. <a href="#cases">Open your case file</a>.');
     setSub('inv');go('cases');
   }catch(e){labMsg(esc(e.message),'err');}
@@ -1522,7 +1545,7 @@ function renderFacts(){
     <p>The years central US rainfall “fell.” Across the full record, ${P100(1-R.S-R.C)} of analyses find no trend.</p></a>`;
 }
 /* ---------- check a claim ---------- */
-const EXAMPLES=[
+const EXAMPLES_OLD=[
   {txt:'“Rainfall in the central US fell from 2007 to 2014.”',k:'precip_uscentral',d:'down',a:2007,b:2014},
   {txt:'“Pollution over Eastern China rose from 2005 to 2012.”',k:'no2_china',d:'up',a:2005,b:2012},
   {txt:'“Alaska stopped warming after 2000.”',k:'t2m_alaska',d:'flat',a:2000,b:2025},
@@ -1614,9 +1637,52 @@ function copyQuote(){const ta=$('#cQuote');if(!ta)return;ta.select();
   if(navigator.clipboard&&navigator.clipboard.writeText)navigator.clipboard.writeText(ta.value).then(done,()=>{try{document.execCommand('copy');done();}catch(e){}});
   else{try{document.execCommand('copy');done();}catch(e){}}}
 function setupClaim(){
-  fillClaimRecords('t2m_alaska');
+  fillClaimRecords('t2m_alaska');fillBuilder();
   $('#cEx').innerHTML=EXAMPLES.map((e,i)=>`<button class="chip" type="button" data-ex="${i}">${esc(e.txt)}</button>`).join('');
 }
+
+const EXAMPLES=[
+  {txt:'“Rainfall in the central US fell from 2007 to 2014.”',m:'precip',p:'the central United States',d:'down',a:2007,b:2014},
+  {txt:'“Pollution over Eastern China rose from 2005 to 2012.”',m:'no2',p:'Eastern China',d:'up',a:2005,b:2012},
+  {txt:'“Alaska stopped warming after 2000.”',m:'t2m',p:'interior Alaska',d:'flat',a:2000,b:2025},
+  {txt:'“Rainfall in Seattle has dropped since 2010.”',m:'precip',p:'the Pacific Northwest',d:'down',a:2010,b:2025}];
+const MEAS_ORDER=['t2m','precip','snow','glacier','soil','aod','no2','seaice','sst','ndvi','ozone','co','et','runoff','chl'];
+const capf=x=>x.charAt(0).toUpperCase()+x.slice(1);
+function placeNames(){const seen=new Set(),out=[];PLACES.forEach(p=>{if(!seen.has(p.name)){seen.add(p.name);out.push(p);}});return out;}
+function fillBuilder(keep){
+  const sm=$('#sMeas'),sp=$('#sPlace');const curM=keep&&keep.m||sm.value||'t2m',curP=keep&&keep.p||sp.value||'interior Alaska';
+  sm.innerHTML=MEAS_ORDER.map(k=>{const m=MEAS.find(x=>x.k===k);return `<option value="${k}">${esc(capf(m.label))}</option>`;}).join('');
+  const all=placeNames(),onfile=all.filter(p=>p.reg),rest=all.filter(p=>!p.reg).sort((x,y)=>x.name.replace(/^the /,'').localeCompare(y.name.replace(/^the /,'')));
+  const ups=Object.keys(D).filter(k=>k.indexOf('user_')===0);
+  sp.innerHTML=`<optgroup label="Records on file">${onfile.map(p=>`<option value="${esc(p.name)}">${esc(p.name)}</option>`).join('')}</optgroup>`+
+    (ups.length?`<optgroup label="Your uploads">${ups.map(k=>`<option value="u:${k}">${esc(D[k].name)} (your upload)</option>`).join('')}</optgroup>`:'')+
+    `<optgroup label="Anywhere else">${rest.map(p=>`<option value="${esc(p.name)}">${esc(p.name)}</option>`).join('')}<option value="__draw">somewhere I’ll draw on the globe</option></optgroup>`;
+  sm.value=curM;sp.value=curP;if(!sp.value)sp.value='interior Alaska';fillBuilderYears(keep);updateHint();
+}
+function fillBuilderYears(keep){const S=$('#sMeas').value,pv0=$('#sPlace').value;let y0=S==='no2'?2005:1980,y1=2025;
+  if(pv0.indexOf('u:')===0){const s=D[pv0.slice(2)];y0=s.y0;y1=s.y1;}
+  const a=keep&&keep.a||+$('#sA').value||y0,b=keep&&keep.b||+$('#sB').value||y1;let o='';for(let y=y0;y<=y1;y++)o+=`<option value="${y}">${y}</option>`;
+  $('#sA').innerHTML=o;$('#sB').innerHTML=o;$('#sA').value=Math.min(Math.max(a,y0),y1);$('#sB').value=Math.min(Math.max(b,y0),y1);}
+function builderState(){
+  const mk=$('#sMeas').value,pv0=$('#sPlace').value,dir=$('#sDir').value;let a=+$('#sA').value,b=+$('#sB').value;if(b<a){const x=a;a=b;b=x;}
+  const meas=MEAS.find(m=>m.k===mk);let place=null,key=null,upload=null;
+  if(pv0.indexOf('u:')===0){upload=pv0.slice(2);key=upload;}else if(pv0==='__draw')place={name:'a region you draw',draw:true};else place=PLACES.find(p=>p.name===pv0);
+  if(!key&&place&&place.reg)key=HAVE[place.reg+':'+mk]||null;
+  return {meas:meas,place:place,dir:dir,a:a,b:b,key:key,upload:upload};}
+function builderSentence(S){if(S.upload){const s=D[S.upload];return '“'+capf(s.measure)+' over '+s.name+' '+PAST[S.dir]+' from '+S.a+' to '+S.b+'.”';}
+  return '“'+capf(S.meas.label)+' in '+S.place.name+' '+PAST[S.dir]+' from '+S.a+' to '+S.b+'.”';}
+function updateHint(){const S=builderState();document.querySelectorAll('.sentence select').forEach(x=>x.classList.remove('miss'));
+  if(S.b-S.a+1<8){$('#sHint').innerHTML='<b>Pick at least eight years.</b> Shorter windows are too noisy to test.';$('#sGo').disabled=true;return;}
+  $('#sGo').disabled=false;
+  if(S.key){$('#sHint').innerHTML='<b>On file.</b> The answer appears right away.';$('#sGo').textContent='Check it';}
+  else{$('#sHint').innerHTML='<b>Not on file yet.</b> TrendNoir sets up the NASA download for you (about two minutes), then checks it.';$('#sGo').textContent='Get the data and check it';}}
+function builderGo(q){
+  const S=builderState();if(S.b-S.a+1<8)return;q=q||builderSentence(S);$('#cText').value=$('#cText').value||'';
+  if(S.key){const s=D[S.key];fillClaimRecords(S.key);$('#cDir').value=S.dir;let a=Math.max(s.y0,S.a),b=Math.min(s.y1,S.b);if(b-a+1<8)a=Math.max(s.y0,b-7);fillClaimYears(a,b);
+    $('#cRead').innerHTML=a!==S.a||b!==S.b?`<p class="small muted" style="margin-top:.6rem">The record covers ${s.y0}–${s.y1}, so the check uses ${a}–${b}.</p>`:'';runClaim({txt:q});return;}
+  state._parsed={P:{meas:S.meas,place:S.place&&!S.place.draw?S.place:null,dir:S.dir,a:S.a,b:S.b},q:q};startPending();
+}
+function setBuilder(m,p,d,a,b){fillBuilder({m:m,p:p,a:a,b:b});if(d)$('#sDir').value=d;fillBuilderYears({a:a,b:b});updateHint();}
 
 /* ---------- classroom: predict first ---------- */
 state.pred={};
@@ -1643,11 +1709,11 @@ function runCounts(root){if(!root)return;root.querySelectorAll('[data-count]').f
   const step=now=>{const k=Math.min(1,(now-t0)/dur);el.textContent=fmt(to*ease(k));if(k<1)requestAnimationFrame(step);};requestAnimationFrame(step);});}
 
 /* ---------- app shell: pages and case sub-tabs ---------- */
-const VIEWS=['home','claim','cases','explore','learn','lineup','about'],ALIAS={teach:'about',method:'about',evidence:'explore',data:'explore',why:'home',top:'home'};
+const VIEWS=['home','claim','cases','explore','learn','about'],ALIAS={teach:'about',method:'about',evidence:'explore',data:'explore',why:'home',top:'home'};
 function enter(el){if(!el)return;el.classList.remove('enter');void el.offsetWidth;el.classList.add('enter');}
 function moveInd(){const a=document.querySelector('.subtab[aria-selected="true"]'),ind=document.querySelector('.subind');if(a&&ind&&a.offsetWidth){ind.style.left=a.offsetLeft+'px';ind.style.width=a.offsetWidth+'px';}}
 window.addEventListener('resize',()=>requestAnimationFrame(moveInd));
-function route(){let h0=(location.hash||'').slice(1);let h=h0;h=ALIAS[h]||h;if(VIEWS.indexOf(h)<0)h='home';
+function route(){let h0=(location.hash||'').slice(1);let h=h0;if(h0==='lineup'){state.custom=null;state.caseId='c4';showCase();h='cases';}h=ALIAS[h]||h;if(VIEWS.indexOf(h)<0)h='home';
   document.querySelectorAll('.view').forEach(v=>{const show=v.id==='v-'+h;if(show&&v.hidden)enter(v);v.hidden=!show;});hideTip();
   if(h==='cases')requestAnimationFrame(moveInd);if(h==='learn')initLearn();if(h==='explore')initGlobe();if(h==='home')runCounts($('#v-home'));
   document.querySelectorAll('.bar nav a').forEach(a=>a.setAttribute('aria-current',a.getAttribute('href')==='#'+h?'page':'false'));
@@ -1671,7 +1737,7 @@ const VARS=[
   {id:'M2TMNXAER_5_12_4_TOTEXTTAU',label:'Haze: aerosol optical depth (MERRA-2, monthly)',kw:'aerosol extinction AOT',y0:1980},
   {id:'OMNO2d_004_ColumnAmountNO2TropCloudScreened',label:'Nitrogen dioxide pollution (OMI satellite, daily)',kw:'OMI NO2',y0:2005,daily:true,src:'no2_china'}];
 const PRESETS=[{n:'Pacific Northwest',b:[-125,45,-119,49]},{n:'Amazon',b:[-70,-12,-50,0]},{n:'Sahel',b:[-10,12,20,16]},{n:'Himalayas',b:[76,27,92,33]},{n:'Greenland',b:[-55,62,-25,80]},{n:'Great Plains',b:[-104,35,-95,45]}];
-const G={rot:[100,-25,0],k:1,box:null,mode:'rotate',ready:false,sel:null,user:[],auto:true};
+const GS=0.8;const G={rot:[100,-25,0],k:1,box:null,mode:'rotate',ready:false,sel:null,user:[],auto:true};
 function rectGeo(b){const W=b[0],S=b[1],E=b[2],N=b[3],r=[],n=24;for(let i=0;i<=n;i++)r.push([W,S+(N-S)*i/n]);for(let i=1;i<=n;i++)r.push([W+(E-W)*i/n,N]);
   for(let i=1;i<=n;i++)r.push([E,N-(N-S)*i/n]);for(let i=1;i<n;i++)r.push([E-(E-W)*i/n,S]);r.push([W,S]);return {type:'Polygon',coordinates:[r]};}
 function caseClass(k){const s=D[k];return ['CONFIRMED','UNSTEADY','WEAK'].indexOf(s.stats.verdict)>=0?(s.des.slope_dec>=0?'up':'down'):'flat';}
@@ -1680,33 +1746,49 @@ function initGlobe(){
   const host=$('#globe');
   if(!window.d3){host.innerHTML='<p class="err">The globe needs one script from cdnjs.cloudflare.com, which did not load. You can still type a region below.</p>';return;}
   G.land={type:'MultiPolygon',coordinates:GEO.land};G.bord={type:'MultiLineString',coordinates:GEO.borders};G.grat=d3.geoGraticule10();
-  host.innerHTML=`<svg><defs><radialGradient id="gshade" cx="38%" cy="32%" r="75%"><stop offset="0%" stop-color="#fff" stop-opacity=".10"/><stop offset="70%" stop-color="#000" stop-opacity="0"/><stop offset="100%" stop-color="#000" stop-opacity=".28"/></radialGradient></defs>
-    <circle class="g-halo"/><path class="g-sphere"/><path class="g-grat"/><path class="g-land"/><path class="g-bord"/><g class="g-users"></g><g class="g-cases"></g><path class="g-box"/><circle class="g-shade" fill="url(#gshade)" pointer-events="none"/><g class="g-labs"></g></svg>`;
+  host.innerHTML=`<svg><defs><radialGradient id="gshade" cx="36%" cy="30%" r="78%"><stop offset="0%" stop-color="#fff" stop-opacity=".22"/><stop offset="45%" stop-color="#fff" stop-opacity="0"/><stop offset="82%" stop-color="#000" stop-opacity=".12"/><stop offset="100%" stop-color="#000" stop-opacity=".42"/></radialGradient>
+    <radialGradient id="gatm" gradientUnits="userSpaceOnUse"><stop class="g-atm0" offset=".9" style="stop-color:var(--atm)"/><stop offset="1" stop-color="#000" stop-opacity="0"/></radialGradient>
+    <filter id="gblur" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="7"/></filter></defs>
+    <ellipse class="g-floor" filter="url(#gblur)"/><circle class="g-atm" fill="url(#gatm)" pointer-events="none"/><path class="g-sphere"/><path class="g-grat"/><path class="g-land"/><path class="g-bord"/><g class="g-users"></g><g class="g-cases"></g><g class="g-marks"></g><path class="g-box"/><circle class="g-shade" fill="url(#gshade)" pointer-events="none"/><circle class="g-ring2" pointer-events="none"/><circle class="g-ring" pointer-events="none"/><g class="g-ticks" pointer-events="none"></g><g class="g-labs"></g></svg>`;
   const svg=d3.select(host).select('svg');G.svg=svg;
   svg.select('.g-cases').selectAll('path').data(Object.keys(BOXES)).enter().append('path').attr('class',k=>'g-case '+caseClass(k)).attr('data-k',k=>k)
     .append('title').text(k=>D[k].measure+', '+D[k].name);
+  const mk=svg.select('.g-marks').selectAll('g').data(Object.keys(BOXES)).enter().append('g');mk.append('circle').attr('class',k=>'g-pulse '+caseClass(k)).attr('r',6);mk.append('circle').attr('class','g-mark').attr('r',3.6);
   svg.select('.g-labs').selectAll('text').data(Object.keys(BOXES)).enter().append('text').attr('class','g-lab').attr('text-anchor','middle').text(k=>D[k].name);
   mount(host,sizeGlobe);
   const node=svg.node();let st=null,moved=0;
-  node.addEventListener('pointerdown',e=>{G.auto=false;const p=d3.pointer(e,node);moved=0;
+  let vel=[0,0],lastT=0,lastRot=null;
+  node.addEventListener('pointerdown',e=>{G.auto=false;if(G.spin){G.spin.stop();G.spin=null;}const p=d3.pointer(e,node);moved=0;vel=[0,0];lastT=performance.now();lastRot=G.rot.slice();
     if(G.mode==='draw'){const ll=G.proj.invert(p);if(!ll||d3.geoDistance(ll,[-G.rot[0],-G.rot[1]])>Math.PI/2)return;st={draw:ll};}
     else st={p:p,rot:G.rot.slice()};node.setPointerCapture(e.pointerId);e.preventDefault();});
   node.addEventListener('pointermove',e=>{if(!st)return;const p=d3.pointer(e,node);
     if(st.draw){const ll=G.proj.invert(p);if(!ll)return;const b=[Math.min(st.draw[0],ll[0]),Math.min(st.draw[1],ll[1]),Math.max(st.draw[0],ll[0]),Math.max(st.draw[1],ll[1])].map(v=>Math.round(v*2)/2);G.box=b;setBoxInputs(b);renderGlobe();}
-    else{const dx=p[0]-st.p[0],dy=p[1]-st.p[1];moved=Math.max(moved,Math.abs(dx)+Math.abs(dy));const f=0.32/G.k;G.rot=[st.rot[0]+dx*f,Math.max(-85,Math.min(85,st.rot[1]-dy*f)),0];G.proj.rotate(G.rot);renderGlobe();}});
+    else{const dx=p[0]-st.p[0],dy=p[1]-st.p[1];moved=Math.max(moved,Math.abs(dx)+Math.abs(dy));const f=0.32/G.k;G.rot=[st.rot[0]+dx*f,Math.max(-85,Math.min(85,st.rot[1]-dy*f)),0];
+      const now=performance.now(),dt=Math.max(8,now-lastT);vel=[(G.rot[0]-lastRot[0])/dt,(G.rot[1]-lastRot[1])/dt];lastT=now;lastRot=G.rot.slice();G.proj.rotate(G.rot);renderGlobe();}});
   const end=e=>{if(!st)return;const was=st;st=null;
     if(was.draw){setDrawMode(false);if(G.box&&G.box[2]-G.box[0]>=0.5&&G.box[3]-G.box[1]>=0.5)applyBox(G.box,'drawn');else{G.box=null;renderGlobe();}}
+    else if(moved>=4&&!REDUCE&&performance.now()-lastT<80&&(Math.abs(vel[0])+Math.abs(vel[1]))>0.01){let last=performance.now();
+      G.spin=d3.timer(()=>{const now=performance.now(),dt=now-last;last=now;vel=vel.map(v=>v*Math.pow(0.93,dt/16));if(Math.abs(vel[0])+Math.abs(vel[1])<0.002){G.spin.stop();G.spin=null;return;}
+        G.rot=[G.rot[0]+vel[0]*dt,Math.max(-85,Math.min(85,G.rot[1]+vel[1]*dt)),0];G.proj.rotate(G.rot);renderGlobe();});}
     else if(moved<4){const ll=G.proj.invert(d3.pointer(e,node));if(ll){const hit=Object.keys(BOXES).find(k=>d3.geoContains(rectGeo(BOXES[k]),ll));if(hit)selectRegion(hit);}}};
   node.addEventListener('pointerup',end);node.addEventListener('pointercancel',end);
   node.addEventListener('wheel',e=>{e.preventDefault();G.auto=false;zoomBy(e.deltaY<0?1.15:1/1.15);},{passive:false});
-  if(!REDUCE)d3.timer(()=>{if(!G.auto||$('#v-explore').hidden)return;G.rot[0]+=0.08;G.proj.rotate(G.rot);renderGlobe();});
+  if(!REDUCE)d3.timer(()=>{if(!G.auto||$('#v-explore').hidden)return;G.rot[0]+=0.06;G.proj.rotate(G.rot);renderGlobe();});
 }
+function host_g(){return document.querySelector('#globe svg');}
 function sizeGlobe(){const host=$('#globe');const W=Math.min(Math.floor(host.clientWidth),600);if(!W)return;host._w=Math.floor(host.clientWidth);
   G.size=W;G.svg.attr('width',W).attr('height',W).attr('viewBox',`0 0 ${W} ${W}`);
-  G.proj=d3.geoOrthographic().translate([W/2,W/2]).scale(W/2*0.92*G.k).clipAngle(90).rotate(G.rot).precision(0.4);G.path=d3.geoPath(G.proj);renderGlobe();}
+  G.proj=d3.geoOrthographic().translate([W/2,W/2]).scale(W/2*GS*G.k).clipAngle(90).rotate(G.rot).precision(0.4);G.path=d3.geoPath(G.proj);renderGlobe();}
 function renderGlobe(){
   if(!G.proj)return;const svg=G.svg,path=G.path,W=G.size,R=G.proj.scale();
-  svg.select('.g-halo').attr('cx',W/2).attr('cy',W/2).attr('r',Math.min(R+6,W/2-1));
+  const fade=Math.max(0,1-(G.k-1)*3);
+  svg.select('.g-atm').attr('cx',W/2).attr('cy',W/2).attr('r',R+22);d3.select(host_g()).select('#gatm').attr('cx',W/2).attr('cy',W/2).attr('r',R+22);svg.select('.g-atm0').attr('offset',(R/(R+22)).toFixed(3));
+  svg.select('.g-floor').attr('cx',W/2).attr('cy',W/2+R*0.97).attr('rx',R*0.62).attr('ry',R*0.07).attr('opacity',0.4*fade);
+  svg.selectAll('.g-ring').attr('cx',W/2).attr('cy',W/2).attr('r',R+9).attr('opacity',fade);svg.select('.g-ring2').attr('cx',W/2).attr('cy',W/2).attr('r',R+4).attr('opacity',0.7*fade);
+  const tk=svg.select('.g-ticks').attr('opacity',fade).selectAll('line').data(d3.range(0,360,5));tk.enter().append('line').attr('class','g-tick').merge(tk)
+    .each(function(a){const r0=R+12,r1=R+(a%30===0?18:15),ang=a*Math.PI/180;d3.select(this).attr('x1',W/2+r0*Math.cos(ang)).attr('y1',W/2+r0*Math.sin(ang)).attr('x2',W/2+r1*Math.cos(ang)).attr('y2',W/2+r1*Math.sin(ang));});
+  svg.select('.g-marks').selectAll('g').each(function(k){const b=BOXES[k],c0=[(b[0]+b[2])/2,(b[1]+b[3])/2],vis=d3.geoDistance(c0,[-G.rot[0],-G.rot[1]])<Math.PI/2*0.95,p=G.proj(c0);
+    d3.select(this).attr('transform',p?`translate(${p[0]},${p[1]})`:'').attr('opacity',vis?1:0);});
   svg.select('.g-shade').attr('cx',W/2).attr('cy',W/2).attr('r',R);
   svg.select('.g-sphere').attr('d',path({type:'Sphere'}));svg.select('.g-grat').attr('d',path(G.grat));
   svg.select('.g-land').attr('d',path(G.land));svg.select('.g-bord').attr('d',path(G.bord));
@@ -1717,26 +1799,27 @@ function renderGlobe(){
   svg.select('.g-labs').selectAll('text').each(function(k){const b=BOXES[k],ctr=[(b[0]+b[2])/2,b[3]],vis=d3.geoDistance(ctr,c)<Math.PI/2*0.92,p=G.proj(ctr);
     d3.select(this).attr('x',p?p[0]:-99).attr('y',p?p[1]-8:-99).attr('opacity',vis?1:0);});
 }
-function zoomBy(f){G.k=Math.max(0.9,Math.min(8,G.k*f));if(G.proj){G.proj.scale(G.size/2*0.92*G.k);renderGlobe();}}
+function zoomBy(f){G.k=Math.max(0.9,Math.min(8,G.k*f));if(G.proj){G.proj.scale(G.size/2*GS*G.k);renderGlobe();}}
 function flyTo(b){if(!window.d3||!G.proj){return;}G.auto=false;const lon=(b[0]+b[2])/2,lat=(b[1]+b[3])/2,span=Math.max(b[2]-b[0],(b[3]-b[1])*1.4);
-  const r0=G.rot.slice(),k0=G.k,r1=[-lon,-lat,0],k1=Math.max(1,Math.min(1.35,22/Math.max(span,1)));let dl=r1[0]-r0[0];dl=((dl+540)%360)-180;r1[0]=r0[0]+dl;
-  if(REDUCE){G.rot=r1;G.k=k1;G.proj.rotate(G.rot).scale(G.size/2*0.92*G.k);renderGlobe();return;}
-  d3.transition().duration(1100).ease(d3.easeCubicInOut).tween('fly',()=>{const ir=d3.interpolate(r0,r1),ik=d3.interpolate(k0,k1);return tt=>{G.rot=ir(tt);G.k=ik(tt);G.proj.rotate(G.rot).scale(G.size/2*0.92*G.k);renderGlobe();};});}
+  const r0=G.rot.slice(),k0=G.k,r1=[-lon,-lat,0],k1=Math.max(1,Math.min(1.6,26/Math.max(span,1)));let dl=r1[0]-r0[0];dl=((dl+540)%360)-180;r1[0]=r0[0]+dl;
+  if(REDUCE){G.rot=r1;G.k=k1;G.proj.rotate(G.rot).scale(G.size/2*GS*G.k);renderGlobe();return;}
+  d3.transition().duration(1100).ease(d3.easeCubicInOut).tween('fly',()=>{const ir=d3.interpolate(r0,r1),ik=d3.interpolate(k0,k1);return tt=>{G.rot=ir(tt);G.k=ik(tt);G.proj.rotate(G.rot).scale(G.size/2*GS*G.k);renderGlobe();};});}
 function setDrawMode(on){G.mode=on?'draw':'rotate';G.auto=false;$('#gDraw').setAttribute('aria-pressed',String(on));$('#gDraw').textContent=on?'Drag on the globe to draw…':'Draw a region';
   $('#globe').classList.toggle('draw',on);$('#gHint').textContent=on?'Press and drag across the globe to draw a box.':'Drag to spin. Scroll or use + and − to zoom.';}
 function setBoxInputs(b){['bW','bS','bE','bN'].forEach((id,i)=>{$('#'+id).value=b?b[i]:'';});}
 function boxText(b){return b.join(',');}
-function applyBox(b,how){G.box=b;setBoxInputs(b);if(how!=='drawn')flyTo(b);else renderGlobe();
+function applyBox(b,how){G.box=b;if(how==='drawn')G.boxName='your drawn region';else if(how==='typed')G.boxName=null;setBoxInputs(b);if(how!=='drawn')flyTo(b);else renderGlobe();
   const w=(b[2]-b[0]),h=(b[3]-b[1]),approxKm=Math.round(w*111*Math.cos((b[1]+b[3])/2*Math.PI/180))+' × '+Math.round(h*111)+' km';
   if(how!=='region')$('#gSel').innerHTML=`<div class="gsel">Your region: <b>${fmtBox(boxText(b))}</b>, about ${approxKm}.${w>60||h>40?' A very large box mixes very different climates; consider a smaller one.':''}</div>`;
-  renderLinks();}
+  renderLinks();invSummary();}
 function selectRegion(k){G.sel=k;const s=D[k],b=BOXES[k],c=REGION_CASE[k],cs=CASES.find(x=>x.id===c),v=VARS.find(x=>x.src===k);
-  G.box=b.slice();setBoxInputs(b);renderGlobe();flyTo(b);
+  G.box=b.slice();G.boxName=s.name;setBoxInputs(b);renderGlobe();flyTo(b);invSummary();
   $('#gSel').innerHTML=`<div class="gsel"><b>${esc(s.name)}</b>, ${esc(s.measure)}. ${verdictShort(s)}
     <div class="btnrow"><a class="btn" href="#cases" data-case-link="${c}">Open ${cs.tab}</a><button class="btn ghost" type="button" data-usebox="${k}">Test another measurement here</button></div></div>`;
   if(v){$('#gVar').value=v.id;fillExploreYears();}renderLinks();}
 function fillExploreForm(){
-  $('#gPresets').innerHTML=PRESETS.map((p,i)=>`<button class="chip" type="button" data-preset="${i}">${p.n}</button>`).join('');
+  $('#placeList').innerHTML=placeNames().map(p=>`<option value="${esc(capf(p.name))}">`).join('');
+  invSummary();
   $('#gVar').innerHTML=VARS.map(v=>`<option value="${v.id}">${esc(v.label)}</option>`).join('')+'<option value="__other">Any other variable: search Giovanni…</option>';
   renderFinder();$('#gKwChips').innerHTML=KW_SUGGEST.map(k=>`<button class="chip" type="button" data-kw="${k}">${k}</button>`).join('');fillExploreYears();renderLinks();showVarDef();}
 function fillExploreYears(){const v=VARS.find(x=>x.id===$('#gVar').value)||{y0:1980};let o='';for(let y=v.y0;y<=2025;y++)o+=`<option value="${y}">${y}</option>`;
@@ -1753,7 +1836,7 @@ function renderLinks(){
     h+='</div><p class="small muted" style="margin-top:.4rem">Daily satellite data comes in parts so Giovanni doesn’t time out. Download every part, then drop them here together.</p>';}
   else h+=`<a class="btn" href="${giovanniURL(v,b,a,z)}" target="_blank" rel="noopener">${v.id?'Open in Giovanni':'Search Giovanni for “'+esc(v.kw)+'”'}</a></div>`;
   h+=`<p class="small muted" style="margin-top:.4rem">Region for Giovanni: <b>${boxText(b)}</b> <button class="linkbtn" type="button" id="gCopy">copy</button></p>`;
-  box.innerHTML=h;}
+  box.innerHTML=h;invSummary();}
 function readBoxInputs(){const v=['bW','bS','bE','bN'].map(id=>parseFloat($('#'+id).value));if(v.some(isNaN))return;
   let [W,S,E,N]=v;if(W>E){const x=W;W=E;E=x;}if(S>N){const x=S;S=N;N=x;}W=Math.max(-180,W);E=Math.min(180,E);S=Math.max(-90,S);N=Math.min(90,N);
   if(E-W<0.5||N-S<0.5)return;G.sel=null;applyBox([W,S,E,N],'typed');}
@@ -1801,8 +1884,8 @@ function renderFinder(){
   $('#fSug').innerHTML=h;
 }
 function useCatalog(i,withPlace){
-  const c=CATALOG[i];if(c.id){$('#gVar').value=c.id;}else{$('#gVar').value='__other';$('#gKw').value=c.kw;}onVarChange();
-  if(withPlace){const pt=PTYPES.find(p=>p.k===FINDER.place);if(pt){G.sel=null;applyBox(pt.ex.b,'preset');}}
+  INV.var=true;const c=CATALOG[i];G.varLabel=c.id?null:c.n;if(c.id){$('#gVar').value=c.id;}else{$('#gVar').value='__other';$('#gKw').value=c.kw;}onVarChange();
+  if(withPlace){const pt=PTYPES.find(p=>p.k===FINDER.place);if(pt){G.sel=null;G.boxName=pt.ex.n;applyBox(pt.ex.b,'preset');}}
   const target=withPlace?document.querySelector('.gsteps>li:nth-child(4)'):document.querySelector('.gsteps>li:nth-child(2)');if(target)target.scrollIntoView({behavior:'smooth',block:'start'});
 }
 function showVarDef(){const el=$('#gDef');if(!el)return;const v=VARS.find(x=>x.id===$('#gVar').value);const c=v&&CATALOG.find(x=>x.id===v.id);
@@ -1908,32 +1991,29 @@ function readAsHTML(P){
 }
 function checkTyped(){
   const txt=$('#cText').value.trim();if(!txt)return;const P=parseClaim(txt),q='“'+txt.replace(/^["“]|["”]$/g,'').replace(/\.?$/,'.')+'”';
-  let h=readAsHTML(P);
-  if(!P.meas||!P.dir){$('#cRead').innerHTML=h+`<p class="small" style="margin-top:.5rem">Say what changed (rain, temperature, snow, soil, haze, pollution) and which way (rose, fell, stopped), and where.</p>`;$('#cOut').innerHTML='';return;}
-  if(P.key){const s=D[P.key];fillClaimRecords(P.key);$('#cDir').value=P.dir;
-    let a=P.a||s.y0,b=P.b||s.y1,note='';if(a<s.y0){note=`The record starts in ${s.y0}, so the check starts there. `;a=s.y0;}if(b>s.y1)b=s.y1;if(b-a+1<8){a=Math.max(s.y0,b-7);note+='Shorter than eight years, so the window was widened. ';}
-    fillClaimYears(a,b);$('#cRead').innerHTML=h+(note?`<p class="small muted" style="margin-top:.4rem">${note}</p>`:'');runClaim({txt:q});return;}
-  // not in our files yet: set up the download on the globe
-  $('#cRead').innerHTML=h+`<div class="gsel" style="margin-top:.8rem"><b>No record on file for this yet.</b> Get it from NASA in a couple of minutes: the globe will open with ${P.place?'the region':'no region yet'} and ${esc(P.meas.label)} selected. Download the CSV, drop it in, and the verdict appears here.
-    <div class="btnrow"><button class="btn" type="button" id="cGet">Get this record</button></div></div>`;
-  $('#cOut').innerHTML='';state._parsed={P:P,q:q};
+  setBuilder(P.meas?P.meas.k:$('#sMeas').value,P.place?P.place.name:$('#sPlace').value,P.dir||$('#sDir').value,P.a||null,P.b||null);
+  const miss=[];if(!P.meas){$('#sMeas').classList.add('miss');miss.push('what changed');}if(!P.place){$('#sPlace').classList.add('miss');miss.push('where');}if(!P.dir){$('#sDir').classList.add('miss');miss.push('which way');}
+  if(miss.length){$('#cRead').innerHTML=`<p class="err" style="margin-top:.6rem">I couldn’t tell ${miss.join(', ')}. Pick ${miss.length>1?'them':'it'} in the red ${miss.length>1?'fields':'field'} above, then press the button.</p>`;$('#cOut').innerHTML='';return;}
+  $('#cRead').innerHTML='';builderGo(q);
 }
 function startPending(){
   const X=state._parsed;if(!X)return;const P=X.P;state.pendingClaim={dir:P.dir,a:P.a,b:P.b,txt:X.q};
   go('explore');setTimeout(()=>{initGlobe();
     if(P.meas.v){$('#gVar').value=P.meas.v;}else{$('#gVar').value='__other';$('#gKw').value=P.meas.kw||P.meas.label;}
-    onVarChange();if(P.place){G.sel=null;applyBox(P.place.box,'preset');}
+    onVarChange();if(P.place){G.sel=null;G.boxName=P.place.name;applyBox(P.place.box,'preset');}if(P.a)$('#gA').value=Math.max(+$('#gA').options[0].value,Math.min(P.a,2016));
     $('#gPending').innerHTML=`<div class="pending"><b>Checking:</b> ${esc(X.q)} ${P.place?'':'Draw the region on the globe first. '}When you drop the CSV in step 4, the verdict appears on the claim page.</div>`;},60);
 }
-function onVarChange(){const other=$('#gVar').value==='__other';$('#gOtherBox').hidden=!other;fillExploreYears();renderLinks();showVarDef();}
+function onVarChange(){INV.var=true;const other=$('#gVar').value==='__other';$('#gOtherBox').hidden=!other;fillExploreYears();renderLinks();showVarDef();}
 
 /* ---------- a 30-second demo that plays itself ---------- */
 const TOUR=[
   {go:'home',cap:'Interior Alaska, 1980 to 2025. The seasons swing the temperature by 34 °C a year and hide any slow change.',ms:4600,act:()=>{hero.mode='raw';drawHero(true);}},
   {go:'home',cap:'Remove the seasons and a steady warming appears: +0.38 °C per decade, confirmed by the careful test.',ms:5000,act:()=>{hero.mode='anom';drawHero(true);}},
-  {go:'claim',cap:'Heard a claim? Type it. TrendNoir tests the years it picked, then every other reasonable choice of years.',ms:6600,act:async tk=>{$('#cText').value='';$('#cOut').innerHTML='';$('#cRead').innerHTML='';await typeInto('#cText','Rainfall in the central US fell from 2007 to 2014',tk);if(tk.dead)return;checkTyped();}},
+  {go:'claim',cap:'Heard a claim? Set it up as a sentence. TrendNoir tests the years it picked, then every other reasonable choice of years.',ms:6600,act:async tk=>{$('#cOut').innerHTML='';$('#cRead').innerHTML='';
+    const steps=[()=>setBuilder('precip','the central United States','up',1980,2025),()=>{$('#sDir').value='down';updateHint();},()=>{$('#sA').value=2007;updateHint();},()=>{$('#sB').value=2014;updateHint();}];
+    for(const f of steps){if(tk.dead)return;f();await new Promise(r=>setTimeout(r,REDUCE?0:420));}if(!tk.dead)builderGo('“Rainfall in the central US fell from 2007 to 2014.”');}},
   {go:'cases',cap:'Same satellite, same pollutant, opposite directions: NO₂ falls over Eastern China and rises over Northern India.',ms:5600,act:()=>{state.custom=null;state.caseId='c1';state.step=1;showCase();setSub('inv');setTimeout(()=>{setStep(4);const s=$('#sheets');if(s)s.scrollIntoView({behavior:'smooth',block:'center'});},700);}},
-  {go:'explore',cap:'Now investigate any place on Earth: pick a variable, draw a region, and test it with NASA data.',ms:5000,act:()=>{initGlobe();setTimeout(()=>{G.sel=null;applyBox([-125,45,-119,49],'preset');},500);}}];
+  {go:'explore',cap:'Now investigate any place on Earth: pick a variable, find a region, and test it with NASA data.',ms:5000,act:()=>{initGlobe();setTimeout(()=>{G.sel=null;G.boxName='the Pacific Northwest';applyBox([-125,45,-119,49],'preset');},500);}}];
 let tourTk=null;
 function typeInto(sel,text,tk){return new Promise(res=>{const el=$(sel);let i=0;const step=()=>{if(tk.dead)return res();el.value=text.slice(0,++i);if(i<text.length)setTimeout(step,REDUCE?0:38);else res();};step();});}
 function tourUI(i){let box=$('#tour');if(!box){box=document.createElement('div');box.id='tour';box.className='tour';box.setAttribute('role','dialog');box.setAttribute('aria-label','Demo');document.body.appendChild(box);}
@@ -1951,6 +2031,19 @@ function openFromQuery(){const q=new URLSearchParams(location.search);
   if(q.get('claim')){go('claim');setTimeout(()=>{$('#cText').value=q.get('claim');checkTyped();},120);return true;}
   if(q.get('case')){const c=CASES.find(x=>x.id===q.get('case'));if(c){state.custom=null;state.caseId=c.id;state.step=1;showCase();go('cases');const st=+q.get('step');if(st>=2&&st<=4)setTimeout(()=>setStep(st),400);return true;}}
   return false;}
+
+/* ---------- investigation progress ---------- */
+const INV={var:false,link:false,file:false};
+function invSummary(){
+  const box=$('#invSum');if(!box)return;const v=VARS.find(x=>x.id===$('#gVar').value),o=$('#gVar').value==='__other'?otherVar():null;
+  const what=INV.var?(v?v.label.replace(/ \(.*$/,''):(o?(G.varLabel&&$('#gKw').value===(CATALOG.find(c=>c.n===G.varLabel)||{}).kw?G.varLabel:o.label):null)):null,where=G.box?(G.boxName||fmtBox(boxText(G.box))):null,yrs=$('#gA').value&&$('#gB').value?$('#gA').value+' to '+$('#gB').value:'';
+  box.innerHTML=`Investigating: ${what?esc(what):'<i>pick a measurement</i>'} in ${where?esc(where):'<i>pick a region</i>'}${yrs?', '+yrs:''}`;
+  const set=(id,on)=>{const el=document.getElementById(id);if(el)el.classList.toggle('done',!!on);};
+  set('st1',INV.var);set('st2',!!G.box);set('st3',INV.link);set('st4',INV.file);
+}
+function findPlace(q){q=(q||'').trim().toLowerCase();if(!q)return null;return placeNames().find(p=>p.name.toLowerCase()===q)||PLACES.find(p=>p.re.test(' '+q+' '))||null;}
+function goPlace(){const p=findPlace($('#gPlaceQ').value);if(!p){$('#gSel').innerHTML='<div class="gsel">I don’t know that place yet. Draw it on the globe instead.</div>';return;}
+  G.sel=null;G.boxName=p.name;applyBox(p.box,'preset');}
 
 /* ---------- learn: live explainers ---------- */
 function gauss(R){let u=0,v=0;while(u===0)u=R();while(v===0)v=R();return Math.sqrt(-2*Math.log(u))*Math.cos(2*Math.PI*v);}
@@ -2042,7 +2135,7 @@ function renderDetect(){
 }
 
 /* ---------- lineup ---------- */
-function renderLineup(){
+function lineupHTML(){
   const keys=['t2m_alaska','soilwet_alaska','aod_alaska','snow_glacier_alaska','precip_alaska','snow_land_alaska'];
   const arr=keys.map(k=>D[k]).sort((a,b)=>TIER[a.stats.verdict]-TIER[b.stats.verdict]||a.des.lp-b.des.lp);
   const CAP=8;let h='';
@@ -2056,8 +2149,9 @@ function renderLineup(){
     <div class="halves">first half ${ar(h1)}<br>second half ${ar(h2)}<span class="${agree?'agr':'dis'}">${agree?'directions agree':'directions disagree'}</span></div>
     <div><button class="btn ghost" type="button" data-interrogate="${s.key}">Interrogate</button></div></div>`;
   });
-  $('#lineupRows').innerHTML=h;
+  return h;
 }
+function renderLineup(){}
 function renderDataTable(){
   const keys=Object.keys(D);let h='<thead><tr><th>Measurement</th><th>Region</th><th>Dataset</th><th>Kind</th><th>Period</th></tr></thead><tbody>';
   keys.forEach(k=>{const s=D[k];h+=`<tr><td>${esc(s.measure)}</td><td>${esc(s.name)}<br><span class="muted small">${esc(s.box)}</span></td><td>${esc(s.coll)}</td><td>${esc(s.kind)}</td><td>${s.y0} to ${s.y1}</td></tr>`;});
@@ -2065,7 +2159,7 @@ function renderDataTable(){
 }
 
 /* ---------- wiring ---------- */
-function showCase(){renderTabs();renderCase();renderTrapBlocks();renderRob();renderDetect();}
+function showCase(){renderTabs();renderCase();if(!curCase().lineup){renderTrapBlocks();renderRob();renderDetect();}}
 document.addEventListener('click',e=>{
   const rp=e.target.closest&&e.target.closest('[data-replay]');
   if(rp){const h=$('#mc-'+rp.dataset.replay);if(h){animateMorph(h,{t:0,tr:0,fan:0},0);setTimeout(()=>animateMorph(h,{t:1},1400),250);}return;}
@@ -2074,21 +2168,23 @@ document.addEventListener('click',e=>{
   const cl=e.target.closest&&e.target.closest('[data-case-link]');
   if(cl){state.custom=null;state.caseId=cl.dataset.caseLink;state.step=1;showCase();setSub(cl.dataset.gosub||'inv');}
   const el2=e.target.closest&&e.target.closest('[data-ex-link]');
-  if(el2){const E=EXAMPLES[+el2.dataset.exLink];setTimeout(()=>{fillClaimRecords(E.k);$('#cDir').value=E.d;fillClaimYears(E.a,E.b);runClaim(E);},50);}
+  if(el2){const E=EXAMPLES[+el2.dataset.exLink];setTimeout(()=>{setBuilder(E.m,E.p,E.d,E.a,E.b);builderGo(E.txt);},60);}
   const pz=e.target.closest&&e.target.closest('[data-preset]');
   if(pz){G.sel=null;applyBox(PRESETS[+pz.dataset.preset].b,'preset');return;}
   const ub=e.target.closest&&e.target.closest('[data-usebox]');
   if(ub){const b=BOXES[ub.dataset.usebox];applyBox(b,'region');document.querySelector('.gsteps>li:nth-child(2)').scrollIntoView({behavior:'smooth',block:'center'});return;}
+  if(e.target.id==='gPlaceGo'){goPlace();return;}
+  if(e.target.closest&&e.target.closest('#gLinks a')){INV.link=true;invSummary();}
   if(e.target.id==='gCopy'){const txt=boxText(G.box);(navigator.clipboard&&navigator.clipboard.writeText?navigator.clipboard.writeText(txt):Promise.reject()).then(()=>{e.target.textContent='copied';},()=>{e.target.textContent=txt;});return;}
   const ex=e.target.closest&&e.target.closest('[data-ex]');
-  if(ex&&!EXAMPLES[+ex.dataset.ex].k){$('#cText').value=EXAMPLES[+ex.dataset.ex].txt.replace(/[“”]/g,'');checkTyped();return;}
-  if(ex){const E=EXAMPLES[+ex.dataset.ex];$('#cText').value=E.txt.replace(/[“”]/g,'');$('#cRead').innerHTML='';fillClaimRecords(E.k);$('#cDir').value=E.d;fillClaimYears(E.a,E.b);runClaim(E);return;}
+  if(ex){const E=EXAMPLES[+ex.dataset.ex];$('#cRead').innerHTML='';setBuilder(E.m,E.p,E.d,E.a,E.b);builderGo(E.txt);return;}
   if(e.target.id==='cGo'){runClaim();return;}
   if(e.target.id==='cParse'){checkTyped();return;}
+  if(e.target.id==='sGo'){builderGo();return;}
   if(e.target.id==='demoBtn'){playTour(0);return;}
   if(e.target.id==='tourEnd'){endTour();return;}
   if(e.target.id==='tourNext'){const i=tourTk&&tourTk.i!==undefined?tourTk.i:0;if(tourTk)clearTimeout(tourTk.timer);playTour(i+1);return;}
-  if(e.target.dataset&&e.target.dataset.shareClaim){copyText(shareLink({claim:$('#cText').value||''}),e.target);return;}
+  if(e.target.dataset&&e.target.dataset.shareClaim){const S=builderState();copyText(shareLink({claim:S.upload?($('#cText').value||''):builderSentence(S).replace(/[“”]/g,'')}),e.target);return;}
   if(e.target.dataset&&e.target.dataset.shareCase){copyText(shareLink({case:state.caseId,step:state.step})+'#cases',e.target);return;}
   if(e.target.id==='fMore'){FINDER.all=true;renderFinder();return;}
   const fp=e.target.closest&&e.target.closest('[data-fplace]');if(fp){FINDER.all=false;FINDER.place=FINDER.place===fp.dataset.fplace?null:fp.dataset.fplace;renderFinder();return;}
@@ -2135,15 +2231,17 @@ window.__G=G;window.__TN={D:D,mkESS:mkESS,olsP:olsP,makeDecoys:makeDecoys,parseG
 $('#fullrec').addEventListener('click',()=>{const s0=D[curCase().series[0]];setWin(s0.y0,s0.y1);});
 $('#cRec').addEventListener('change',()=>fillClaimYears());
 $('#gDraw').addEventListener('click',()=>setDrawMode(G.mode!=='draw'));$('#gIn').addEventListener('click',()=>{G.auto=false;zoomBy(1.3);});$('#gOut').addEventListener('click',()=>{G.auto=false;zoomBy(1/1.3);});
-$('#gVar').addEventListener('change',onVarChange);$('#gKw').addEventListener('input',renderLinks);
-$('#cText').addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();checkTyped();}});$('#gA').addEventListener('change',renderLinks);$('#gB').addEventListener('change',renderLinks);
+$('#gVar').addEventListener('change',onVarChange);$('#gPlaceQ').addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();goPlace();}});$('#gPlaceQ').addEventListener('change',()=>{if(findPlace($('#gPlaceQ').value))goPlace();});$('#gKw').addEventListener('input',renderLinks);
+$('#cText').addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();checkTyped();}});
+$('#sMeas').addEventListener('change',()=>{fillBuilderYears();updateHint();});$('#sPlace').addEventListener('change',()=>{fillBuilderYears();updateHint();});
+['sDir','sA','sB'].forEach(id=>$('#'+id).addEventListener('change',updateHint));$('#gA').addEventListener('change',renderLinks);$('#gB').addEventListener('change',renderLinks);
 ['bW','bS','bE','bN'].forEach(id=>$('#'+id).addEventListener('change',readBoxInputs));
 $('#heroBtn').addEventListener('click',()=>{hero.mode=hero.mode==='raw'?'anom':'raw';drawHero(true);});
 $('#lamp').addEventListener('click',()=>{const root=document.documentElement;
   const dark=getComputedStyle(root).getPropertyValue('--bg').trim()==='#161c22';
   root.setAttribute('data-theme',dark?'light':'dark');$('#lamp').setAttribute('aria-pressed',String(!dark));});
 
-drawHero(false);renderFacts();setupClaim();renderLineup();renderDataTable();showCase();
+drawHero(false);renderFacts();setupClaim();renderDataTable();showCase();
 window.addEventListener('hashchange',route);route();openFromQuery();
 document.addEventListener('keydown',e=>{if(e.key==='Escape'&&tourTk)endTour();});
 document.addEventListener('keydown',e=>{const tg=e.target&&e.target.tagName;if(/INPUT|SELECT|TEXTAREA/.test(tg||''))return;
