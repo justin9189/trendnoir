@@ -255,6 +255,28 @@ input[type=range]{width:100%;accent-color:var(--up);height:2rem}
 .readas .pill.miss{border-style:dashed;color:var(--stamp)}
 .pending{border:2px dashed var(--stamp);padding:.7rem .9rem;margin:0 0 1rem;background:var(--sheet-2)}
 
+/* investigate finder, four questions, demo */
+.q4{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:1rem}
+@media (max-width:960px){.q4{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (max-width:560px){.q4{grid-template-columns:1fr}}
+.chip[aria-pressed="true"]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.sugs{display:grid;gap:.6rem;margin-top:.9rem}
+.sug{padding:.75rem .9rem}
+.sug h4{font-family:var(--display);font-weight:400;font-size:1.08rem;margin:0 0 .15rem}
+.sug .src{font-size:.82rem;color:var(--ink-soft);margin-bottom:.35rem}
+.sug p{font-size:.95rem;margin:0 0 .35rem}
+.sug .btnrow{margin-top:.4rem}
+.sug .btn{padding:.4rem .8rem;font-size:.95rem}
+.tour{position:fixed;left:50%;bottom:calc(1rem + env(safe-area-inset-bottom,0px));transform:translateX(-50%);z-index:70;width:min(760px,calc(100% - 2rem));
+  --sheet:#efe9da;--ink:#25221c;--ink-soft:#5f5a4e;--rule:#cdc3aa;--bg:#f7f3e9;--up:#9a4f07;color:var(--ink);background:var(--sheet);border:1px solid rgba(60,45,15,.25);box-shadow:0 24px 50px -20px rgba(0,0,0,.75);padding:.8rem 1rem}
+.tour .cap{font-size:1.05rem;min-height:2.6em;margin:0 0 .5rem}
+.tour .row{display:flex;gap:.5rem;align-items:center;flex-wrap:wrap}
+.tour .dots{display:flex;gap:.3rem;margin-right:auto}
+.tour .dots i{width:.55rem;height:.55rem;border-radius:50%;background:var(--rule)}
+.tour .dots i.on{background:var(--up)}
+.tour .btn{padding:.35rem .8rem;font-size:.95rem}
+.sharebtn{margin-left:.5rem}
+
 /* motion */
 @keyframes viewIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
 .view.enter,.panel.enter{animation:viewIn .34s cubic-bezier(.2,.8,.2,1)}
@@ -459,7 +481,7 @@ footer b{color:var(--ink);font-family:var(--display);font-weight:400;font-size:1
   <div class="wrap">
     <a class="brand" href="#home">TrendNoir</a>
     <button class="lamp" id="lamp" type="button" aria-pressed="false">Lights</button>
-    <nav aria-label="Pages"><a href="#claim">Check a claim</a><a href="#cases">Case files</a><a href="#explore">Explore</a><a href="#learn">Learn</a><a href="#lineup">Lineup</a><a href="#about">About</a></nav>
+    <nav aria-label="Pages"><a href="#explore">Investigate</a><a href="#cases">Case files</a><a href="#claim">Check a claim</a><a href="#learn">Learn</a><a href="#lineup">Lineup</a><a href="#about">About</a></nav>
   </div>
 </header>
 
@@ -469,9 +491,9 @@ footer b{color:var(--ink);font-family:var(--display);font-weight:400;font-size:1
     <div class="wrap">
       <div>
         <h1>Real trend,<br>or illusion?</h1>
-        <p class="lede">Someone says the rain is drying up or a region is warming. TrendNoir checks the claim against decades of NASA data and tells you whether it holds up, or only works for the years someone picked.</p>
-        <div class="btnrow"><a class="btn" href="#claim">Check a claim</a><a class="btn ghost" href="#cases">Open the case files</a></div>
-        <p class="for">For science journalists, students and anyone curious about their region.</p>
+        <p class="lede">Pick a place and a measurement. TrendNoir pulls the NASA record, finds out whether it is really changing, how fast, and whether the change is significant. Heard a claim? It checks that too.</p>
+        <div class="btnrow"><a class="btn" href="#explore">Start an investigation</a><button class="btn ghost" type="button" id="demoBtn">Watch a 30-second demo</button></div>
+        <p class="for">For students, science journalists and anyone curious about their region. <a href="#claim">Check a claim</a></p>
       </div>
       <div class="exhibit">
       <h2>Exhibit A: Alaska’s temperature</h2>
@@ -486,10 +508,12 @@ footer b{color:var(--ink);font-family:var(--display);font-weight:400;font-size:1
     <div class="wrap">
       <h2 class="h2s">Why a trend line isn’t enough</h2>
       <div class="facts" id="facts"></div>
-      <div class="who">
-        <a class="whocard" href="#claim"><b>Journalists and fact-checkers</b><span>Test a “since 2007” claim before you repeat it.</span><i>Check a claim</i></a>
-        <a class="whocard" href="#explore"><b>Students</b><span>Draw any region on the globe and test any NASA measurement there.</span><i>Explore the globe</i></a>
-        <a class="whocard" href="#cases" data-case-link="c1"><b>Anyone curious</b><span>See one pollutant move in opposite directions in two countries.</span><i>Open Case 001</i></a>
+      <h2 class="h2s" style="margin-top:2.2rem">Four questions every investigation answers</h2>
+      <div class="q4">
+        <a class="sheet whocard" href="#explore"><b>What is changing?</b><span>Answer two questions and get suggested variables from MODIS, OMI, AIRS, GPM, MERRA-2 and GLDAS, each with a plain definition.</span><i>Find a variable</i></a>
+        <a class="sheet whocard" href="#explore"><b>Where?</b><span>Draw any region on the globe, or compare two regions to catch opposite trends.</span><i>Open the globe</i></a>
+        <a class="sheet whocard" href="#cases" data-case-link="c2"><b>How much?</b><span>Change per decade with a likely range, measured with Sen’s slope after removing the seasons.</span><i>See an example</i></a>
+        <a class="sheet whocard" href="#cases" data-case-link="c1"><b>Is it significant?</b><span>A t-test, the Mann-Kendall test and confidence intervals, corrected for memory and checked across every reasonable analysis.</span><i>See the verdicts</i></a>
       </div>
     </div>
   </section>
@@ -596,12 +620,12 @@ footer b{color:var(--ink);font-family:var(--display);font-weight:400;font-size:1
       </article>
       <article class="sheet lcard">
         <div><span class="lc-n">4</span><h3>Months that remember</h3>
-          <p>A cold month tends to be followed by another cold month. Records with memory wander in long swings that look like trends. A careless test treats every month as fresh evidence and is fooled; the careful test counts how much independent evidence the record really holds.</p>
+          <p>A cold month tends to be followed by another cold month. Records with memory wander in long swings that look like trends. A plain t-test treats every month as fresh evidence and is fooled; the careful test counts how much independent evidence the record really holds.</p>
           <p>Every record simulated here has <b>no trend at all</b>, so a fair test should cry wolf about 5% of the time.</p>
           <p class="lc-out" id="l4out"></p></div>
         <div><label class="lc-sl">Strength of memory<output id="l4v"></output><input type="range" id="l4" min="0" max="0.95" step="0.05" value="0.8"></label>
           <p class="label">One of 200 trend-free records</p><div class="chart" id="l4a"></div>
-          <div class="hbars"><div class="hbar"><span>Careless test</span><span class="tr"><i id="l4c" style="background:var(--stamp)"></i><u style="left:5%"></u></span><b id="l4ct"></b></div>
+          <div class="hbars"><div class="hbar"><span>Plain t-test</span><span class="tr"><i id="l4c" style="background:var(--stamp)"></i><u style="left:5%"></u></span><b id="l4ct"></b></div>
             <div class="hbar"><span>Careful test</span><span class="tr"><i id="l4k" style="background:var(--ink-soft)"></i><u style="left:5%"></u></span><b id="l4kt"></b></div></div>
           <p class="small muted" style="margin-top:.4rem">Share of the 200 records each test calls significant. The tick marks 5%.</p></div>
       </article>
@@ -632,8 +656,8 @@ footer b{color:var(--ink);font-family:var(--display);font-weight:400;font-size:1
 
 <div class="view" id="v-explore" hidden>
   <section class="tight"><div class="wrap">
-    <h2>Explore the globe</h2>
-    <p class="lead1">Spin the Earth, draw a box anywhere, and TrendNoir sets up the NASA download for you. Colored boxes are our case files: click one to open it.</p>
+    <h2>Start an investigation</h2>
+    <p class="lead1">What do you want to know, and where? Answer two questions, pick a region on the globe, and TrendNoir sets up the NASA download and tests the record. Colored boxes on the globe are our case files.</p>
     <div id="gPending"></div>
     <div class="explore">
       <div class="globewrap">
@@ -647,6 +671,10 @@ footer b{color:var(--ink);font-family:var(--display);font-weight:400;font-size:1
         <p class="small muted" id="gHint" style="margin-top:.3rem">Drag to spin. Scroll or use + and − to zoom.</p>
       </div>
       <ol class="gsteps">
+        <li><h3>What do you want to investigate?</h3>
+          <p class="small muted">What kind of place?</p><div class="excl" id="fPlace"></div>
+          <p class="small muted" style="margin-top:.6rem">What interests you?</p><div class="excl" id="fInt"></div>
+          <div id="fSug"></div></li>
         <li><h3>Pick a region</h3>
           <p class="small muted">Draw on the globe, click a colored box, or start from a place.</p>
           <div class="excl" id="gPresets"></div>
@@ -654,6 +682,7 @@ footer b{color:var(--ink);font-family:var(--display);font-weight:400;font-size:1
           <div id="gSel"></div></li>
         <li><h3>Pick a measurement and years</h3>
           <div class="claimline"><label class="rec">Measurement<select id="gVar"></select></label><label>from<select id="gA"></select></label><label>to<select id="gB"></select></label></div>
+          <p class="small" id="gDef" style="margin-top:.5rem"></p>
           <div id="gOtherBox" hidden style="margin-top:.7rem">
             <div class="claimrow"><input id="gKw" type="text" autocomplete="off" placeholder="Search word, Giovanni variable ID, or a pasted Giovanni link"></div>
             <div class="excl" id="gKwChips" style="margin-top:.5rem"></div>
@@ -686,6 +715,20 @@ footer b{color:var(--ink);font-family:var(--display);font-weight:400;font-size:1
 </div>
 
 <div class="view" id="v-about" hidden>
+<section class="tight"><div class="wrap">
+  <h2>How TrendNoir answers the challenge</h2>
+  <div class="scroll"><table class="cmp">
+    <thead><tr><th>The challenge asks</th><th>Where TrendNoir does it</th></tr></thead><tbody>
+    <tr><td>Identify variables of interest</td><td>Investigate, step 1: two questions (kind of place, interest) suggest variables from MODIS, OMI, AIRS, GPM, MERRA-2 and GLDAS, each with a plain definition. Any other Giovanni variable can be searched. The Lineup ranks six variables over one region by strength of evidence.</td></tr>
+    <tr><td>Acquire the data for a region</td><td>Draw a region on the globe or pick a place; TrendNoir builds the Giovanni request with region, variable and years filled in, then reads the downloaded CSV in the browser.</td></tr>
+    <tr><td>Generate and visualize a time series</td><td>Every case and upload: the monthly record, the seasons removed in an animated step, the trend line with its range, and maps of every window of years.</td></tr>
+    <tr><td>Rate of change and significance (t-test, Mann-Kendall, confidence intervals)</td><td>Sen’s slope per decade with a 95% range; Mann-Kendall corrected for autocorrelation; a plain t-test shown for comparison; Hamed-Rao and seasonal Kendall as second opinions; robustness across every reasonable analysis.</td></tr>
+    <tr><td>Same process, opposite trends in different regions</td><td>Case 001 and the two-region upload, with a verdict on whether the two places move the same way.</td></tr>
+    <tr><td>Simple definitions, demonstration examples</td><td>A plain definition for every variable, three worked case files, a 30-second demo that plays itself, and live explainers on the Learn page.</td></tr>
+    <tr><td>Trends that are not yet significant</td><td>“How long?” estimates the record length needed; verdicts separate “no trend detected” from “can’t tell yet.”</td></tr>
+    <tr><td>Seasonal cycles and non-linear change</td><td>Seasons are removed before testing; unsteady trends get a turning point with its uncertainty.</td></tr>
+  </tbody></table></div>
+</div></section>
 <section id="method">
   <div class="wrap">
     <h2>How the verdicts are reached</h2>
@@ -701,6 +744,7 @@ footer b{color:var(--ink);font-family:var(--display);font-weight:400;font-size:1
           <li>Get two second opinions. Hamed and Rao’s stricter correction (1998) uses every significant lag of memory, not just one. The seasonal Kendall test with Hirsch and Slack’s correction (1984) works on the raw record and compares each calendar month only with itself.</li>
           <li>Find the turning point, if there is one: fit a line with a single bend at every possible month, keep the best, and estimate how sure we are of the bend with a block bootstrap that keeps the data’s memory.</li>
           <li>Repeat the main test for every window of eight or more years to draw the map.</li>
+          <li>Suggest variables with a fixed rule table, not AI: each kind of place and interest maps to measurements from MODIS, OMI, AIRS, GPM, MERRA-2 and GLDAS, with a plain definition and a reason a trend might show there.</li>
           <li>Score robustness with a multiverse analysis (Steegen and colleagues, 2016): every window of at least ten years and at least half the record, analyzed four defensible ways (the main test, Hamed and Rao, seasonal Kendall, and annual means). Because short windows lack the power to see small trends, we also report the result for windows long enough to catch a trend of that size.</li>
           <li>Measure false alarms: chop the record’s trend-free residuals into blocks long enough to keep their memory, shuffle the blocks into 400 fake records, and count how often each test calls them significant.</li>
         </ol>
@@ -1033,7 +1077,7 @@ function stepperHTML(){
 function renderCase(){
   const c=curCase(),ss=seriesOf(c);
   const fileNo=c.tab&&/^Case \d+/.test(c.tab)?'TN-'+c.tab.slice(5):'TN-'+String(lab.count).padStart(3,'0')+'U';
-  $('#caseHead').innerHTML=`<div class="filelabel"><span><i>File no.</i>${esc(fileNo)}</span><span><i>Subject</i>${esc(ss[0].measure)}</span><span><i>Period</i>${ss[0].y0}–${ss[0].y1}</span><span><i>Status</i><span id="fileStatus"></span></span></div>
+  $('#caseHead').innerHTML=`<div class="filelabel"><span><i>File no.</i>${esc(fileNo)}</span><span><i>Subject</i>${esc(ss[0].measure)}</span><span><i>Period</i>${ss[0].y0}–${ss[0].y1}</span><span><i>Status</i><span id="fileStatus"></span>${CAN_SHARE&&!state.custom?'<button class="linkbtn sharebtn" type="button" data-share-case="1">copy link</button>':''}</span></div>
     <div class="casehead"><h3>${esc(c.title)}</h3><p class="lead1" style="margin-bottom:0">${esc(c.q)}</p></div>`;
   let h=`<div id="stepperBox">${stepperHTML()}</div><div id="cmpBox"></div><div class="sheets ${ss.length>1?'two':''}" id="sheets">`;
   ss.forEach(s=>{h+=`<article class="sheet">${sheetHead(s)}<div class="mchart" id="mc-${s.key}"></div><div id="st-${s.key}"></div></article>`;});
@@ -1082,12 +1126,12 @@ function fillSteps(){
       <p class="verdict-sentence">${verdictShort(s)}</p>${kpisHTML(s)}
       <details class="more"><summary>Show the full evidence</summary>
       <p>${verdictText(s)}</p>
-      <div class="scroll"><table class="cmp"><thead><tr><th></th><th>Change per decade</th><th>Careful test</th><th>Careless test</th></tr></thead><tbody>
+      <div class="scroll"><table class="cmp"><thead><tr><th></th><th>Change per decade</th><th>Careful test</th><th>Plain t-test</th></tr></thead><tbody>
       <tr><th>Seasons left in</th><td class="num">${sg(s.rawS.slope_dec)}<br><span class="muted small">${range(s,s.rawS.lo_dec,s.rawS.hi_dec)}</span></td><td class="num">${pEq(s.rawS.lp)}<br>${pv(s.rawS.lp)<0.05?'<span class="badge yes">significant</span>':'<span class="badge no">not significant</span>'}</td><td class="num">${pEq(s.rawS.lp_naive)}<br>${pv(s.rawS.lp_naive)<0.05?'<span class="badge yes">significant</span>':'<span class="badge no">not significant</span>'}</td></tr>
       <tr><th>Seasons removed</th><td class="num">${sg(s.des.slope_dec)}<br><span class="muted small">${range(s,s.des.lo_dec,s.des.hi_dec)}</span></td><td class="num">${pEq(s.des.lp)}<br>${pv(s.des.lp)<0.05?'<span class="badge yes">significant</span>':'<span class="badge no">not significant</span>'}</td><td class="num">${pEq(s.des.lp_naive)}<br>${pv(s.des.lp_naive)<0.05?'<span class="badge yes">significant</span>':'<span class="badge no">not significant</span>'}</td></tr>
       </tbody></table></div>
       ${extrasHTML(s)}
-      <p class="note small muted">The p-value is how often luck alone would produce a pattern this strong; below 0.05 is the usual bar. The careless test treats every month as independent news. Here neighboring months correlate at ${s.des.r1.toFixed(2)}, so ${s.n} months carry the weight of only about ${s.des.n_eff} independent ones. <a href="#learn">See why this matters</a>.</p>
+      <p class="note small muted">The p-value is how often luck alone would produce a pattern this strong; below 0.05 is the usual bar. The plain t-test on the slope treats every month as independent news. Here neighboring months correlate at ${s.des.r1.toFixed(2)}, so ${s.n} months carry the weight of only about ${s.des.n_eff} independent ones. <a href="#learn">See why this matters</a>.</p>
       </details>`;}
     $('#st-'+s.key).innerHTML=h;if(step===4)runCounts($('#st-'+s.key));
     if(step===4){const n=s.n,cal=$('#cal-'+s.key);if(cal){cal._s=s;mount(cal,()=>drawCal(cal));}
@@ -1149,8 +1193,8 @@ function renderTrapDyn(){
       aria:'Trend inside the chosen window of years'});
     const long=s.cells.filter(x=>x.b-x.a+1>=10),nn=long.filter(x=>x.ln<LOG05).length/long.length,cc=long.filter(x=>x.lc<LOG05).length/long.length;
     const said=pv(cell.lc)<0.05?('Stop here and a detective would call it <b>'+(cell.sl>=0?'rising':'falling')+'</b>.'):'Stop here and a detective would say <b>there’s nothing to see</b>.';
-    $('#ro-'+s.key).innerHTML=`<p class="readout"><b>${w.a} to ${w.b}:</b> ${delta(s,cell.sl)}.<br>Careless test ${pEq(cell.ln)} ${badge(cell.ln)}<br>Careful test ${pEq(cell.lc)} ${badge(cell.lc)}</p>
-    <p class="small muted">${said} Of all ${long.length} windows of 10+ years, ${Math.round(nn*100)}% pass the careless test and ${Math.round(cc*100)}% the careful one.</p>`;
+    $('#ro-'+s.key).innerHTML=`<p class="readout"><b>${w.a} to ${w.b}:</b> ${delta(s,cell.sl)}.<br>Plain t-test ${pEq(cell.ln)} ${badge(cell.ln)}<br>Careful test ${pEq(cell.lc)} ${badge(cell.lc)}</p>
+    <p class="small muted">${said} Of all ${long.length} windows of 10+ years, ${Math.round(nn*100)}% pass the plain t-test and ${Math.round(cc*100)}% the careful one.</p>`;
   });
   renderFooledNote();
 }
@@ -1176,7 +1220,7 @@ function renderFooledNote(){
   if(f.kind==='reversal')m=`In ${c.a} to ${c.b}, ${s.noun} ${dirWord(s,c.sl)} (${delta(s,c.sl)}), the opposite of the full record, and it still passes the careful test (${pEq(c.lc)}).`;
   else if(f.kind==='vanish')m=`The full record shows a clear trend, yet in ${c.a} to ${c.b} it is not significant (careful ${pEq(c.lc)}). Pick that window and the change seems to vanish.`;
   else if(f.kind==='falseCareful')m=`The full record shows no trend, yet ${c.a} to ${c.b} shows ${delta(s,c.sl)} and passes even the careful test (${pEq(c.lc)}). A false alarm.`;
-  else m=`The full record shows no trend, yet ${c.a} to ${c.b} shows ${delta(s,c.sl)}, and the careless test calls it significant (${pEq(c.ln)}). The careful test is not fooled (${pEq(c.lc)}).`;
+  else m=`The full record shows no trend, yet ${c.a} to ${c.b} shows ${delta(s,c.sl)}, and the plain t-test calls it significant (${pEq(c.ln)}). The careful test is not fooled (${pEq(c.lc)}).`;
   box.innerHTML=`<div class="callout"><b>Here is the trick.</b> ${m} Choose your years after looking at the data and you can “prove” almost anything. A fair test fixes the window first.</div>`;
 }
 
@@ -1219,7 +1263,7 @@ function renderSpotMsg(){
   else if(ok)m='<b>You picked it, but probably by luck.</b> The careful test can’t separate this record from noise either, which matches the verdict.';
   else if(sigReal)m=`<b>Not this one. The real record was ${L}.</b> The test can see a trend your eye missed (careful ${pEq(s.des.lp)}). Trust the test over a glance.`;
   else m=`<b>The real record was ${L}.</b> It looks just like the noise, which matches the verdict: nothing here you could tell apart from chance.`;
-  box.innerHTML=`<div class="callout">${m}<br>Among the eight fakes, which contain no trend at all, the careless test calls ${fn} “significant.” The careful test calls ${fc}.</div>`;
+  box.innerHTML=`<div class="callout">${m}<br>Among the eight fakes, which contain no trend at all, the plain t-test calls ${fn} “significant.” The careful test calls ${fc}.</div>`;
 }
 
 /* ---------- bring your own evidence: parsing ---------- */
@@ -1471,7 +1515,7 @@ function renderFacts(){
   const soil=D.soilwet_alaska,t2=D.t2m_alaska,pr=D.precip_uscentral,c=winCell(pr,2007,2014),R=robSummary(pr);
   $('#facts').innerHTML=`
   <a class="sheet fact whocard" href="#learn"><h3>Noise that looks like a trend</h3><div class="fig" data-count="${Math.round(soil.fp.careless*100)}" data-suffix="%">0%</div>
-    <p>of pure-noise soil records pass a careless trend test. A careful test: ${P100(soil.fp.careful)}.</p></a>
+    <p>of pure-noise soil records pass a plain t-test. A careful test: ${P100(soil.fp.careful)}.</p></a>
   <a class="sheet fact whocard" href="#cases" data-case-link="c2"><h3>A trend hidden by seasons</h3><div class="fig">p = ${pHTML(t2.rawS.lp)}</div>
     <p>Alaska’s raw temperatures show nothing. Remove the seasons: ${delta(t2,t2.des.slope_dec)}.</p></a>
   <a class="sheet fact whocard" href="#claim" data-ex-link="0"><h3>A decline made of chosen years</h3><div class="fig">2007–2014</div>
@@ -1558,6 +1602,7 @@ function runClaim(ex){
     <p class="verdict-sentence">${tail}</p><ul class="checks">${c1}${c2}${c3}</ul>
     <div class="claimcols"><div class="chart" id="cChart" role="img"></div><div class="spec" id="cStrip" role="img" aria-label="Slopes of every window of the same length"></div></div>
     <details class="more"><summary>Read the full reasoning</summary><ol class="claimsteps"><li>${s1}</li><li>${s2}</li><li>${s3}</li></ol></details>
+    ${CAN_SHARE?'<div class="btnrow" style="margin-top:.8rem"><button class="btn ghost" type="button" data-share-claim="1">Copy a link to this check</button></div>':''}
     <details class="more"><summary>Copy a summary to quote</summary><div class="quote"><textarea id="cQuote" readonly aria-label="Summary to quote">${esc(quote)}</textarea><button class="btn ghost" id="cCopy" type="button">Copy</button></div></details></article>`;
   const i0=(a-s.y0)*12,i1=(b-s.y0+1)*12-1,tr=trendObj(s,i0,i1,E.c.sl);
   chart($('#cChart'),{n:s.n,y0:s.y0,unit:s.u+' above or below normal',zero:true,h:210,layers:[{y:s.anom,cls:'faint'},{y:s.anom.slice(i0,i1+1),x0:i0,cls:'win'}],shade:[{i0:i0,i1:i1}],trend:tr,anim:true,aria:'The record with the claimed years highlighted'});
@@ -1693,7 +1738,7 @@ function selectRegion(k){G.sel=k;const s=D[k],b=BOXES[k],c=REGION_CASE[k],cs=CAS
 function fillExploreForm(){
   $('#gPresets').innerHTML=PRESETS.map((p,i)=>`<button class="chip" type="button" data-preset="${i}">${p.n}</button>`).join('');
   $('#gVar').innerHTML=VARS.map(v=>`<option value="${v.id}">${esc(v.label)}</option>`).join('')+'<option value="__other">Any other variable: search Giovanni…</option>';
-  $('#gKwChips').innerHTML=KW_SUGGEST.map(k=>`<button class="chip" type="button" data-kw="${k}">${k}</button>`).join('');fillExploreYears();renderLinks();}
+  renderFinder();$('#gKwChips').innerHTML=KW_SUGGEST.map(k=>`<button class="chip" type="button" data-kw="${k}">${k}</button>`).join('');fillExploreYears();renderLinks();showVarDef();}
 function fillExploreYears(){const v=VARS.find(x=>x.id===$('#gVar').value)||{y0:1980};let o='';for(let y=v.y0;y<=2025;y++)o+=`<option value="${y}">${y}</option>`;
   const a=$('#gA'),b=$('#gB');a.innerHTML=o;b.innerHTML=o;a.value=v.y0;b.value=2025;}
 function giovanniURL(v,b,a,z){return 'https://giovanni.gsfc.nasa.gov/giovanni/#service=ArAvTs&starttime='+a+'-01-01T00:00:00Z&endtime='+z+'-12-31T23:59:59Z&bbox='+b.join(',')+(v.id?'&data='+v.id:'')+(v.kw?'&dataKeyword='+encodeURIComponent(v.kw):'')+'&portal=GIOVANNI&format=json';}
@@ -1720,25 +1765,126 @@ function otherVar(){const raw=($('#gKw')?$('#gKw').value:'').trim();if(!raw)retu
   if(/^[A-Za-z0-9]+_[A-Za-z0-9_.]+$/.test(raw)&&raw.indexOf('_')>0)return {id:raw,kw:'',label:raw};
   return {id:'',kw:raw,label:raw};}
 
+/* ---------- variable finder: two questions, suggested NASA variables (rules, no AI) ---------- */
+const PTYPES=[{k:'arctic',n:'Arctic and ice',ex:{n:'Greenland',b:[-55,62,-25,80]}},{k:'desert',n:'Desert',ex:{n:'Sahara',b:[0,20,20,28]}},{k:'forest',n:'Rainforest',ex:{n:'Amazon',b:[-70,-12,-50,0]}},
+  {k:'city',n:'Big city',ex:{n:'Delhi region',b:[75,24,88,31]}},{k:'farm',n:'Farmland',ex:{n:'US Corn Belt',b:[-97,39,-87,45]}},{k:'coast',n:'Coast and estuary',ex:{n:'Chesapeake Bay',b:[-77.5,36.5,-75.5,39.5]}},
+  {k:'mount',n:'Mountains and snow',ex:{n:'Himalayas',b:[76,27,92,33]}},{k:'ocean',n:'Open ocean',ex:{n:'North Pacific',b:[-165,30,-140,45]}}];
+const INTS=[{k:'heat',n:'Heat'},{k:'water',n:'Rain and water'},{k:'snow',n:'Snow and ice'},{k:'air',n:'Air quality'},{k:'plants',n:'Plants and land'},{k:'sea',n:'The sea'}];
+const CATALOG=[
+  {n:'Air temperature near the ground',src:'MERRA-2 model, monthly, from 1980',id:'M2TMNXSLV_5_12_4_T2M',ints:['heat'],places:'*',def:'The temperature about two meters above the ground, like a weather-station thermometer.',why:'The most direct sign of warming or cooling; changes are often fastest in the Arctic and in autumn and winter.'},
+  {n:'Surface air temperature from space',src:'AIRS instrument on NASA’s Aqua satellite, from 2002',kw:'AIRS surface air temperature',ints:['heat'],places:'*',def:'Air temperature near the surface, measured by an infrared sounder in orbit rather than by a model.',why:'A satellite cross-check on the model temperature record.'},
+  {n:'Precipitation, bias-corrected',src:'MERRA-2 model, monthly, from 1980',id:'M2TMNXFLX_5_12_4_PRECTOTCORR',ints:['water'],places:'*',def:'All the water that falls, with snow counted as melted water, in millimeters per day.',why:'Wet places can get wetter and dry places drier; noisy, so long records matter.'},
+  {n:'Rain from the GPM satellites',src:'GPM IMERG, monthly, from 2000',kw:'IMERG precipitation monthly',ints:['water'],places:'*',def:'Rainfall estimated from a constellation of satellites led by the Global Precipitation Measurement mission.',why:'Independent of the model rainfall; good for comparing two sources.'},
+  {n:'Evapotranspiration',src:'GLDAS land model, monthly',kw:'evapotranspiration GLDAS',ints:['water','plants'],places:['farm','forest','desert'],def:'Water leaving the land as evaporation from soil and as vapor breathed out by plants.',why:'Responds to heat, irrigation and changes in plant cover.'},
+  {n:'Surface runoff',src:'GLDAS land model, monthly',kw:'surface runoff GLDAS',ints:['water'],places:['mount','farm','coast'],def:'Water that flows off the land surface into streams instead of soaking in, a stand-in for streamflow.',why:'Shifts when snowmelt comes earlier or rain gets heavier.'},
+  {n:'Root-zone soil wetness',src:'MERRA-2 model, monthly, from 1980',id:'M2TMNXLND_5_12_4_GWETROOT',ints:['water','plants'],places:['farm','desert','forest','arctic'],def:'How full of water the soil is where plant roots reach, from 0 (dry) to 1 (saturated).',why:'Tracks drought and thawing ground; changes slowly, so watch for memory.'},
+  {n:'Snow on the ground',src:'MERRA-2 model, monthly, from 1980',id:'M2TMNXLND_5_12_4_SNOMAS',ints:['snow','water'],places:['mount','arctic'],def:'The weight of snow lying on the ground; 1 kg/m² is 1 millimeter of water.',why:'Snow seasons can shrink at the edges even when midwinter snow does not change.'},
+  {n:'Sea ice fraction',src:'MERRA-2 model, monthly',kw:'sea ice fraction',ints:['snow','sea'],places:['arctic','ocean'],def:'The share of the sea surface covered by ice.',why:'One of the clearest long-term signals in the polar oceans.'},
+  {n:'Vegetation greenness (NDVI)',src:'MODIS on NASA’s Terra and Aqua satellites, from 2000',kw:'NDVI',ints:['plants'],places:['farm','forest','desert','arctic'],def:'How green and leafy the land looks from space, from about 0 (bare) to 1 (dense plants).',why:'Rises with greening and falls with drought, fire or clearing.'},
+  {n:'Haze: aerosol optical depth',src:'MERRA-2 model, monthly, from 1980',id:'M2TMNXAER_5_12_4_TOTEXTTAU',ints:['air'],places:['city','desert','forest'],def:'How much smoke, dust and pollution particles dim the sunlight.',why:'Falls where air is cleaned up, spikes with dust storms and wildfires.'},
+  {n:'Haze measured by MODIS',src:'MODIS on Terra and Aqua, from 2000',kw:'MODIS aerosol optical depth',ints:['air'],places:['city','desert','forest'],def:'The same haze measure, observed directly by satellite.',why:'A satellite cross-check on the model haze.'},
+  {n:'Nitrogen dioxide pollution',src:'OMI on NASA’s Aura satellite, daily, from 2004',id:'OMNO2d_004_ColumnAmountNO2TropCloudScreened',ints:['air'],places:['city'],def:'A brownish gas from burning fuel in cars, power plants and factories.',why:'Responds quickly to economic growth and to pollution rules.'},
+  {n:'Carbon monoxide',src:'Satellite or model; search Giovanni',kw:'carbon monoxide',ints:['air'],places:['city','forest'],def:'A gas from incomplete burning, including wildfires.',why:'Follows fire seasons and combustion.'},
+  {n:'Sea surface temperature',src:'Satellite record; search Giovanni',kw:'sea surface temperature',ints:['sea','heat'],places:['ocean','coast'],def:'The temperature of the top layer of the ocean.',why:'Warming oceans drive coral bleaching, storms and fisheries changes.'},
+  {n:'Ocean chlorophyll',src:'MODIS ocean color; search Giovanni',kw:'chlorophyll a concentration',ints:['sea','plants'],places:['ocean','coast'],def:'How much microscopic plant life floats in the surface water.',why:'Changes with nutrients from rivers, warming and currents.'}];
+const FINDER={place:null,int:null,all:false};
+function renderFinder(){
+  $('#fPlace').innerHTML=PTYPES.map(p=>`<button class="chip" type="button" data-fplace="${p.k}" aria-pressed="${FINDER.place===p.k}">${p.n}</button>`).join('');
+  $('#fInt').innerHTML=INTS.map(p=>`<button class="chip" type="button" data-fint="${p.k}" aria-pressed="${FINDER.int===p.k}">${p.n}</button>`).join('');
+  if(!FINDER.place&&!FINDER.int){$('#fSug').innerHTML='';return;}
+  const full=CATALOG.filter(c=>(!FINDER.int||c.ints.indexOf(FINDER.int)>=0)&&(!FINDER.place||c.places==='*'||c.places.indexOf(FINDER.place)>=0));let list=FINDER.all?full:full.slice(0,3);
+  const pt=PTYPES.find(p=>p.k===FINDER.place);
+  let h=list.length?'<div class="sugs">':'<p class="small muted" style="margin-top:.6rem">No suggestions for that pair. Try another interest, or search Giovanni for any variable in the measurement step.</p>';
+  list.forEach((c,i)=>{h+=`<div class="sheet sug"><h4>${esc(c.n)}</h4><div class="src">${esc(c.src)}</div><p>${esc(c.def)}</p><p class="small muted">${esc(c.why)}</p>
+    <div class="btnrow"><button class="btn" type="button" data-usevar="${CATALOG.indexOf(c)}">Investigate this</button>${pt?`<button class="btn ghost" type="button" data-usevar="${CATALOG.indexOf(c)}" data-withplace="1">…in ${esc(pt.ex.n)}</button>`:''}</div></div>`;});
+  if(full.length>list.length)h+=`</div><button class="linkbtn" type="button" id="fMore" style="margin-top:.5rem">Show ${full.length-list.length} more</button>`;else if(list.length)h+='</div>';
+  $('#fSug').innerHTML=h;
+}
+function useCatalog(i,withPlace){
+  const c=CATALOG[i];if(c.id){$('#gVar').value=c.id;}else{$('#gVar').value='__other';$('#gKw').value=c.kw;}onVarChange();
+  if(withPlace){const pt=PTYPES.find(p=>p.k===FINDER.place);if(pt){G.sel=null;applyBox(pt.ex.b,'preset');}}
+  const target=withPlace?document.querySelector('.gsteps>li:nth-child(4)'):document.querySelector('.gsteps>li:nth-child(2)');if(target)target.scrollIntoView({behavior:'smooth',block:'start'});
+}
+function showVarDef(){const el=$('#gDef');if(!el)return;const v=VARS.find(x=>x.id===$('#gVar').value);const c=v&&CATALOG.find(x=>x.id===v.id);
+  el.innerHTML=c?`<b>What is it?</b> ${esc(c.def)} <span class="muted">${esc(c.src)}.</span>`:($('#gVar').value==='__other'?'':'');}
+
 /* ---------- reading a claim typed in plain English (rules, no AI) ---------- */
 const PLACES=[
+  {re:/fairbanks|anchorage|interior alaska|alaska/,box:[-156,62,-144,68],name:'interior Alaska',reg:'alaska'},
+  {re:/beijing|shanghai|tianjin|nanjing|eastern china|east china|china/,box:[112,30,122,40],name:'Eastern China',reg:'china'},
+  {re:/delhi|lucknow|kanpur|patna|kolkata|ganges|northern india|north india|india/,box:[75,24,88,31],name:'Northern India',reg:'india'},
+  {re:/kansas city|wichita|omaha|des moines|st\.? louis|central (us|u\.s\.|united states|usa)|midwest|kansas|missouri|iowa|nebraska/,box:[-100,36,-90,44],name:'the central United States',reg:'uscentral'},
   {re:/great plains/,box:[-104,35,-95,45],name:'the Great Plains'},
-  {re:/alaska/,box:[-156,62,-144,68],name:'interior Alaska',reg:'alaska'},
-  {re:/china/,box:[112,30,122,40],name:'Eastern China',reg:'china'},
-  {re:/india/,box:[75,24,88,31],name:'Northern India',reg:'india'},
-  {re:/central (us|u\.s\.|united states|usa)|midwest|kansas|missouri|iowa|nebraska/,box:[-100,36,-90,44],name:'the central United States',reg:'uscentral'},
-  {re:/seattle|washington state|pacific northwest|oregon|puget/,box:[-125,45,-119,49],name:'the Pacific Northwest'},
-  {re:/amazon|brazil/,box:[-70,-12,-50,0],name:'the Amazon'},
+  {re:/corn belt|illinois|indiana|ohio/,box:[-97,39,-82,45],name:'the US Corn Belt'},
+  {re:/seattle|tacoma|puget|washington state|pacific northwest|cascades/,box:[-125,45,-119,49],name:'the Pacific Northwest'},
+  {re:/portland|oregon/,box:[-124.5,42,-117,46],name:'Oregon'},
+  {re:/san francisco|bay area|sacramento|northern california/,box:[-124,36.5,-119.5,40.5],name:'Northern California'},
+  {re:/los angeles|san diego|southern california/,box:[-120.5,32.5,-115,35.5],name:'Southern California'},
+  {re:/california/,box:[-124.5,32.5,-114,42],name:'California'},
+  {re:/phoenix|arizona|las vegas|nevada|southwest/,box:[-115,31.5,-108,37],name:'the US Southwest'},
+  {re:/denver|colorado|rockies|rocky mountains/,box:[-109,37,-102,41],name:'Colorado'},
+  {re:/texas|houston|dallas|austin/,box:[-104,26,-94,36],name:'Texas'},
+  {re:/florida|miami/,box:[-87.5,25,-80,31],name:'Florida'},
+  {re:/new york|boston|new england|northeast/,box:[-78,39,-69,45],name:'the US Northeast'},
+  {re:/chicago|great lakes|michigan/,box:[-92,41,-76,49],name:'the Great Lakes'},
+  {re:/chesapeake|baltimore|washington,? d\.?c/,box:[-77.5,36.5,-75.5,39.5],name:'Chesapeake Bay'},
+  {re:/gulf of mexico/,box:[-97,22,-82,30],name:'the Gulf of Mexico'},
+  {re:/mexico city|mexico/,box:[-106,16,-94,24],name:'central Mexico'},
+  {re:/canada|toronto|vancouver/,box:[-125,45,-70,55],name:'southern Canada'},
+  {re:/amazon|manaus|brazil/,box:[-70,-12,-50,0],name:'the Amazon'},
+  {re:/andes|peru|bolivia/,box:[-78,-20,-66,-8],name:'the central Andes'},
+  {re:/argentina|buenos aires|pampas/,box:[-64,-38,-57,-30],name:'the Argentine Pampas'},
+  {re:/patagonia/,box:[-74,-52,-65,-40],name:'Patagonia'},
+  {re:/caribbean/,box:[-85,12,-60,23],name:'the Caribbean'},
+  {re:/london|england|britain|\buk\b/,box:[-6,50,2,56],name:'Britain'},
+  {re:/paris|france/,box:[-4,43,8,51],name:'France'},
+  {re:/berlin|germany|central europe/,box:[6,47,15,55],name:'Central Europe'},
+  {re:/madrid|spain|portugal|iberia/,box:[-9.5,36,3.5,44],name:'Iberia'},
+  {re:/rome|italy/,box:[7,37,18.5,46.5],name:'Italy'},
+  {re:/scandinavia|sweden|norway|finland/,box:[5,56,30,70],name:'Scandinavia'},
+  {re:/mediterranean/,box:[-5,31,36,45],name:'the Mediterranean'},
+  {re:/sahara/,box:[0,20,20,28],name:'the Sahara'},
   {re:/sahel/,box:[-10,12,20,16],name:'the Sahel'},
-  {re:/himalaya|tibet|nepal/,box:[76,27,92,33],name:'the Himalayas'},
-  {re:/greenland/,box:[-55,62,-25,80],name:'Greenland'}];
+  {re:/lake chad/,box:[12,11,16,15],name:'the Lake Chad basin'},
+  {re:/cairo|egypt|nile/,box:[25,22,35,31.5],name:'Egypt and the Nile'},
+  {re:/ethiopia|east africa|kenya|nairobi/,box:[33,-5,48,15],name:'East Africa'},
+  {re:/congo/,box:[12,-10,30,5],name:'the Congo Basin'},
+  {re:/south africa|cape town|johannesburg/,box:[16,-35,33,-22],name:'South Africa'},
+  {re:/arabia|saudi|dubai|middle east/,box:[35,15,57,32],name:'the Arabian Peninsula'},
+  {re:/tehran|iran/,box:[44,25,63,40],name:'Iran'},
+  {re:/aral sea/,box:[57,43,62,47],name:'the Aral Sea'},
+  {re:/himalaya|nepal|kathmandu/,box:[76,27,92,33],name:'the Himalayas'},
+  {re:/tibet/,box:[78,28,100,37],name:'the Tibetan Plateau'},
+  {re:/mumbai|south india|bangalore|chennai/,box:[72,8,82,20],name:'southern India'},
+  {re:/bangladesh|dhaka/,box:[88,20.5,92.7,26.6],name:'Bangladesh'},
+  {re:/mongolia|gobi/,box:[90,41,120,52],name:'Mongolia'},
+  {re:/siberia/,box:[60,55,140,72],name:'Siberia'},
+  {re:/tokyo|japan/,box:[129,31,146,46],name:'Japan'},
+  {re:/seoul|korea/,box:[125,34,130,39],name:'Korea'},
+  {re:/jakarta|indonesia|borneo/,box:[95,-9,120,6],name:'western Indonesia'},
+  {re:/sydney|melbourne|murray|southeast australia/,box:[140,-39,154,-28],name:'southeast Australia'},
+  {re:/great barrier reef|queensland/,box:[142,-24,154,-10],name:'the Great Barrier Reef'},
+  {re:/australia/,box:[113,-39,154,-11],name:'Australia'},
+  {re:/greenland/,box:[-55,62,-25,80],name:'Greenland'},
+  {re:/\barctic ocean|\barctic\b/,box:[-180,75,180,88],name:'the Arctic Ocean'},
+  {re:/antarctic|antarctica/,box:[-180,-85,180,-65],name:'Antarctica'},
+  {re:/north pacific|pacific ocean/,box:[-165,30,-140,45],name:'the North Pacific'},
+  {re:/north atlantic|atlantic ocean/,box:[-50,35,-20,55],name:'the North Atlantic'}];
 const MEAS=[
+  {k:'seaice',re:/sea ice/,label:'sea ice',kw:'sea ice fraction'},
+  {k:'sst',re:/sea surface temp|ocean temp|sea temp|water temp/,label:'sea surface temperature',kw:'sea surface temperature'},
+  {k:'ndvi',re:/green(ness|er|ing)?\b|vegetation|ndvi|forest cover|plants?\b/,label:'vegetation greenness',kw:'NDVI'},
+  {k:'ozone',re:/ozone/,label:'ozone',kw:'ozone'},
+  {k:'co',re:/carbon monoxide/,label:'carbon monoxide',kw:'carbon monoxide'},
+  {k:'et',re:/evapo/,label:'evapotranspiration',kw:'evapotranspiration GLDAS'},
+  {k:'runoff',re:/runoff|streamflow|river flow/,label:'runoff',kw:'surface runoff GLDAS'},
+  {k:'chl',re:/chlorophyll|algae|plankton/,label:'ocean chlorophyll',kw:'chlorophyll a concentration'},
   {k:'glacier',re:/glacier/,label:'glacier snow',kw:'snow mass glaciated'},
   {k:'snow',re:/snow/,label:'snow',v:'M2TMNXLND_5_12_4_SNOMAS'},
   {k:'soil',re:/soil|moisture/,label:'soil wetness',v:'M2TMNXLND_5_12_4_GWETROOT'},
   {k:'aod',re:/haze|smoke|aerosol|\baod\b/,label:'haze',v:'M2TMNXAER_5_12_4_TOTEXTTAU'},
   {k:'no2',re:/\bno2\b|no₂|nitrogen|pollution|smog|emission/,label:'NO₂ pollution',v:'OMNO2d_004_ColumnAmountNO2TropCloudScreened'},
-  {k:'precip',re:/rain|precip|drought|wetter|drier|\bwet\b|\bdry\b/,label:'rainfall',v:'M2TMNXFLX_5_12_4_PRECTOTCORR'},
+  {k:'precip',re:/rain|precip|drought|wetter|drier|\bwet\b|\bdry\b|monsoon|storms?\b/,label:'rainfall',v:'M2TMNXFLX_5_12_4_PRECTOTCORR'},
   {k:'t2m',re:/temperat|warm|cool|heat|hotter|colder|\bhot\b|\bcold\b/,label:'temperature',v:'M2TMNXSLV_5_12_4_T2M'}];
 const HAVE={'alaska:t2m':'t2m_alaska','alaska:precip':'precip_alaska','alaska:snow':'snow_land_alaska','alaska:glacier':'snow_glacier_alaska','alaska:soil':'soilwet_alaska','alaska:aod':'aod_alaska','china:no2':'no2_china','india:no2':'no2_india','uscentral:precip':'precip_uscentral'};
 const DIRS=[['flat',/stopped|stall|paus|no (real )?change|unchanged|hasn.t changed|has not changed|not chang|\bflat\b|steady|level(l)?ed off/],
@@ -1779,7 +1925,32 @@ function startPending(){
     onVarChange();if(P.place){G.sel=null;applyBox(P.place.box,'preset');}
     $('#gPending').innerHTML=`<div class="pending"><b>Checking:</b> ${esc(X.q)} ${P.place?'':'Draw the region on the globe first. '}When you drop the CSV in step 4, the verdict appears on the claim page.</div>`;},60);
 }
-function onVarChange(){const other=$('#gVar').value==='__other';$('#gOtherBox').hidden=!other;fillExploreYears();renderLinks();}
+function onVarChange(){const other=$('#gVar').value==='__other';$('#gOtherBox').hidden=!other;fillExploreYears();renderLinks();showVarDef();}
+
+/* ---------- a 30-second demo that plays itself ---------- */
+const TOUR=[
+  {go:'home',cap:'Interior Alaska, 1980 to 2025. The seasons swing the temperature by 34 °C a year and hide any slow change.',ms:4600,act:()=>{hero.mode='raw';drawHero(true);}},
+  {go:'home',cap:'Remove the seasons and a steady warming appears: +0.38 °C per decade, confirmed by the careful test.',ms:5000,act:()=>{hero.mode='anom';drawHero(true);}},
+  {go:'claim',cap:'Heard a claim? Type it. TrendNoir tests the years it picked, then every other reasonable choice of years.',ms:6600,act:async tk=>{$('#cText').value='';$('#cOut').innerHTML='';$('#cRead').innerHTML='';await typeInto('#cText','Rainfall in the central US fell from 2007 to 2014',tk);if(tk.dead)return;checkTyped();}},
+  {go:'cases',cap:'Same satellite, same pollutant, opposite directions: NO₂ falls over Eastern China and rises over Northern India.',ms:5600,act:()=>{state.custom=null;state.caseId='c1';state.step=1;showCase();setSub('inv');setTimeout(()=>{setStep(4);const s=$('#sheets');if(s)s.scrollIntoView({behavior:'smooth',block:'center'});},700);}},
+  {go:'explore',cap:'Now investigate any place on Earth: pick a variable, draw a region, and test it with NASA data.',ms:5000,act:()=>{initGlobe();setTimeout(()=>{G.sel=null;applyBox([-125,45,-119,49],'preset');},500);}}];
+let tourTk=null;
+function typeInto(sel,text,tk){return new Promise(res=>{const el=$(sel);let i=0;const step=()=>{if(tk.dead)return res();el.value=text.slice(0,++i);if(i<text.length)setTimeout(step,REDUCE?0:38);else res();};step();});}
+function tourUI(i){let box=$('#tour');if(!box){box=document.createElement('div');box.id='tour';box.className='tour';box.setAttribute('role','dialog');box.setAttribute('aria-label','Demo');document.body.appendChild(box);}
+  box.innerHTML=`<p class="cap" aria-live="polite">${esc(TOUR[i].cap)}</p><div class="row"><span class="dots">${TOUR.map((_,j)=>`<i class="${j<=i?'on':''}"></i>`).join('')}</span><button class="btn ghost" type="button" id="tourNext">${i<TOUR.length-1?'Next':'Finish'}</button><button class="btn ghost" type="button" id="tourEnd">End demo</button></div>`;}
+function endTour(){if(tourTk)tourTk.dead=true;tourTk=null;const b=$('#tour');if(b)b.remove();}
+function playTour(i){if(tourTk)tourTk.dead=true;if(i>=TOUR.length){endTour();return;}const tk={dead:false};tourTk=tk;const sc=TOUR[i];
+  go(sc.go);tourUI(i);setTimeout(()=>{if(tk.dead)return;Promise.resolve(sc.act(tk)).then(()=>{});tk.timer=setTimeout(()=>{if(!tk.dead)playTour(i+1);},sc.ms);tk.i=i;},350);}
+
+/* ---------- share links (only where the page is its own top-level page) ---------- */
+const CAN_SHARE=window.self===window.top&&/^https?:$/.test(location.protocol);
+function shareLink(params){return location.origin+location.pathname+'?'+new URLSearchParams(params).toString();}
+function copyText(txt,btn){const done=()=>{if(btn){const o=btn.textContent;btn.textContent='Link copied';setTimeout(()=>{btn.textContent=o;},1600);}};
+  if(navigator.clipboard&&navigator.clipboard.writeText)navigator.clipboard.writeText(txt).then(done,()=>prompt('Copy this link',txt));else prompt('Copy this link',txt);}
+function openFromQuery(){const q=new URLSearchParams(location.search);
+  if(q.get('claim')){go('claim');setTimeout(()=>{$('#cText').value=q.get('claim');checkTyped();},120);return true;}
+  if(q.get('case')){const c=CASES.find(x=>x.id===q.get('case'));if(c){state.custom=null;state.caseId=c.id;state.step=1;showCase();go('cases');const st=+q.get('step');if(st>=2&&st<=4)setTimeout(()=>setStep(st),400);return true;}}
+  return false;}
 
 /* ---------- learn: live explainers ---------- */
 function gauss(R){let u=0,v=0;while(u===0)u=R();while(v===0)v=R();return Math.sqrt(-2*Math.log(u))*Math.cos(2*Math.PI*v);}
@@ -1837,7 +2008,7 @@ function learn4(){
   for(let r=0;r<200;r++){const y=ar1(n,phi,R);if(!first)first=y;if(olsP(y).p<0.05)c++;if(mkCore(y,false).p<0.05)k++;}
   chart($('#l4a'),{n:n,y0:2006,unit:'',zero:true,layers:[{y:first,cls:'anom'}],h:130,ml:38,aria:'A trend-free record with memory'});
   $('#l4c').style.width=(c/2)+'%';$('#l4k').style.width=(k/2)+'%';$('#l4ct').textContent=Math.round(c/2)+'%';$('#l4kt').textContent=Math.round(k/2)+'%';
-  $('#l4out').innerHTML=`With memory ${phi.toFixed(2)}, the careless test calls <b>${Math.round(c/2)}%</b> of trend-free records significant. The careful test: <b>${Math.round(k/2)}%</b>.`;
+  $('#l4out').innerHTML=`With memory ${phi.toFixed(2)}, the plain t-test calls <b>${Math.round(c/2)}%</b> of trend-free records significant. The careful test: <b>${Math.round(k/2)}%</b>.`;
 }
 
 /* ---------- comparing two places ---------- */
@@ -1914,6 +2085,15 @@ document.addEventListener('click',e=>{
   if(ex){const E=EXAMPLES[+ex.dataset.ex];$('#cText').value=E.txt.replace(/[“”]/g,'');$('#cRead').innerHTML='';fillClaimRecords(E.k);$('#cDir').value=E.d;fillClaimYears(E.a,E.b);runClaim(E);return;}
   if(e.target.id==='cGo'){runClaim();return;}
   if(e.target.id==='cParse'){checkTyped();return;}
+  if(e.target.id==='demoBtn'){playTour(0);return;}
+  if(e.target.id==='tourEnd'){endTour();return;}
+  if(e.target.id==='tourNext'){const i=tourTk&&tourTk.i!==undefined?tourTk.i:0;if(tourTk)clearTimeout(tourTk.timer);playTour(i+1);return;}
+  if(e.target.dataset&&e.target.dataset.shareClaim){copyText(shareLink({claim:$('#cText').value||''}),e.target);return;}
+  if(e.target.dataset&&e.target.dataset.shareCase){copyText(shareLink({case:state.caseId,step:state.step})+'#cases',e.target);return;}
+  if(e.target.id==='fMore'){FINDER.all=true;renderFinder();return;}
+  const fp=e.target.closest&&e.target.closest('[data-fplace]');if(fp){FINDER.all=false;FINDER.place=FINDER.place===fp.dataset.fplace?null:fp.dataset.fplace;renderFinder();return;}
+  const fi=e.target.closest&&e.target.closest('[data-fint]');if(fi){FINDER.all=false;FINDER.int=FINDER.int===fi.dataset.fint?null:fi.dataset.fint;renderFinder();return;}
+  const uv=e.target.closest&&e.target.closest('[data-usevar]');if(uv){initGlobe();useCatalog(+uv.dataset.usevar,!!uv.dataset.withplace);return;}
   if(e.target.id==='cGet'){startPending();return;}
   const kc=e.target.closest&&e.target.closest('[data-kw]');
   if(kc){$('#gKw').value=kc.dataset.kw;renderLinks();return;}
@@ -1964,7 +2144,8 @@ $('#lamp').addEventListener('click',()=>{const root=document.documentElement;
   root.setAttribute('data-theme',dark?'light':'dark');$('#lamp').setAttribute('aria-pressed',String(!dark));});
 
 drawHero(false);renderFacts();setupClaim();renderLineup();renderDataTable();showCase();
-window.addEventListener('hashchange',route);route();
+window.addEventListener('hashchange',route);route();openFromQuery();
+document.addEventListener('keydown',e=>{if(e.key==='Escape'&&tourTk)endTour();});
 document.addEventListener('keydown',e=>{const tg=e.target&&e.target.tagName;if(/INPUT|SELECT|TEXTAREA/.test(tg||''))return;
   if($('#v-cases').hidden||state.sub!=='inv')return;
   if(e.key==='ArrowRight'&&state.step<4){setStep(state.step+1);e.preventDefault();}else if(e.key==='ArrowLeft'&&state.step>1){setStep(state.step-1);e.preventDefault();}});
