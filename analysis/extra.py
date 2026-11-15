@@ -126,3 +126,16 @@ def robustness(raw, anom, y0, y1, grid_map):
         hs=hirsch_slack(raw[i0:i1]); out['m'][2].append([float(f"{hs['slope_yr']*10:.4g}"),round(math.log10(max(hs['p'],1e-300)),2)])
         pa,ba=mk_ess(ann[a-y0:b-y0+1]); out['m'][3].append([float(f"{ba*10:.4g}"),round(math.log10(max(pa,1e-300)),2)])
     return out
+
+def decoy_false_positive(anom, slope_dec, r1, n_decoys=400, seed=7):
+    """Share of trend-free block-bootstrap decoys that each test calls significant (same recipe as the page)."""
+    y=np.asarray(anom,float); n=len(y); sm=slope_dec/120; t=np.arange(n)
+    v0=np.median(y-sm*t); res=y-(v0+sm*t)
+    phi=max(0.0,r1); L=int(min(60,max(3,round(2*(1+phi)/(1-phi)))))
+    rng=np.random.default_rng(seed); careless=careful=0
+    for _ in range(n_decoys):
+        starts=rng.integers(0,n,size=math.ceil(n/L))
+        d=res[((starts[:,None]+np.arange(L)[None,:]).ravel()[:n])%n]
+        if stats.linregress(t,d).pvalue<0.05: careless+=1
+        if mk_ess(d)[0]<0.05: careful+=1
+    return dict(n=n_decoys,careless=careless/n_decoys,careful=careful/n_decoys,block=L)

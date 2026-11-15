@@ -6,7 +6,7 @@ import numpy as np, pandas as pd
 from scipy import stats
 from load import read_giovanni, to_monthly
 from engine import deseasonalize
-from extra import hamed_rao, hirsch_slack, hinge, mk_plain, robustness
+from extra import hamed_rao, hirsch_slack, hinge, mk_plain, robustness, decoy_false_positive
 
 UP=os.path.join(ROOT,'data','raw')+os.sep
 _tri={}
@@ -111,6 +111,7 @@ def build(sp):
             r=mk(seg)
             cells.append([a,b,sig(r['slope']*120,4),lp(r['p']),lp(naive_p(seg))])
     cells_arr=np.array(cells)
+    fp=decoy_false_positive(d.values,sl,des['r1'])
     rob=robustness(m.values,d.values,sp['y0'],sp['y1'],{(c[0],c[1]):c for c in cells})
     out=dict(key=sp['key'],units=sp['units'],decimals=sp['decimals'],pct=sp['pct'],
         y0=sp['y0'],y1=sp['y1'],n=n,mean=sig(mean,5),
@@ -122,7 +123,7 @@ def build(sp):
           half=dict(first=dict(slope_dec=sig(h1['slope']*120),lp=lp(h1['p'])),second=dict(slope_dec=sig(h2['slope']*120),lp=lp(h2['p']))),
           verdict=verdict,consistent=bool(consistent),ci_excludes_zero=bool(ci_excl),
           std_dec=sig(sl/sd,3),std_lo=sig(lo/sd,3),std_hi=sig(hi/sd,3)),
-        detect=detect,extra=extra,rob=rob,
+        detect=detect,extra=extra,rob=rob,fp=fp,
         grid=cells)
     return out
 
