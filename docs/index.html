@@ -10,9 +10,9 @@
 <link href="https://fonts.googleapis.com/css2?family=Special+Elite&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&display=swap" rel="stylesheet">
 <style>
 :root{
-  --bg:#dcdad2; --sheet:#ecebe4; --sheet-2:#e2e0d7; --ink:#1c1f22; --ink-soft:#4f565c; --rule:#b4b1a4;
+  --bg:#cfc9bb; --sheet:#ecebe4; --sheet-2:#e2e0d7; --ink:#1c1f22; --ink-soft:#4f565c; --rule:#b4b1a4;
   --up:#a4540a; --down:#1c5a85; --stamp:#a3231c; --slat:rgba(20,22,24,.07); --glow:rgba(255,255,255,.55);
-  --header-bg:#dcdad2; --grain:.07; --shadow:rgba(30,30,24,.35); --ocean:#c3cdd0; --land:#8f8b7d;
+  --header-bg:#cfc9bb; --grain:.07; --shadow:rgba(30,30,24,.35); --ocean:#c3cdd0; --land:#8f8b7d;
   --display:"Special Elite","Courier New",Courier,monospace;
   --serif:"Source Serif 4",Georgia,"Times New Roman",serif;
   box-sizing:border-box; padding-top:env(safe-area-inset-top,0px); padding-bottom:env(safe-area-inset-bottom,0px);
@@ -170,7 +170,7 @@ input[type=range]{width:100%;accent-color:var(--up);height:2rem}
 .legend{display:flex;gap:1rem;flex-wrap:wrap;font-size:.86rem;color:var(--ink-soft);margin-top:.35rem;align-items:center}
 .sw{display:inline-block;width:.9rem;height:.9rem;vertical-align:-.12rem;margin-right:.3rem;border:1px solid var(--rule)}
 .readout{margin:.4rem 0 .2rem;font-size:1rem}
-.callout{border:2px solid var(--stamp);padding:.8rem 1rem;margin:1rem 0 0;background:var(--sheet-2);max-width:70ch}
+.callout{border:2px solid var(--stamp);padding:.8rem 1rem;margin:1rem 0 0;background:var(--sheet);max-width:70ch}
 .callout b{font-family:var(--display);font-weight:400}
 
 /* detect */
@@ -221,6 +221,39 @@ input[type=range]{width:100%;accent-color:var(--up);height:2rem}
 .cal text{font-family:var(--serif);font-size:11px;fill:var(--ink-soft)}
 .ops th{font-weight:400}
 .ops th b{font-weight:600}
+
+/* dossier: paper documents on a desk, cases in manila folders */
+.sheet,.trapblock,.claimform,.labcard,.gsel,.exhibit,.callout,.err,.ok,.pred,.lineup,.claimtype,.filelabel{
+  --sheet:#efe9da;--sheet-2:#e4dcc7;--ink:#25221c;--ink-soft:#5f5a4e;--rule:#cdc3aa;--up:#9a4f07;--down:#1b567f;--stamp:#a8261c;--bg:#f7f3e9;--ocean:#c9d1cf;--land:#8f8b7d;
+  color:var(--ink)}
+.sheet,.trapblock,.claimform,.labcard,.gsel,.exhibit,.lineup,.claimtype{background-color:var(--sheet);background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='140' height='140'><filter id='p'><feTurbulence type='fractalNoise' baseFrequency='.75' numOctaves='3' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 .35  0 0 0 0 .28  0 0 0 0 .16  0 0 0 .09 0'/></filter><rect width='100%' height='100%' filter='url(%23p)'/></svg>"),linear-gradient(180deg,rgba(255,255,255,.4),rgba(120,95,40,.05));border:1px solid rgba(60,45,15,.12);box-shadow:0 1px 1px rgba(0,0,0,.14),0 22px 34px -22px rgba(0,0,0,.65)}
+.lineup{padding:.2rem 1.1rem;border-top:1px solid rgba(60,45,15,.12)}
+.sheets .sheet,.claimres{padding-top:1.5rem}
+.sheets .sheet::before,.claimres::before{content:"";position:absolute;top:-16px;right:30px;width:18px;height:48px;background:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 18 48'><path d='M6 12 V36 a3 3 0 0 0 6 0 V8 a5 5 0 0 0 -10 0 V38 a7 7 0 0 0 14 0 V14' fill='none' stroke='%23777' stroke-width='1.8' stroke-linecap='round'/></svg>") no-repeat;pointer-events:none}
+.sheet .stamp,.claimres .stamp,.lineup .stamp{mix-blend-mode:multiply}
+.folder{--ink:#2b2416;--ink-soft:#5a4d31;--rule:rgba(70,52,16,.32);--up:#7a3d00;--down:#163f5c;--sheet:#dcc48a;--sheet-2:#d2b979;--bg:#f4ead0;--stamp:#8f1f16;
+  color:var(--ink);background:#c8ab6b linear-gradient(180deg,rgba(255,255,255,.16),rgba(0,0,0,.05));border-radius:0 8px 8px 8px;padding:clamp(1rem,3vw,1.9rem);box-shadow:inset 0 1px 0 rgba(255,255,255,.35),0 30px 44px -28px rgba(0,0,0,.75)}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .folder{background-color:#b99c5d}}
+:root[data-theme="dark"] .folder{background-color:#b99c5d}
+.tabs{border-bottom:none;gap:.3rem;margin:.2rem 0 0}
+.tab{background:#a68c55;color:#2b2416;border:none;border-radius:9px 9px 0 0;padding:.55rem 1.15rem .5rem;top:0;box-shadow:inset 0 1px 0 rgba(255,255,255,.25)}
+.tab:hover:not([aria-selected="true"]){background:#b49962}
+.tab[aria-selected="true"]{background:#c8ab6b;color:#2b2416;border-color:transparent}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .tab[aria-selected="true"]{background:#b99c5d}}
+:root[data-theme="dark"] .tab[aria-selected="true"]{background:#b99c5d}
+.folder .casehead{padding-top:.2rem}
+.filelabel{display:grid;grid-template-columns:.7fr 1.6fr 1fr 1.3fr;gap:.5rem 1.2rem;margin:0 0 1rem;padding:.65rem .9rem;background:#f5edd6;border:1px solid rgba(70,52,16,.28);box-shadow:0 1px 2px rgba(0,0,0,.15);font-family:var(--display);font-size:.98rem;line-height:1.25;transform:rotate(-.25deg)}
+.filelabel i{display:block;font-style:normal;font-family:var(--serif);font-size:.74rem;color:var(--ink-soft);margin-bottom:.1rem}
+@media (max-width:700px){.filelabel{grid-template-columns:1fr 1fr}}
+.memo{display:flex;justify-content:space-between;gap:1rem;font-family:var(--display);font-size:.9rem;color:var(--ink-soft);border-bottom:1px solid var(--rule);padding-bottom:.4rem;margin-bottom:.8rem}
+.claimtype{padding:1.1rem 1.2rem;margin-top:1.1rem}
+.claimtype label{display:block;font-family:var(--display);font-size:1.15rem;margin-bottom:.45rem}
+.claimrow{display:flex;gap:.6rem;flex-wrap:wrap}
+.claimrow input{flex:1 1 280px;font:inherit;font-size:1.12rem;color:var(--ink);background:var(--bg);border:1px solid var(--rule);border-bottom:2px solid var(--ink);padding:.6rem .7rem;border-radius:2px}
+.readas{display:flex;flex-wrap:wrap;gap:.4rem;align-items:center;margin-top:.8rem;font-size:.95rem}
+.readas .pill{border:1px solid var(--rule);background:var(--sheet-2);padding:.15rem .55rem;border-radius:2px}
+.readas .pill.miss{border-style:dashed;color:var(--stamp)}
+.pending{border:2px dashed var(--stamp);padding:.7rem .9rem;margin:0 0 1rem;background:var(--sheet-2)}
 
 /* motion */
 @keyframes viewIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
@@ -465,7 +498,14 @@ footer b{color:var(--ink);font-family:var(--display);font-weight:400;font-size:1
 <div class="view" id="v-claim" hidden>
   <section class="tight"><div class="wrap">
     <h2>Check a claim</h2>
-    <p class="lead1">A real trend, or cherry-picked years? Fill in the claim, or try an example.</p>
+    <p class="lead1">A real trend, or cherry-picked years? Type the claim the way you heard it.</p>
+    <div class="claimtype">
+      <label for="cText">The claim</label>
+      <div class="claimrow"><input id="cText" type="text" autocomplete="off" placeholder="e.g. Rainfall in Seattle has dropped since 2010"><button class="btn" id="cParse" type="button">Check it</button></div>
+      <div id="cRead" aria-live="polite"></div>
+    </div>
+    <div class="excl" id="cEx" style="margin-top:.8rem"></div>
+    <details class="more" style="margin-top:1.2rem"><summary>Or set the claim up by hand</summary>
     <div class="claimform">
       <div class="claimline">
         <label class="rec">The record<select id="cRec"></select></label>
@@ -476,7 +516,7 @@ footer b{color:var(--ink);font-family:var(--display);font-weight:400;font-size:1
       <button class="btn" id="cGo" type="button">Check this claim</button>
     </div>
     
-    <div class="excl" id="cEx"></div>
+    </details>
     <div id="cOut" aria-live="polite"></div>
   </div></section>
 </div>
@@ -484,6 +524,7 @@ footer b{color:var(--ink);font-family:var(--display);font-weight:400;font-size:1
 <div class="view" id="v-cases" hidden>
   <section class="tight"><div class="wrap">
     <div class="tabs" id="tabs" role="tablist" aria-label="Case files"></div>
+    <div class="folder">
     <div id="caseHead"></div>
     <div class="subtabs" role="tablist" aria-label="Ways to examine this case">
       <button class="subtab" type="button" role="tab" data-sub="inv" aria-selected="true">Investigate</button>
@@ -515,6 +556,7 @@ footer b{color:var(--ink);font-family:var(--display);font-weight:400;font-size:1
     <div class="panel" id="p-long" hidden>
       <p class="lead1">When the evidence falls short: how many years of data would settle it?</p>
       <div class="detect" id="detect"></div>
+    </div>
     </div>
   </div></section>
 </div>
@@ -592,6 +634,7 @@ footer b{color:var(--ink);font-family:var(--display);font-weight:400;font-size:1
   <section class="tight"><div class="wrap">
     <h2>Explore the globe</h2>
     <p class="lead1">Spin the Earth, draw a box anywhere, and TrendNoir sets up the NASA download for you. Colored boxes are our case files: click one to open it.</p>
+    <div id="gPending"></div>
     <div class="explore">
       <div class="globewrap">
         <div id="globe" class="globe" role="application" aria-label="Interactive globe. Drag to rotate. In draw mode, drag to draw a region."></div>
@@ -610,7 +653,12 @@ footer b{color:var(--ink);font-family:var(--display);font-weight:400;font-size:1
           <div class="bbox"><label>West<input type="number" id="bW" step="0.5" min="-180" max="180"></label><label>South<input type="number" id="bS" step="0.5" min="-90" max="90"></label><label>East<input type="number" id="bE" step="0.5" min="-180" max="180"></label><label>North<input type="number" id="bN" step="0.5" min="-90" max="90"></label></div>
           <div id="gSel"></div></li>
         <li><h3>Pick a measurement and years</h3>
-          <div class="claimline"><label class="rec">Measurement<select id="gVar"></select></label><label>from<select id="gA"></select></label><label>to<select id="gB"></select></label></div></li>
+          <div class="claimline"><label class="rec">Measurement<select id="gVar"></select></label><label>from<select id="gA"></select></label><label>to<select id="gB"></select></label></div>
+          <div id="gOtherBox" hidden style="margin-top:.7rem">
+            <div class="claimrow"><input id="gKw" type="text" autocomplete="off" placeholder="Search word, Giovanni variable ID, or a pasted Giovanni link"></div>
+            <div class="excl" id="gKwChips" style="margin-top:.5rem"></div>
+            <p class="small muted" style="margin-top:.4rem">Giovanni opens with your region and years set and this word in its search box. Pick a <b>monthly</b> variable from its list for the quickest download.</p>
+          </div></li>
         <li><h3>Get the data from NASA</h3>
           <div id="gLinks"></div>
           <p class="small muted" style="margin-top:.5rem">Giovanni opens with your region, measurement and years filled in. Sign in with a free Earthdata account, press <b>Plot Data</b>, then download the CSV.</p></li>
@@ -984,18 +1032,21 @@ function stepperHTML(){
   ${state.step<4?'<button class="btn" id="next" type="button">Next clue</button>':'<button class="btn" type="button" data-sub="break" data-scroll="1">Now try to break it</button>'}</div>`;return h;}
 function renderCase(){
   const c=curCase(),ss=seriesOf(c);
-  $('#caseHead').innerHTML=`<div class="casehead"><h3>${esc(c.title)}</h3><p class="lead1" style="margin-bottom:0">${esc(c.q)}</p></div>`;
+  const fileNo=c.tab&&/^Case \d+/.test(c.tab)?'TN-'+c.tab.slice(5):'TN-'+String(lab.count).padStart(3,'0')+'U';
+  $('#caseHead').innerHTML=`<div class="filelabel"><span><i>File no.</i>${esc(fileNo)}</span><span><i>Subject</i>${esc(ss[0].measure)}</span><span><i>Period</i>${ss[0].y0}–${ss[0].y1}</span><span><i>Status</i><span id="fileStatus"></span></span></div>
+    <div class="casehead"><h3>${esc(c.title)}</h3><p class="lead1" style="margin-bottom:0">${esc(c.q)}</p></div>`;
   let h=`<div id="stepperBox">${stepperHTML()}</div><div id="cmpBox"></div><div class="sheets ${ss.length>1?'two':''}" id="sheets">`;
   ss.forEach(s=>{h+=`<article class="sheet">${sheetHead(s)}<div class="mchart" id="mc-${s.key}"></div><div id="st-${s.key}"></div></article>`;});
   $('#caseView').innerHTML=h+'</div>';
   ss.forEach(s=>morph($('#mc-'+s.key),s,STEP_TARGET[state.step]));
   state._pw=(state.step-1)/3*100;const bar=document.querySelector('.stepbar i');if(bar)bar.style.width=state._pw+'%';
-  fillSteps();
+  fillSteps();fileStatus();
 }
+function fileStatus(){const el=$('#fileStatus');if(!el)return;const ss=seriesOf(curCase());el.textContent=state.step<4?'Under investigation':ss.map(s=>STAMP[s.stats.verdict].t).join(' / ');}
 function setStep(n){
   state.step=n;$('#stepperBox').innerHTML=stepperHTML();const bar=document.querySelector('.stepbar i');if(bar){void bar.offsetWidth;bar.style.width=((n-1)/3*100)+'%';}state._pw=(n-1)/3*100;
   seriesOf(curCase()).forEach(s=>goMorph($('#mc-'+s.key),STEP_TARGET[n]));
-  fillSteps();
+  fillSteps();fileStatus();
 }
 function sheetHead(s){return `<h4>${esc(s.name)}</h4><p class="where">${esc(s.measure)}, ${s.y0} to ${s.y1}. ${esc(s.box)}.</p>`;}
 function verdictShort(s){
@@ -1342,6 +1393,11 @@ async function runLab(){
       const mo=toMonthly(A),place=$('#labPlace').value.trim()||'the selected region';
       const res=await analyzeMonthly(mo,conv,msg=>labMsg(esc(msg)+'…','busy'));const key=registerUser(res,A,mo,place,units,title);
       state.custom={id:key,tab:'Your evidence',title:'Your evidence: '+title,series:[key],q:title+' over '+place+', '+mo.y0+' to '+mo.y1+', from the file you uploaded. Does the evidence hold?'};
+      if(state.pendingClaim){const pc=state.pendingClaim,s=D[key];state.pendingClaim=null;$('#gPending').innerHTML='';
+        const want=G.box?G.box.join(','):null,got=(A.meta.bbox||'').replace(/\s/g,'');
+        $('#cRead').innerHTML=(want&&got&&want!==got)?`<p class="err" style="margin-top:.6rem">Heads up: the uploaded file covers ${esc(fmtBox(got))}, not the region set for this claim (${esc(fmtBox(want))}). The verdict below is for the file you uploaded.</p>`:'';
+        state.step=1;showCase();fillClaimRecords(key);$('#cDir').value=pc.dir;let a=Math.max(s.y0,pc.a||s.y0),b=Math.min(s.y1,pc.b||s.y1);if(b-a+1<8)a=Math.max(s.y0,b-7);fillClaimYears(a,b);
+        labMsg('Done. Your claim is checked on the claim page. <a href="#claim">See the verdict</a>.');btn.disabled=false;go('claim');setTimeout(()=>runClaim({txt:pc.txt}),80);return;}
     }else{
       const B=lab.recB,pa=$('#labPlace').value.trim()||'Region A',pb=$('#labPlaceB').value.trim()||'Region B';
       const a0=toMonthly(A),b0=toMonthly(B),Y0=Math.max(a0.y0,b0.y0),Y1=Math.min(a0.y1,b0.y1);
@@ -1426,7 +1482,8 @@ const EXAMPLES=[
   {txt:'“Rainfall in the central US fell from 2007 to 2014.”',k:'precip_uscentral',d:'down',a:2007,b:2014},
   {txt:'“Pollution over Eastern China rose from 2005 to 2012.”',k:'no2_china',d:'up',a:2005,b:2012},
   {txt:'“Alaska stopped warming after 2000.”',k:'t2m_alaska',d:'flat',a:2000,b:2025},
-  {txt:'“Interior Alaska has warmed since 1980.”',k:'t2m_alaska',d:'up',a:1980,b:2025}];
+  {txt:'“Interior Alaska has warmed since 1980.”',k:'t2m_alaska',d:'up',a:1980,b:2025},
+  {txt:'“Rainfall in Seattle has dropped since 2010.”',k:null}];
 const CLAIM_ORDER=['t2m_alaska','precip_uscentral','no2_china','no2_india','precip_alaska','snow_land_alaska','snow_glacier_alaska','soilwet_alaska','aod_alaska'];
 function claimRecords(){return CLAIM_ORDER.concat(Object.keys(D).filter(k=>k.indexOf('user_')===0));}
 function fillClaimRecords(keep){
@@ -1496,7 +1553,8 @@ function runClaim(ex){
   else{c1=E.inWin==='contradicts'?li('bad','✕',`A real change in ${a} to ${b}`,`${sl}, ${pEq(E.c.lc)}.`):li('meh','–',`Nothing detected in ${a} to ${b}`,`But a ${E.len}-year window misses changes smaller than about ${nf(E.minDet)} ${s.u} per decade.`);
     c2=li('meh','–','Easy to pick','Short or noisy windows often show nothing.');
     c3=E.verdict==='Holds up'?li('ok','✓','The full record agrees',`${P100(E.back)} of ${E.R.N.toLocaleString('en-US')} reasonable analyses find no trend.`):E.verdict==='Misleading'?li('bad','✕','Long windows find a trend',`${P100(1-E.backLong)} of analyses using ${E.need}+ years detect one.`):li('meh','–','The full record is mixed',`${P100(E.back)} of ${E.R.N.toLocaleString('en-US')} reasonable analyses find no trend.`);}
-  $('#cOut').innerHTML=`<article class="sheet claimres"><p class="claimq">${esc(q)}</p><div class="stampwrap"><span class="stamp slam ${E.cool?'cool':''}">${E.verdict}</span></div>
+  state._claimNo=(state._claimNo||0)+1;
+  $('#cOut').innerHTML=`<article class="sheet claimres"><div class="memo"><span>Claim check</span><span>Memo no. C-${String(state._claimNo).padStart(3,'0')}</span></div><p class="claimq">${esc(q)}</p><div class="stampwrap"><span class="stamp slam ${E.cool?'cool':''}">${E.verdict}</span></div>
     <p class="verdict-sentence">${tail}</p><ul class="checks">${c1}${c2}${c3}</ul>
     <div class="claimcols"><div class="chart" id="cChart" role="img"></div><div class="spec" id="cStrip" role="img" aria-label="Slopes of every window of the same length"></div></div>
     <details class="more"><summary>Read the full reasoning</summary><ol class="claimsteps"><li>${s1}</li><li>${s2}</li><li>${s3}</li></ol></details>
@@ -1634,24 +1692,94 @@ function selectRegion(k){G.sel=k;const s=D[k],b=BOXES[k],c=REGION_CASE[k],cs=CAS
   if(v){$('#gVar').value=v.id;fillExploreYears();}renderLinks();}
 function fillExploreForm(){
   $('#gPresets').innerHTML=PRESETS.map((p,i)=>`<button class="chip" type="button" data-preset="${i}">${p.n}</button>`).join('');
-  $('#gVar').innerHTML=VARS.map(v=>`<option value="${v.id}">${esc(v.label)}</option>`).join('');fillExploreYears();renderLinks();}
-function fillExploreYears(){const v=VARS.find(x=>x.id===$('#gVar').value);let o='';for(let y=v.y0;y<=2025;y++)o+=`<option value="${y}">${y}</option>`;
+  $('#gVar').innerHTML=VARS.map(v=>`<option value="${v.id}">${esc(v.label)}</option>`).join('')+'<option value="__other">Any other variable: search Giovanni…</option>';
+  $('#gKwChips').innerHTML=KW_SUGGEST.map(k=>`<button class="chip" type="button" data-kw="${k}">${k}</button>`).join('');fillExploreYears();renderLinks();}
+function fillExploreYears(){const v=VARS.find(x=>x.id===$('#gVar').value)||{y0:1980};let o='';for(let y=v.y0;y<=2025;y++)o+=`<option value="${y}">${y}</option>`;
   const a=$('#gA'),b=$('#gB');a.innerHTML=o;b.innerHTML=o;a.value=v.y0;b.value=2025;}
-function giovanniURL(v,b,a,z){return 'https://giovanni.gsfc.nasa.gov/giovanni/#service=ArAvTs&starttime='+a+'-01-01T00:00:00Z&endtime='+z+'-12-31T23:59:59Z&bbox='+b.join(',')+'&data='+v.id+'&dataKeyword='+encodeURIComponent(v.kw)+'&portal=GIOVANNI&format=json';}
+function giovanniURL(v,b,a,z){return 'https://giovanni.gsfc.nasa.gov/giovanni/#service=ArAvTs&starttime='+a+'-01-01T00:00:00Z&endtime='+z+'-12-31T23:59:59Z&bbox='+b.join(',')+(v.id?'&data='+v.id:'')+(v.kw?'&dataKeyword='+encodeURIComponent(v.kw):'')+'&portal=GIOVANNI&format=json';}
 function renderLinks(){
   const box=$('#gLinks');if(!box)return;const b=G.box;if(!b){box.innerHTML='<p class="small muted">Pick a region first.</p>';return;}
-  const v=VARS.find(x=>x.id===$('#gVar').value);let a=+$('#gA').value,z=+$('#gB').value;if(z<a){const x=a;a=z;z=x;}
+  let v=VARS.find(x=>x.id===$('#gVar').value);if(!v){v=otherVar();if(!v){box.innerHTML='<p class="small muted">Type a search word, or pick a suggestion.</p>';return;}}
+  let a=+$('#gA').value,z=+$('#gB').value;if(z<a){const x=a;a=z;z=x;}
   if(z-a+1<10){box.innerHTML='<p class="err">Choose at least ten years.</p>';return;}
   let h='<div class="glinks">';
   if(v.daily&&z-a+1>7){const parts=[];for(let s=a;s<=z;s+=7)parts.push([s,Math.min(z,s+6)]);
     parts.forEach((p,i)=>{h+=`<a class="btn${i?' ghost':''}" href="${giovanniURL(v,b,p[0],p[1])}" target="_blank" rel="noopener">Part ${i+1}: ${p[0]}–${p[1]}</a>`;});
     h+='</div><p class="small muted" style="margin-top:.4rem">Daily satellite data comes in parts so Giovanni doesn’t time out. Download every part, then drop them here together.</p>';}
-  else h+=`<a class="btn" href="${giovanniURL(v,b,a,z)}" target="_blank" rel="noopener">Open in Giovanni</a></div>`;
+  else h+=`<a class="btn" href="${giovanniURL(v,b,a,z)}" target="_blank" rel="noopener">${v.id?'Open in Giovanni':'Search Giovanni for “'+esc(v.kw)+'”'}</a></div>`;
   h+=`<p class="small muted" style="margin-top:.4rem">Region for Giovanni: <b>${boxText(b)}</b> <button class="linkbtn" type="button" id="gCopy">copy</button></p>`;
   box.innerHTML=h;}
 function readBoxInputs(){const v=['bW','bS','bE','bN'].map(id=>parseFloat($('#'+id).value));if(v.some(isNaN))return;
   let [W,S,E,N]=v;if(W>E){const x=W;W=E;E=x;}if(S>N){const x=S;S=N;N=x;}W=Math.max(-180,W);E=Math.min(180,E);S=Math.max(-90,S);N=Math.min(90,N);
   if(E-W<0.5||N-S<0.5)return;G.sel=null;applyBox([W,S,E,N],'typed');}
+
+/* ---------- any Giovanni variable ---------- */
+const KW_SUGGEST=['sea surface temperature','ozone','carbon monoxide','evapotranspiration','snow depth','wind speed','cloud fraction','vegetation','surface skin temperature','sea ice'];
+function otherVar(){const raw=($('#gKw')?$('#gKw').value:'').trim();if(!raw)return null;
+  const m=raw.match(/[?&#]data=([A-Za-z0-9_.]+)/);if(m)return {id:m[1],kw:'',label:m[1]};
+  if(/^[A-Za-z0-9]+_[A-Za-z0-9_.]+$/.test(raw)&&raw.indexOf('_')>0)return {id:raw,kw:'',label:raw};
+  return {id:'',kw:raw,label:raw};}
+
+/* ---------- reading a claim typed in plain English (rules, no AI) ---------- */
+const PLACES=[
+  {re:/great plains/,box:[-104,35,-95,45],name:'the Great Plains'},
+  {re:/alaska/,box:[-156,62,-144,68],name:'interior Alaska',reg:'alaska'},
+  {re:/china/,box:[112,30,122,40],name:'Eastern China',reg:'china'},
+  {re:/india/,box:[75,24,88,31],name:'Northern India',reg:'india'},
+  {re:/central (us|u\.s\.|united states|usa)|midwest|kansas|missouri|iowa|nebraska/,box:[-100,36,-90,44],name:'the central United States',reg:'uscentral'},
+  {re:/seattle|washington state|pacific northwest|oregon|puget/,box:[-125,45,-119,49],name:'the Pacific Northwest'},
+  {re:/amazon|brazil/,box:[-70,-12,-50,0],name:'the Amazon'},
+  {re:/sahel/,box:[-10,12,20,16],name:'the Sahel'},
+  {re:/himalaya|tibet|nepal/,box:[76,27,92,33],name:'the Himalayas'},
+  {re:/greenland/,box:[-55,62,-25,80],name:'Greenland'}];
+const MEAS=[
+  {k:'glacier',re:/glacier/,label:'glacier snow',kw:'snow mass glaciated'},
+  {k:'snow',re:/snow/,label:'snow',v:'M2TMNXLND_5_12_4_SNOMAS'},
+  {k:'soil',re:/soil|moisture/,label:'soil wetness',v:'M2TMNXLND_5_12_4_GWETROOT'},
+  {k:'aod',re:/haze|smoke|aerosol|\baod\b/,label:'haze',v:'M2TMNXAER_5_12_4_TOTEXTTAU'},
+  {k:'no2',re:/\bno2\b|no₂|nitrogen|pollution|smog|emission/,label:'NO₂ pollution',v:'OMNO2d_004_ColumnAmountNO2TropCloudScreened'},
+  {k:'precip',re:/rain|precip|drought|wetter|drier|\bwet\b|\bdry\b/,label:'rainfall',v:'M2TMNXFLX_5_12_4_PRECTOTCORR'},
+  {k:'t2m',re:/temperat|warm|cool|heat|hotter|colder|\bhot\b|\bcold\b/,label:'temperature',v:'M2TMNXSLV_5_12_4_T2M'}];
+const HAVE={'alaska:t2m':'t2m_alaska','alaska:precip':'precip_alaska','alaska:snow':'snow_land_alaska','alaska:glacier':'snow_glacier_alaska','alaska:soil':'soilwet_alaska','alaska:aod':'aod_alaska','china:no2':'no2_china','india:no2':'no2_india','uscentral:precip':'precip_uscentral'};
+const DIRS=[['flat',/stopped|stall|paus|no (real )?change|unchanged|hasn.t changed|has not changed|not chang|\bflat\b|steady|level(l)?ed off/],
+  ['down',/\bfell\b|fallen|falling|drop|declin|decreas|lower|cool(ed|ing)|drier|dried|\bless\b|shrink|shrank|melt|cleaner|\bdown\b|fewer|reduc|vanish|disappear/],
+  ['up',/\brose\b|risen|rising|increas|\bgrew\b|grow|higher|warm(ed|ing|er)|wetter|\bmore\b|\bup\b|worse|spik|surg|climb|soar/]];
+function parseClaim(txt){
+  const s=' '+txt.toLowerCase()+' ';const out={};
+  for(const [d,re] of DIRS)if(re.test(s)){out.dir=d;break;}
+  out.meas=MEAS.find(m=>m.re.test(s))||null;out.place=PLACES.find(p=>p.re.test(s))||null;
+  let m;const ys=(s.match(/\b(19[5-9]\d|20[0-4]\d)\b/g)||[]).map(Number);
+  if((m=s.match(/(last|past)\s+(\d+)\s+years/))){out.a=2025-(+m[2])+1;out.b=2025;}
+  else if(/(last|past) (decade|ten years)/.test(s)){out.a=2016;out.b=2025;}
+  else if(ys.length>=2){out.a=Math.min(ys[0],ys[1]);out.b=Math.max(ys[0],ys[1]);}
+  else if(ys.length===1){out.a=ys[0];out.b=2025;}
+  out.key=out.place&&out.meas&&out.place.reg?HAVE[out.place.reg+':'+out.meas.k]||null:null;
+  return out;
+}
+function readAsHTML(P){
+  const pill=(ok,txt)=>`<span class="pill${ok?'':' miss'}">${esc(txt)}</span>`;
+  return `<div class="readas">Read as:${pill(!!P.meas,P.meas?P.meas.label:'what changed?')}${pill(!!P.place,P.place?'in '+P.place.name:'where?')}${pill(!!P.dir,P.dir?PAST[P.dir]:'which way?')}${pill(true,P.a?P.a+'–'+(P.b||2025):'full record')}</div>`;
+}
+function checkTyped(){
+  const txt=$('#cText').value.trim();if(!txt)return;const P=parseClaim(txt),q='“'+txt.replace(/^["“]|["”]$/g,'').replace(/\.?$/,'.')+'”';
+  let h=readAsHTML(P);
+  if(!P.meas||!P.dir){$('#cRead').innerHTML=h+`<p class="small" style="margin-top:.5rem">Say what changed (rain, temperature, snow, soil, haze, pollution) and which way (rose, fell, stopped), and where.</p>`;$('#cOut').innerHTML='';return;}
+  if(P.key){const s=D[P.key];fillClaimRecords(P.key);$('#cDir').value=P.dir;
+    let a=P.a||s.y0,b=P.b||s.y1,note='';if(a<s.y0){note=`The record starts in ${s.y0}, so the check starts there. `;a=s.y0;}if(b>s.y1)b=s.y1;if(b-a+1<8){a=Math.max(s.y0,b-7);note+='Shorter than eight years, so the window was widened. ';}
+    fillClaimYears(a,b);$('#cRead').innerHTML=h+(note?`<p class="small muted" style="margin-top:.4rem">${note}</p>`:'');runClaim({txt:q});return;}
+  // not in our files yet: set up the download on the globe
+  $('#cRead').innerHTML=h+`<div class="gsel" style="margin-top:.8rem"><b>No record on file for this yet.</b> Get it from NASA in a couple of minutes: the globe will open with ${P.place?'the region':'no region yet'} and ${esc(P.meas.label)} selected. Download the CSV, drop it in, and the verdict appears here.
+    <div class="btnrow"><button class="btn" type="button" id="cGet">Get this record</button></div></div>`;
+  $('#cOut').innerHTML='';state._parsed={P:P,q:q};
+}
+function startPending(){
+  const X=state._parsed;if(!X)return;const P=X.P;state.pendingClaim={dir:P.dir,a:P.a,b:P.b,txt:X.q};
+  go('explore');setTimeout(()=>{initGlobe();
+    if(P.meas.v){$('#gVar').value=P.meas.v;}else{$('#gVar').value='__other';$('#gKw').value=P.meas.kw||P.meas.label;}
+    onVarChange();if(P.place){G.sel=null;applyBox(P.place.box,'preset');}
+    $('#gPending').innerHTML=`<div class="pending"><b>Checking:</b> ${esc(X.q)} ${P.place?'':'Draw the region on the globe first. '}When you drop the CSV in step 4, the verdict appears on the claim page.</div>`;},60);
+}
+function onVarChange(){const other=$('#gVar').value==='__other';$('#gOtherBox').hidden=!other;fillExploreYears();renderLinks();}
 
 /* ---------- learn: live explainers ---------- */
 function gauss(R){let u=0,v=0;while(u===0)u=R();while(v===0)v=R();return Math.sqrt(-2*Math.log(u))*Math.cos(2*Math.PI*v);}
@@ -1782,8 +1910,13 @@ document.addEventListener('click',e=>{
   if(ub){const b=BOXES[ub.dataset.usebox];applyBox(b,'region');document.querySelector('.gsteps>li:nth-child(2)').scrollIntoView({behavior:'smooth',block:'center'});return;}
   if(e.target.id==='gCopy'){const txt=boxText(G.box);(navigator.clipboard&&navigator.clipboard.writeText?navigator.clipboard.writeText(txt):Promise.reject()).then(()=>{e.target.textContent='copied';},()=>{e.target.textContent=txt;});return;}
   const ex=e.target.closest&&e.target.closest('[data-ex]');
-  if(ex){const E=EXAMPLES[+ex.dataset.ex];fillClaimRecords(E.k);$('#cDir').value=E.d;fillClaimYears(E.a,E.b);runClaim(E);return;}
+  if(ex&&!EXAMPLES[+ex.dataset.ex].k){$('#cText').value=EXAMPLES[+ex.dataset.ex].txt.replace(/[“”]/g,'');checkTyped();return;}
+  if(ex){const E=EXAMPLES[+ex.dataset.ex];$('#cText').value=E.txt.replace(/[“”]/g,'');$('#cRead').innerHTML='';fillClaimRecords(E.k);$('#cDir').value=E.d;fillClaimYears(E.a,E.b);runClaim(E);return;}
   if(e.target.id==='cGo'){runClaim();return;}
+  if(e.target.id==='cParse'){checkTyped();return;}
+  if(e.target.id==='cGet'){startPending();return;}
+  const kc=e.target.closest&&e.target.closest('[data-kw]');
+  if(kc){$('#gKw').value=kc.dataset.kw;renderLinks();return;}
   if(e.target.id==='cCopy'){copyQuote();return;}
   const pr=e.target.closest&&e.target.closest('[data-pred]');
   if(pr){state.pred[curCase().id]=pr.dataset.pred;fillSteps();return;}
@@ -1822,7 +1955,8 @@ window.__G=G;window.__TN={D:D,mkESS:mkESS,olsP:olsP,makeDecoys:makeDecoys,parseG
 $('#fullrec').addEventListener('click',()=>{const s0=D[curCase().series[0]];setWin(s0.y0,s0.y1);});
 $('#cRec').addEventListener('change',()=>fillClaimYears());
 $('#gDraw').addEventListener('click',()=>setDrawMode(G.mode!=='draw'));$('#gIn').addEventListener('click',()=>{G.auto=false;zoomBy(1.3);});$('#gOut').addEventListener('click',()=>{G.auto=false;zoomBy(1/1.3);});
-$('#gVar').addEventListener('change',()=>{fillExploreYears();renderLinks();});$('#gA').addEventListener('change',renderLinks);$('#gB').addEventListener('change',renderLinks);
+$('#gVar').addEventListener('change',onVarChange);$('#gKw').addEventListener('input',renderLinks);
+$('#cText').addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();checkTyped();}});$('#gA').addEventListener('change',renderLinks);$('#gB').addEventListener('change',renderLinks);
 ['bW','bS','bE','bN'].forEach(id=>$('#'+id).addEventListener('change',readBoxInputs));
 $('#heroBtn').addEventListener('click',()=>{hero.mode=hero.mode==='raw'?'anom':'raw';drawHero(true);});
 $('#lamp').addEventListener('click',()=>{const root=document.documentElement;
