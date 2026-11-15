@@ -2145,8 +2145,8 @@ function yarnUpdate(g,path){const ls=YARN.map(pr=>({type:'LineString',coordinate
 /* ---------- the evidence board: home globe with pins, string and a magnifier ---------- */
 const HG={rot:[-25,-22,0],ready:false,auto:true,hover:null,lens:null};
 function boardCards(){const items=[['c1','001'],['c2','002'],['c3','003'],['c4','004'],['c5','005']];
-  $('#bcards').innerHTML=items.map(([id,no])=>{const c=CASES.find(x=>x.id===id),ss=seriesOf(c),stamps=c.lineup?(id==='c5'?'<span class="mini">Warmer</span><span class="mini cool">Drier? No</span>':'<span class="mini">Six suspects</span>'):ss.map(s=>{const st=STAMP[s.stats.verdict];return `<span class="mini ${st.cool?'cool':''}">${st.t}</span>`;}).join('');
-    const line=id==='c1'?'Same pollutant, opposite directions.':id==='c2'?'A warming hidden by the seasons.':id==='c3'?'A decline made of chosen years.':id==='c5'?'Seattle is warming. Drier? The satellites say no.':'Which of six measurements really changed?';
+  $('#bcards').innerHTML=items.map(([id,no])=>{const c=CASES.find(x=>x.id===id),ss=seriesOf(c),stamps=c.lineup?(id==='c5'?'<span class="mini">Warmer</span><span class="mini cool">Drier? Not shown</span>':'<span class="mini">Six suspects</span>'):ss.map(s=>{const st=STAMP[s.stats.verdict];return `<span class="mini ${st.cool?'cool':''}">${st.t}</span>`;}).join('');
+    const line=id==='c1'?'Same pollutant, opposite directions.':id==='c2'?'A warming hidden by the seasons.':id==='c3'?'A decline made of chosen years.':id==='c5'?'Seattle is warming. Drier? The satellites detect no trend.':'Which of six measurements really changed?';
     return `<a class="sheet bcard" href="#cases" data-case-link="${id}" data-bcase="${id}"><span class="tackhead" aria-hidden="true"></span><span class="no">Case ${no}</span><b>${esc(c.title)}</b>${stamps}<p>${line}</p></a>`;}).join('');}
 function initHomeGlobe(){
   if(HG.ready)return;boardCards();if(!window.d3){$('#hglobe').innerHTML='';return;}HG.ready=true;
