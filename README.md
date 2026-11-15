@@ -10,23 +10,50 @@ through four steps (pull the record, remove the seasons, measure the change, tes
 gives a plain-language verdict: a real trend, an unsteady one, not enough evidence yet, or no trend.
 It then tries to break its own verdict, so users learn how a trend line can fool them.
 
+The interface is styled as a case dossier: paper documents on a desk, cases in manila folders.
+
 The whole app is one self-contained web page: `docs/index.html`. Open it in any modern browser,
 or visit the GitHub Pages site for this repository.
 
+## How TrendNoir answers the challenge
+
+| The challenge asks | Where TrendNoir does it |
+|---|---|
+| Identify variables of interest | Investigate: two questions (kind of place, interest) suggest variables from MODIS, OMI, AIRS, GPM, MERRA-2 and GLDAS with plain definitions; any Giovanni variable can be searched; Case 004 ranks six variables over one region |
+| Acquire data for a region | Draw a region on the globe; TrendNoir builds the Giovanni request and reads the downloaded CSV in the browser |
+| Visualize the time series | Monthly record, seasons removed in an animated step, trend line with range, maps of every window of years |
+| Rate of change and significance | Sen's slope with 95% range; Mann-Kendall corrected for autocorrelation; plain t-test for comparison; Hamed-Rao and seasonal Kendall; multiverse robustness |
+| Opposite trends in different regions | Case 001 and two-region uploads |
+| Definitions and demonstration examples | Definitions for every variable, three case files, a 30-second self-playing demo, live explainers |
+| Not-yet-significant trends | "How long?" estimate; "no trend detected" versus "can't tell yet" |
+
 ## What it does
 
-- **Check a claim.** Pick a record, a direction (rose, fell, did not change) and the years a claim
-  covers. TrendNoir tests those years, checks whether they are extreme among all windows of the same
-  length (cherry-picking), and asks how many reasonable analyses of the full record back the claim.
-  It returns a verdict (holds up, true for those years only, not supported, contradicted, misleading,
-  unproven) and a summary that can be quoted.
+- **Check a claim.** The claim is built as a sentence from drop-down menus: *[measurement] in [place]
+  [rose / fell / did not change] from [year] to [year]*, with about 60 places and 15 measurements. A claim
+  can also be pasted in plain English; simple rules (no AI) read it and fill in the sentence, marking
+  anything they could not read. If the record is on file, TrendNoir tests those years, checks whether
+  they are extreme among all windows of the same length (cherry-picking), and asks how many reasonable
+  analyses of the full record back the claim. If not, it sets up the NASA download on the globe and
+  checks the claim once the CSV is dropped in. Verdicts: holds up, true for those years only, not
+  supported, contradicted, misleading, unproven.
 - **Why it matters.** Three findings computed from the data on page load, for example that a careless
   test calls 64% of trend-free versions of Alaska's soil-wetness record significant.
 - **Your call first.** Users make a call (rising, falling, no change) before seeing the evidence, then
   compare it with the verdict.
-- **Explore the globe.** A draggable, zoomable globe (d3 orthographic projection). Draw a box anywhere,
+- **Variable finder.** Two questions (what kind of place, what interests you) suggest NASA variables
+  from a fixed rule table, each with its source, a plain definition and why a trend might show there.
+- **30-second demo.** A self-playing tour with captions: seasons hiding a trend, a claim check, opposite
+  trends, and the globe.
+- **Share links.** On a normal web host (for example GitHub Pages), claim checks and case files can be
+  shared as links (`?claim=...`, `?case=c1&step=4`).
+- **Investigate.** A four-step page with progress marks: what to investigate, where, getting the data,
+  and dropping the file. The globe is an antique desk globe (d3 orthographic projection) with a brass
+  meridian ring, lamp shading, pulsing case markers and drag inertia; places can be searched by name.
+  It is draggable and zoomable. Draw a box anywhere,
   pick a measurement and years, and TrendNoir builds a NASA Giovanni link with the region, variable and
-  dates filled in (split into parts for long daily records). Case regions are drawn on the globe and
+  dates filled in (split into parts for long daily records). Any other Giovanni variable can be used by
+  typing a search word, a variable ID, or pasting a Giovanni link. Case regions are drawn on the globe and
   colored by trend direction; uploaded regions appear too.
 - **Learn.** Four live explainers: a slider shows seasons hiding a trend, a draggable point shows why
   Sen's slope resists outliers, a vote tally shows what Mann-Kendall counts, and a simulation of 200
@@ -43,7 +70,8 @@ or visit the GitHub Pages site for this repository.
 - **How hard is it to kill?** A multiverse analysis: every reasonable window times four defensible
   methods, summarized as a robustness grade and a specification curve.
 - **How long until it's real?** A rough estimate of the record length needed to detect a trend.
-- **The lineup.** Six variables over the same patch of Alaska, ranked by strength of evidence.
+- **Case 004: one place, six suspects.** Six variables over the same patch of interior Alaska, ranked
+  by strength of evidence; any one can be opened in the four-step investigation.
 - **Bring your own evidence.** Upload any Giovanni area-averaged time-series CSV (one region, or two
   regions to compare), from the Explore page. It is analyzed in the browser and never leaves the user's
   computer.
