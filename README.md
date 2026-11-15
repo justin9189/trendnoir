@@ -1,6 +1,6 @@
 # TrendNoir: Real trend, or illusion?
 
-**Team:** Signal Over Noise
+**Team:** TrendNoir
 **Event:** 2026 NASA Space Apps Challenge, Seattle
 **Challenge:** Be An Earth System Trend Detective! (Advanced)
 
@@ -37,6 +37,8 @@ or visit the GitHub Pages site for this repository.
   analyses of the full record back the claim. If not, it sets up the NASA download on the globe and
   checks the claim once the CSV is dropped in. Verdicts: holds up, true for those years only, not
   supported, contradicted, misleading, unproven.
+- **Evidence board.** On the home page, the four case files are pinned to a spinning desk globe and
+  tied to their regions with red string; a magnifier follows the pointer over the globe.
 - **Why it matters.** Three findings computed from the data on page load, for example that a careless
   test calls 64% of trend-free versions of Alaska's soil-wetness record significant.
 - **Your call first.** Users make a call (rising, falling, no change) before seeing the evidence, then
