@@ -5,7 +5,7 @@
 **Challenge:** Be An Earth System Trend Detective! (Advanced)
 
 TrendNoir is a detective kit for NASA Earth data, built for science journalists and fact-checkers,
-teachers, and students. Pick a variable and a place, and it walks the record
+students, and anyone curious about their region. Pick a variable and a place, and it walks the record
 through four steps (pull the record, remove the seasons, measure the change, test the evidence), then
 gives a plain-language verdict: a real trend, an unsteady one, not enough evidence yet, or no trend.
 It then tries to break its own verdict, so users learn how a trend line can fool them.
@@ -22,8 +22,12 @@ or visit the GitHub Pages site for this repository.
   unproven) and a summary that can be quoted.
 - **Why it matters.** Three findings computed from the data on page load, for example that a careless
   test calls 64% of trend-free versions of Alaska's soil-wetness record significant.
-- **Classroom mode.** Students make a call before the evidence and compare it with the verdict; a
-  45-minute lesson plan is on the page.
+- **Your call first.** Users make a call (rising, falling, no change) before seeing the evidence, then
+  compare it with the verdict.
+- **Explore the globe.** A draggable, zoomable globe (d3 orthographic projection). Draw a box anywhere,
+  pick a measurement and years, and TrendNoir builds a NASA Giovanni link with the region, variable and
+  dates filled in (split into parts for long daily records). Case regions are drawn on the globe and
+  colored by trend direction; uploaded regions appear too.
 - **Learn.** Four live explainers: a slider shows seasons hiding a trend, a draggable point shows why
   Sen's slope resists outliers, a vote tally shows what Mann-Kendall counts, and a simulation of 200
   trend-free records shows how memory fools a careless test. Plus a one-sentence glossary.
@@ -38,19 +42,18 @@ or visit the GitHub Pages site for this repository.
   finds the window most likely to fool you.
 - **How hard is it to kill?** A multiverse analysis: every reasonable window times four defensible
   methods, summarized as a robustness grade and a specification curve.
-- **Spot the real one.** A visual-inference lineup: the real record hidden among eight trend-free fakes
-  built from its own noise and memory.
 - **How long until it's real?** A rough estimate of the record length needed to detect a trend.
 - **The lineup.** Six variables over the same patch of Alaska, ranked by strength of evidence.
 - **Bring your own evidence.** Upload any Giovanni area-averaged time-series CSV (one region, or two
-  regions to compare). It is analyzed in the browser and never leaves the user's computer.
+  regions to compare), from the Explore page. It is analyzed in the browser and never leaves the user's
+  computer.
 
 ## Repository layout
 
 ```
 data/raw/        Giovanni CSV downloads used for the case files (see data/README.md)
 analysis/        Python analysis: monthly series, tests, windows, robustness  ->  web/data.json
-web/             Page source (template.html) and build script
+web/             Page source (template.html), world map (geo.json) and build script
 docs/index.html  The built, self-contained app (template + data.json + two sample files)
 tests/           Check that the in-browser analysis reproduces the Python results
 ```
@@ -68,7 +71,7 @@ python tests/validate_browser_vs_python.py
 
 GitHub Pages serves `docs/index.html` (Settings, Pages, deploy from the main branch, /docs folder).
 Any other static host works too.
-The page loads fonts from Google Fonts and needs no other network access.
+The page loads fonts from Google Fonts and d3 from cdnjs, and needs no other network access.
 
 ## Methods
 
@@ -86,8 +89,8 @@ The page loads fonts from Google Fonts and needs no other network access.
    circular block bootstrap of residuals.
 8. Robustness: every window of at least max(10 years, half the record) analyzed four ways; reported
    overall and for windows long enough to detect a trend of that size.
-9. Noise lineup: decoys from a circular block bootstrap of the trend-free residuals. The same recipe,
-   with 400 decoys per record, measures each test's false-positive rate (shown in "Why it matters").
+9. False alarms: 400 decoys per record from a circular block bootstrap of the trend-free residuals
+   measure each test's false-positive rate (shown in "Why it matters").
 10. Detection time: rule of thumb of Weatherhead et al. (1998).
 
 Two common shortcuts, trend-free pre-whitening and the seasonal Kendall test without the
@@ -117,7 +120,6 @@ and 99.9% of the robustness analyses agree (the rest are p-values at 0.05 rounde
 - Hirsch, R. M., & Slack, J. R. (1984). A nonparametric trend test for seasonal data with serial dependence. *Water Resources Research*, 20, 727–732.
 - Yue, S., Pilon, P., Phinney, B., & Cavadias, G. (2002). The influence of autocorrelation on the ability to detect trend in hydrological series. *Hydrological Processes*, 16, 1807–1829.
 - Weatherhead, E. C., et al. (1998). Factors affecting the detection of trends: Statistical considerations and applications to environmental data. *Journal of Geophysical Research*, 103, 17149–17161.
-- Buja, A., et al. (2009). Statistical inference for exploratory data analysis and model diagnostics. *Philosophical Transactions of the Royal Society A*, 367, 4361–4383.
 - Steegen, S., Tuerlinckx, F., Gelman, A., & Vanpaemel, W. (2016). Increasing transparency through a multiverse analysis. *Perspectives on Psychological Science*, 11, 702–712.
 - Gelaro, R., et al. (2017). The Modern-Era Retrospective Analysis for Research and Applications, Version 2 (MERRA-2). *Journal of Climate*, 30, 5419–5454.
 
@@ -126,7 +128,10 @@ and 99.9% of the robustness analyses agree (the rest are p-values at 0.05 rounde
 - NASA Giovanni (GES DISC) area-averaged time series. Datasets: OMI/Aura OMNO2d v4; MERRA-2
   collections M2TMNXSLV, M2TMNXFLX, M2TMNXLND, M2TMNXGLC, M2TMNXAER (v5.12.4). Details and the
   exact Giovanni settings for every file are in `data/README.md`.
-- Python: NumPy, pandas, SciPy. Browser: plain JavaScript and SVG, no libraries.
+- Python: NumPy, pandas, SciPy. Browser: plain JavaScript and SVG, plus d3 7.8.5 (loaded from cdnjs) for
+  the globe. The page still works without it, except for the globe.
+- World map: Natural Earth 1:110m land and borders (public domain), via the world-atlas package (ISC
+  license), converted to compact coordinates in `web/geo.json`.
 - Fonts: Special Elite and Source Serif 4, served by Google Fonts under open-source licenses.
 - AI assistance: code and text were drafted with the help of Anthropic's Claude. All statistics are
   computed by the code in this repository, and no AI model produces or alters any number.
